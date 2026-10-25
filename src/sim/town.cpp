@@ -1,5 +1,9 @@
 #include "sim/town.h"
 
+#include <cstdint>
+#include <initializer_list>
+#include <utility>
+
 namespace familiar::town {
 
 namespace {
