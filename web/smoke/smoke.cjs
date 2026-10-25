@@ -164,25 +164,27 @@ function colourCount(png) {
     if (s.cat) await fail('Q did not turn the cat back into Wren');
 
     // To the Okafors' door, steering with the same look() call, hurrying.
-    const route = [[-66.0, -2.5], [-48.0, -2.5], [-48.0, -9.6]];
-    await page.keyboard.down('ShiftLeft');
-    for (const [tx, tz] of route) {
-      const end = Date.now() + 90000;
+    // Hurry along the street, then walk slowly through the gate and up the
+    // path (SwiftShader frames are slow, so steering is coarse).
+    const route = [[-66.0, -2.5, true, 0.8], [-48.0, -2.5, true, 0.6], [-48.0, -4.0, false, 0.4], [-48.0, -9.6, false, 0.5]];
+    for (const [tx, tz, hurry, near] of route) {
+      const end = Date.now() + 120000;
+      if (hurry) await page.keyboard.down('ShiftLeft');
       await page.keyboard.down('KeyW');
       for (;;) {
         s = await status();
         const dx = tx - s.x, dz = tz - s.z;
-        if (Math.hypot(dx, dz) < 0.5 || Date.now() > end) break;
+        if (Math.hypot(dx, dz) < near || Date.now() > end) break;
         let d = Math.atan2(dx, -dz) - s.yaw;
         while (d > Math.PI) d -= 2 * Math.PI;
         while (d < -Math.PI) d += 2 * Math.PI;
         await page.evaluate((px) => window.familiar.look(px, 0), d / 0.0025);
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(50);
       }
       await page.keyboard.up('KeyW');
-      if (Math.hypot(tx - s.x, tz - s.z) >= 0.5) await fail(`could not walk to (${tx}, ${tz}); at (${s.x}, ${s.z})`);
+      if (hurry) await page.keyboard.up('ShiftLeft');
+      if (Math.hypot(tx - s.x, tz - s.z) >= near) await fail(`could not walk to (${tx}, ${tz}); at (${s.x}, ${s.z})`);
     }
-    await page.keyboard.up('ShiftLeft');
     await page.keyboard.press('KeyE');
     s = await until((st) => st.candy > 0);
     console.log(`after knocking: candy ${s.candy}, message ${s.message}`);
