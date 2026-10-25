@@ -32,6 +32,11 @@ struct World {
     Player player;
     Form form = Form::Girl;
     std::array<bool, town::GateCount> gateOpen{};
+    int32_t candy = 0;
+    std::array<bool, town::HouseCount> knocked{};  // each house answers once
+    int32_t answered = -1;      // the house whose door last opened, or -1
+    int64_t answeredTick = -1;  // and when
+    bool kitty = false;         // the answer was to a cat (a treat for the kitty, no candy)
 };
 
 // One tick's worth of player intent, already resolved from keys and mouse.
@@ -40,6 +45,8 @@ struct Input {
     float strafe = 0;   // -1..1, + steps right
     bool hurry = false;
     float yaw = 0, pitch = 0;  // absolute view angles for this tick
+    bool use = false;          // knock, or whatever E does here
+    bool toggleForm = false;   // Q: Wren to cat, or back
 };
 
 World newWorld(uint64_t seed);
@@ -58,6 +65,9 @@ const Body& body(Form f);
 // height it would stand at, or false if something there is too tall to climb
 // onto, or it is the creek. Gates count while shut.
 bool standAt(const World& w, Form form, float x, float z, float feet, float& out);
+
+// Whether the cat may become Wren again here: on the ground, with room for a girl.
+bool canBecomeGirl(const World& w);
 
 // The eye: the feet plus the form's eye height.
 Vec3 eyePosition(const World& w);

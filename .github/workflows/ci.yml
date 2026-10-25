@@ -60,3 +60,44 @@ jobs:
         run: cmake --build build --config Release --parallel
       - name: Tests
         run: ctest --test-dir build -C Release --output-on-failure
+
+  game-linux:
+    name: Game (Linux, headless tour)
+    runs-on: ubuntu-24.04
+    env:
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      GALLIUM_DRIVER: llvmpipe
+      __EGL_VENDOR_LIBRARY_FILENAMES: /usr/share/glvnd/egl_vendor.d/50_mesa.json
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL3 build dependencies and Mesa
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            libx11-dev libxext-dev libxcursor-dev libxi-dev libxfixes-dev libxrandr-dev libxss-dev \
+            libegl-dev libgl-dev libegl1 libegl-mesa0 libgl1-mesa-dri
+      - name: Build the game on Strata
+        run: |
+          cmake -S . -B build -DFAMILIAR_WARNINGS_AS_ERRORS=ON -DFAMILIAR_BUILD_TESTS=OFF
+          cmake --build build -j4 --target familiar
+      - name: Headless tour
+        run: |
+          mkdir -p tour
+          ./build/familiar --headless --tour --frames tour --width 960 --height 540
+          test "$(ls tour/*.png | wc -l)" -eq 9
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tour-linux
+          path: tour/
+
+  game-windows:
+    name: Game (Windows, MSVC)
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -A x64 -DFAMILIAR_WARNINGS_AS_ERRORS=ON
+      - name: Build
+        run: cmake --build build --config Release --parallel
+      - name: Tests
+        run: ctest --test-dir build -C Release --output-on-failure
