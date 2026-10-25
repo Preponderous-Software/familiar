@@ -166,7 +166,7 @@ function colourCount(png) {
     // To the Okafors' door, steering with the same look() call, hurrying.
     // Hurry along the street, then walk slowly through the gate and up the
     // path (SwiftShader frames are slow, so steering is coarse).
-    const route = [[-66.0, -2.5, true, 0.8], [-48.0, -2.5, true, 0.6], [-48.0, -4.0, false, 0.4], [-48.0, -9.6, false, 0.5]];
+    const route = [[-66.0, -2.5, true, 0.8], [-48.0, -2.5, true, 0.6], [-48.0, -4.0, false, 0.4], [-48.0, -9.6, false, 1.0]];
     for (const [tx, tz, hurry, near] of route) {
       const end = Date.now() + 120000;
       if (hurry) await page.keyboard.down('ShiftLeft');
