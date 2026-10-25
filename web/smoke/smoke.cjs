@@ -7,7 +7,7 @@
 // player (W on a desktop, the stick on the phone profile) and looking turns
 // them; Q (or the Cat button) turns Wren into a cat with a lower eye, and back.
 // On a desktop the player also walks to the Okafors' door and knocks, and the
-// candy count goes up. Writes PNGs to <out-dir>. (Atman's smoke test, for
+// candy count goes up after a joke. A costume is chosen first (3, skeleton). Writes PNGs to <out-dir>. (Atman's smoke test, for
 // Familiar.)
 const fs = require('fs');
 const path = require('path');
@@ -109,6 +109,11 @@ function colourCount(png) {
   let s = await status();
   console.log(`ready: ${s.clock} at (${s.x}, ${s.z})`);
   if (s.clock !== '5:20 pm') await fail('the night should start at 5:20 pm, not ' + s.clock);
+  if (!s.choosing) await fail('a new night should offer a costume');
+  await page.locator(phone ? '#costumes [data-costume="3"]' : 'body').click({ timeout: 5000 }).catch(() => {});
+  if (!phone) await page.keyboard.press('Digit3');
+  s = await until((st) => st.costume === 3);
+  if (s.costume !== 3) await fail('choosing the skeleton costume did not take');
   await page.waitForTimeout(1500);
   const shot = await page.screenshot({ path: path.join(outDir, 'familiar.png'), timeout: 180000 });
   const colours = colourCount(shot);
@@ -184,6 +189,9 @@ function colourCount(png) {
     }
     await page.keyboard.up('ShiftLeft');
     await page.keyboard.press('KeyE');
+    s = await until((st) => st.asking);
+    if (!s.asking) await fail('Mrs. Okafor did not ask for a trick');
+    await page.keyboard.press('KeyT');
     s = await until((st) => st.candy > 0);
     console.log(`after knocking: candy ${s.candy}, message ${s.message}`);
     if (s.candy <= 0) await fail('knocking at the Okafors gave no candy');
