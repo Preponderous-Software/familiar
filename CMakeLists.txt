@@ -47,6 +47,7 @@ endfunction()
 # must give bit-identical results on every compiler.
 add_library(familiar_sim STATIC
   src/sim/doors.cpp
+  src/sim/npc.cpp
   src/sim/town.cpp
   src/sim/world.cpp)
 target_include_directories(familiar_sim PUBLIC src)
@@ -59,7 +60,7 @@ endif()
 
 if(FAMILIAR_BUILD_TESTS)
   enable_testing()
-  foreach(t movement town)
+  foreach(t movement town doors)
     add_executable(test_${t} tests/test_${t}.cpp)
     target_link_libraries(test_${t} PRIVATE familiar_sim)
     target_include_directories(test_${t} PRIVATE tests)

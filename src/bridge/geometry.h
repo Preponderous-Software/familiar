@@ -58,6 +58,10 @@ MeshData buildGate(town::Gate g);
 // colours (clothes, and hair or hat). The scene moves it with a transform.
 MeshData buildFigure(float height, Rgb clothes, Rgb top, Rgb skin);
 
+// A trick-or-treater in costume (look: 1 ghost, 2 pumpkin, 3 skeleton, 4
+// witch; 0 a grown-up in a coat), standing at the origin facing -z.
+MeshData buildCostumed(int look, float height);
+
 // Where the jack-o'-lanterns sit on a house's porch (two each, none at Hale's).
 std::vector<Vec3> pumpkins(town::HouseId h);
 

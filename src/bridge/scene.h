@@ -32,6 +32,9 @@ private:
     std::array<uint32_t, town::GateCount> gate_{};
     std::array<uint32_t, town::HouseCount> neighbour_{};
     int shown_ = -1;  // the neighbour in a doorway, or -1
+    std::array<uint32_t, 7> children_{};
+    uint32_t nana_ = 0;
+    void place(uint32_t id, Vec3 at, float yaw, bool shown);
     size_t meshes_ = 0;
 };
 

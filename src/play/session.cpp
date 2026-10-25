@@ -10,12 +10,12 @@ namespace familiar::play {
 namespace {
 
 // SDL scancodes.
-constexpr int kW = 26, kA = 4, kS = 22, kD = 7, kE = 8, kQ = 20, kLShift = 225, kRShift = 229, kEscape = 41, kF1 = 58;
+constexpr int kW = 26, kA = 4, kS = 22, kD = 7, kE = 8, kQ = 20, kT = 23, kOne = 30, kFour = 33, kLShift = 225, kRShift = 229, kEscape = 41, kF1 = 58;
 constexpr float kLookPerPixel = 0.0025f;
 constexpr float kHurryStick = 0.95f;
 constexpr const char* kGreeting =
-    "Halloween in Hollowell. Nana waves you off from her porch: \"Knock where the porch light's on.\"\n"
-    "Q turns you into a cat, and back.";
+    "Halloween in Hollowell. Nana waves from her porch: \"Pick a costume, love, and knock where the porch light's on.\"\n"
+    "1-4 chooses a costume. Q turns you into a cat, and back.";
 
 }  // namespace
 
@@ -33,6 +33,7 @@ void Session::restart() {
     eyeY_ = eyePosition(w_).y;
     answerSeen_ = -1;
     formSeen_ = w_.form;
+    costumeSeen_ = w_.costume;
     say(kGreeting, 10);
 }
 
@@ -73,6 +74,12 @@ void Session::onKeyDown(int scancode, bool repeat) {
     if (scancode == kE) {
         once_.use = true;
         if (w_.form == Form::Cat && atDoor(w_) < 0) say("A cat can't knock. Q to be Wren again.", 3);
+    } else if (scancode == kT) {
+        once_.trick = true;
+        if (w_.asking < 0) say("Tell a joke (T) when a neighbour asks for a trick.", 3);
+    } else if (scancode >= kOne && scancode <= kFour) {
+        once_.costume = scancode - kOne + 1;
+        if (!canChooseCostume(w_)) say("Costumes are chosen on Nana's walk, before the first knock.", 3);
     } else if (scancode == kQ) {
         if (w_.form == Form::Cat && !canBecomeGirl(w_)) say("No room to be a girl here: get down to the ground first.", 4);
         else once_.toggleForm = true;
@@ -129,6 +136,10 @@ void Session::frame(double dt) {
         answerSeen_ = w_.answeredTick;
         const std::string a = answerText(w_);
         if (!a.empty()) say(a, kAnswerSeconds);
+    }
+    if (w_.costume != costumeSeen_) {
+        costumeSeen_ = w_.costume;
+        if (w_.costume != Costume::None) say(std::string("You are dressed as ") + costumeName(w_.costume) + ".", 3);
     }
     if (w_.form != formSeen_) {
         formSeen_ = w_.form;

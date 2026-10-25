@@ -63,6 +63,7 @@ private:
     double messageUntil_ = 0;
     int64_t answerSeen_ = -1;
     Form formSeen_ = Form::Girl;
+    Costume costumeSeen_ = Costume::None;
 };
 
 }  // namespace familiar::play

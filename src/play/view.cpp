@@ -232,6 +232,7 @@ std::vector<HudLine> hudLines(const World& w) {
     std::vector<HudLine> lines;
     lines.push_back({"31 October  " + clockText(w), true});
     lines.push_back({"Candy     " + std::to_string(w.candy)});
+    if (w.form == Form::Girl) lines.push_back({std::string("Costume   ") + costumeShort(w.costume)});
     lines.push_back({std::string("You are   ") + (w.form == Form::Cat ? "a black cat  (Q: Wren)" : "Wren  (Q: a cat)")});
     lines.push_back({""});
     lines.push_back({"NEXT", true});
@@ -332,7 +333,7 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     if (!here.empty()) py = centred(here, py, ink);
     if (!message.empty()) centred(message, std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine), lamp);
     if (help) {
-        std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock", "Q cat / Wren", "Esc free the mouse",
+        std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock", "T tell a joke", "1-4 costume", "Q cat / Wren", "Esc free the mouse",
                                           "F1 hide help"};
         std::vector<std::string> lines(1);
         for (const std::string& item : items) {
