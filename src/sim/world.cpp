@@ -3,6 +3,8 @@
 #include <cmath>
 #include <cstdio>
 
+#include "sim/doors.h"
+
 namespace familiar {
 
 namespace {
@@ -101,6 +103,19 @@ void tick(World& w, const Input& in) {
     // Forward is (sin yaw, -cos yaw) on the ground; right is (cos yaw, sin yaw).
     if (f != 0 || s != 0) move(w, (sy * f + cy * s) * step, (-cy * f + sy * s) * step);
     ++w.tick;
+    if (in.toggleForm) {
+        if (w.form == Form::Girl) w.form = Form::Cat;
+        else if (canBecomeGirl(w)) w.form = Form::Girl;
+    }
+    doorsTick(w, in);
+}
+
+bool canBecomeGirl(const World& w) {
+    if (w.form == Form::Girl) return true;
+    const Player& p = w.player;
+    if (p.feet > town::groundHeight(p.x, p.z) + 0.6f) return false;  // up on something
+    float feet = 0;
+    return standAt(w, Form::Girl, p.x, p.z, p.feet, feet);
 }
 
 Vec3 eyePosition(const World& w) { return {w.player.x, w.player.feet + body(w.form).eye, w.player.z}; }
@@ -127,6 +142,11 @@ uint64_t fingerprint(const World& w) {
     f.add(w.player.pitch);
     f.add(w.form);
     for (bool g : w.gateOpen) f.add(g);
+    f.add(w.candy);
+    for (bool k : w.knocked) f.add(k);
+    f.add(w.answered);
+    f.add(w.answeredTick);
+    f.add(w.kitty);
     return f.h;
 }
 
