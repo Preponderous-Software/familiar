@@ -146,7 +146,10 @@ uint64_t fingerprint(const World& w) {
     for (bool k : w.knocked) f.add(k);
     f.add(w.answered);
     f.add(w.answeredTick);
-    f.add(w.kitty);
+    f.add(w.answer);
+    f.add(w.asking);
+    f.add(w.jokes);
+    f.add(w.costume);
     return f.h;
 }
 

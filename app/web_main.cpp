@@ -104,6 +104,9 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_status() {
     jsonBool(o, "captured", s.captured());
     jsonBool(o, "help", s.help());
     jsonBool(o, "cat", w.form == Form::Cat);
+    jsonBool(o, "asking", w.asking >= 0);
+    jsonBool(o, "choosing", canChooseCostume(w));
+    o += ",\"costume\":" + std::to_string(static_cast<int>(w.costume));
     o += ",\"message\":";
     jsonString(o, s.message());
     o += ",\"prompt\":";
