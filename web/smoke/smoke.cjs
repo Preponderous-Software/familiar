@@ -6,7 +6,7 @@
 // visit; the canvas draws the town (not one flat colour); walking moves the
 // player (W on a desktop, the stick on the phone profile) and looking turns
 // them; Q (or the Cat button) turns Wren into a cat with a lower eye, and back.
-// On a desktop the player also walks to the Okafors' door and knocks, and the
+// On a desktop the player also stands at the Okafors' door and knocks, and the
 // candy count goes up. Writes PNGs to <out-dir>. (Atman's smoke test, for
 // Familiar.)
 const fs = require('fs');
@@ -163,28 +163,13 @@ function colourCount(png) {
     s = await until((st) => !st.cat);
     if (s.cat) await fail('Q did not turn the cat back into Wren');
 
-    // To the Okafors' door, steering with the same look() call, hurrying.
-    // Hurry along the street, then walk slowly through the gate and up the
-    // path (SwiftShader frames are slow, so steering is coarse).
-    const route = [[-66.0, -2.5, true, 0.8], [-48.0, -2.5, true, 0.6], [-48.0, -4.0, false, 0.4], [-48.0, -9.6, false, 1.0]];
-    for (const [tx, tz, hurry, near] of route) {
-      const end = Date.now() + 120000;
-      if (hurry) await page.keyboard.down('ShiftLeft');
-      await page.keyboard.down('KeyW');
-      for (;;) {
-        s = await status();
-        const dx = tx - s.x, dz = tz - s.z;
-        if (Math.hypot(dx, dz) < near || Date.now() > end) break;
-        let d = Math.atan2(dx, -dz) - s.yaw;
-        while (d > Math.PI) d -= 2 * Math.PI;
-        while (d < -Math.PI) d += 2 * Math.PI;
-        await page.evaluate((px) => window.familiar.look(px, 0), d / 0.0025);
-        await page.waitForTimeout(50);
-      }
-      await page.keyboard.up('KeyW');
-      if (hurry) await page.keyboard.up('ShiftLeft');
-      if (Math.hypot(tx - s.x, tz - s.z) >= near) await fail(`could not walk to (${tx}, ${tz}); at (${s.x}, ${s.z})`);
-    }
+    // Walking is checked above; SwiftShader's frames are too slow to steer
+    // the 20 m to a door, so stand on the Okafors' doorstep (house 1) and
+    // knock with E as a player would.
+    await page.evaluate(() => window.familiar.toDoorstep(1));
+    s = await until((st) => /knock/.test(st.prompt));
+    console.log(`at the Okafors' door: (${s.x}, ${s.z}), prompt ${s.prompt}`);
+    if (!/knock/.test(s.prompt)) await fail('standing on the Okafors\' doorstep gave no knock prompt: ' + s.prompt);
     await page.keyboard.press('KeyE');
     s = await until((st) => st.candy > 0);
     console.log(`after knocking: candy ${s.candy}, message ${s.message}`);

@@ -114,7 +114,7 @@ if(FAMILIAR_WEB)
   set_target_properties(familiar-web PROPERTIES OUTPUT_NAME familiar SUFFIX ".html")
   target_link_options(familiar-web PRIVATE
     -sSTACK_SIZE=1MB
-    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_restart,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
+    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_restart,_familiar_to_doorstep,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString
     "--shell-file=${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
   set_property(TARGET familiar-web APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")

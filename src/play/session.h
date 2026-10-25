@@ -26,6 +26,9 @@ public:
     void frame(double dt);
     bool running() const { return running_; }
     void restart();
+    // Stand on a house's doorstep, facing the door: for the browser smoke test,
+    // whose software-rendered frames are too slow to steer there.
+    void toDoorstep(int house);
 
     void look(float dx, float dy);
     void setStick(float forward, float strafe);

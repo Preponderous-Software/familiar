@@ -36,6 +36,18 @@ void Session::restart() {
     say(kGreeting, 10);
 }
 
+void Session::toDoorstep(int house) {
+    if (house < 0 || house >= town::HouseCount) return;
+    const auto h = static_cast<town::HouseId>(house);
+    const Vec2 d = town::doorstep(h), door = town::doorAt(h);
+    w_.player.x = d.x;
+    w_.player.z = d.z;
+    float feet = 0;
+    if (standAt(w_, w_.form, d.x, d.z, 10.0f, feet)) w_.player.feet = feet;
+    yaw_ = std::atan2(door.x - d.x, -(door.z - d.z));
+    w_.player.yaw = yaw_;
+}
+
 void Session::say(const std::string& text, double seconds) {
     message_ = text;
     messageUntil_ = clock_ + seconds;

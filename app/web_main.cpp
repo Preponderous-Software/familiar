@@ -76,6 +76,9 @@ EMSCRIPTEN_KEEPALIVE void familiar_captured(int on) {
 EMSCRIPTEN_KEEPALIVE void familiar_restart() {
     if (g) g->session->restart();
 }
+EMSCRIPTEN_KEEPALIVE void familiar_to_doorstep(int house) {
+    if (g) g->session->toDoorstep(house);
+}
 EMSCRIPTEN_KEEPALIVE void familiar_cover(double right, double bottom) {
     if (g) g->session->setCover(static_cast<float>(right), static_cast<float>(bottom));
 }
