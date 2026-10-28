@@ -118,4 +118,14 @@ if(FAMILIAR_WEB)
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString
     "--shell-file=${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
   set_property(TARGET familiar-web APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
+  # The loading shell (web/strata-kit, vendored from Strata) and its bridge go
+  # inline into the page, with the download's size (web/strata_page.cmake).
+  set_property(TARGET familiar-web APPEND PROPERTY LINK_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/web/strata-kit/strata-loader.js"
+    "${CMAKE_CURRENT_SOURCE_DIR}/web/strata-boot.js")
+  add_custom_command(TARGET familiar-web POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" "-DHTML=$<TARGET_FILE:familiar-web>"
+            "-DWASM=$<TARGET_FILE_DIR:familiar-web>/$<TARGET_FILE_BASE_NAME:familiar-web>.wasm"
+            "-DWEB=${CMAKE_CURRENT_SOURCE_DIR}/web" -P "${CMAKE_CURRENT_SOURCE_DIR}/web/strata_page.cmake"
+    VERBATIM)
 endif()
