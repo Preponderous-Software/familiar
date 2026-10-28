@@ -29,8 +29,8 @@ The page loads behind the Strata web kit's loading shell
 the page's own colours (no trailer or poster exists yet; add `poster` and `trailer` to the `StrataBoot.start` call in `web/shell.html` when they do) and real progress with the size ("0.5 of 1.3 MB"). The loader streams
 the `.wasm` and hands its bytes to the engine, so nothing downloads twice. If
 Familiar can't run (no WebGL 2, the renderer fails, the engine stops, a lost
-WebGL context does not come back), the shell says why, and plays the trailer instead (the still under `prefers-reduced-motion`).
-A device that draws under 12 frames a second is offered the clip without
+WebGL context does not come back), the shell says why, with a link to more games.
+A device that draws under 12 frames a second is offered that link without
 losing the game (not in automated browsers or `?bench` runs).
 
 `web/strata-boot.js` bridges this classic (non-`MODULARIZE`) build to the
