@@ -201,10 +201,12 @@ function colourCount(png) {
       const r = document.querySelector('.sk-loader');
       return { text: r.innerText, media: !!r.querySelector('video, img'), wide: document.documentElement.scrollWidth > innerWidth };
     });
-    await p2.screenshot({ path: path.join(outDir, 'no-webgl2.png') });
     if (!/WebGL 2/.test(fb.text) || fb.wide) await fail('without WebGL 2 the shell did not say why: ' + JSON.stringify(fb));
     if (engine.length) await fail('without WebGL 2 the engine still downloaded: ' + engine.join(', '));
     console.log('ok: without WebGL 2 the shell ' + (fb.media ? 'shows the trailer and ' : '') + 'says why, and nothing of the engine downloads');
+    // A page screenshot waits for a still frame, which a software-drawn page may not give in time.
+    await p2.screenshot({ path: path.join(outDir, 'no-webgl2.png'), timeout: 15000 })
+      .catch((e) => console.log('(no-WebGL 2 screenshot skipped: ' + String(e.message || e).split('\n')[0] + ')'));
     await bare.close();
   }
 
