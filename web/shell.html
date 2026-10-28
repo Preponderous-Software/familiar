@@ -9,6 +9,8 @@
   :root {
     --bg: #0d0a0f; --panel: rgba(18, 12, 20, 0.88); --line: #3a2a3a; --text: #f2e8dc; --dim: #b3a3a8;
     --lamp: #ff8a1e; --btn: #261b28; --btn-on: #5a2e14;
+    /* The loading shell (web/strata-kit/strata-loader.js) in the page's colours. */
+    --sk-loader-bg: var(--bg); --sk-loader-fg: var(--text); --sk-loader-panel: var(--panel); --sk-loader-accent: var(--lamp);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
@@ -106,7 +108,7 @@
   <div id="clickToPlay"><div><b>Click to play</b><br><span style="color:var(--dim)">Esc frees the mouse</span></div></div>
 </div>
 
-<div id="loading">Loading Familiar&hellip;</div>
+<div id="loading" style="display: none"></div>
 
 <div id="help" class="dialog" role="dialog" aria-labelledby="helpTitle">
   <h2 id="helpTitle">Familiar</h2>
@@ -316,6 +318,7 @@
       window.familiar = call;  // for the smoke test and the curious
       ready = true;
       $('loading').style.display = 'none';
+      StrataBoot.ready();
       setTouch(touchMode);
       wire();
       sizeCanvas();
@@ -326,6 +329,7 @@
     },
     onRendererFailed: function (why) {
       $('loading').textContent = 'Familiar needs WebGL 2, which this browser did not provide (' + why + ').';
+      StrataLoader.fallback('engine', 'Familiar needs WebGL 2, which this browser did not provide (' + why + ').');
     },
     onAbort: function (what) {
       $('loading').style.display = 'block';
@@ -334,6 +338,22 @@
   };
 })();
 </script>
-{{{ SCRIPT }}}
+<!-- emcc's script tag, kept inert: web/strata-boot.js starts it behind the
+     loading shell. data-bytes is the download's size, stamped by the build. -->
+<template id="strata-glue" data-bytes="0">{{{ SCRIPT }}}</template>
+<!-- The loading shell, vendored from Strata, and its bridge to this build; the
+     build puts both inline (web/strata_page.cmake). -->
+<script src="strata-kit/strata-loader.js"></script>
+<script src="strata-boot.js"></script>
+<script>
+  // The loading shell: real progress, and the reason in words if the game
+  // can't run here (no trailer or poster exists yet to show instead).
+  StrataBoot.start({
+    wasm: 'familiar.wasm',
+    title: 'Familiar',
+    fallback: { href: 'https://danielstephenson.dev/play', text: 'More games' },
+    canvas: document.getElementById('canvas')
+  }).catch(function () {});  // the loading shell already shows why
+</script>
 </body>
 </html>
