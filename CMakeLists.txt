@@ -72,14 +72,14 @@ if(FAMILIAR_BUILD_TESTS)
 endif()
 
 # ---------------------------------------------------------------- the game on Strata
-# Strata is fetched at FAMILIAR_STRATA_REF (the v0.6.0 tag: ABI 1.12), or
+# Strata is fetched at FAMILIAR_STRATA_REF (the v0.7.0 tag: ABI 1.12), or
 # taken from a local checkout with -DFETCHCONTENT_SOURCE_DIR_STRATA=<path>.
 # The desktop game (FAMILIAR_WITH_STRATA) and the browser game (FAMILIAR_WEB)
 # share everything but their main().
 if(FAMILIAR_WITH_STRATA OR FAMILIAR_WEB)
   cmake_minimum_required(VERSION 3.24)
   include(FetchContent)
-  set(FAMILIAR_STRATA_REF "c2d7ee4c1102726c654c90d8361383d9ba3590b3" CACHE STRING "Strata git ref (a full commit SHA)")
+  set(FAMILIAR_STRATA_REF "20827c3d67e71c1f942c29e7cf8adfa4801188a8" CACHE STRING "Strata git ref (a full commit SHA)")
   set(STRATA_BUILD_TESTS OFF CACHE BOOL "" FORCE)
   set(STRATA_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
   set(STRATA_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
