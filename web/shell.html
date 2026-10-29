@@ -65,6 +65,10 @@
   body.asking #pad #trickBtn { display: block; }
   #costumes { position: absolute; left: 50%; transform: translateX(-50%); bottom: 12px; z-index: 2; display: none; gap: 6px; }
   body.choosing #costumes { display: flex; }
+  /* On a phone the centred row runs under the action pad; sit it bottom left, above the stick hint. */
+  body.touch #costumes { left: max(10px, env(safe-area-inset-left)); transform: none; bottom: 36px;
+    flex-wrap: wrap; width: 176px; }
+  body.touch #costumes button { flex: 1 1 80px; min-height: 44px; }
   #clickToPlay { position: absolute; inset: 0; z-index: 1; display: none; align-items: center; justify-content: center;
     background: rgba(10, 6, 10, 0.35); cursor: pointer; }
   #clickToPlay div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; text-align: center; }
