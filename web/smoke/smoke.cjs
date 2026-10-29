@@ -117,7 +117,9 @@ function colourCount(png) {
     s = await until((st) => /latch/.test(st.prompt) && st.use === 'Open');
     console.log(`in Mr. Hale's yard: (${s.x}, ${s.z}), prompt ${s.prompt}, button ${s.use}`);
     if (!/latch/.test(s.prompt) || s.use !== 'Open') await fail('inside Mr. Hale\'s yard the cat was offered no latch: ' + s.prompt + ' / ' + s.use);
-    if (phone && (await page.locator('#use').innerText()).trim() !== 'Open') await fail('the action button does not say Open at the latch');
+    // The page relabels its buttons from the status every 250 ms.
+    if (phone && !(await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Open', null, { timeout: 10000 }).catch(() => false)))
+      await fail('the action button does not say Open at the latch: ' + (await page.locator('#use').innerText()));
     await use();
     s = await until((st) => st.haleGate);
     if (!s.haleGate) await fail('the cat did not open Mr. Hale\'s gate');
