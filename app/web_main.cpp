@@ -11,6 +11,7 @@
 
 #include "play/session.h"
 #include "play/view.h"
+#include "sim/cat.h"
 #include "sim/doors.h"
 #include "strata/strata.hpp"
 
@@ -79,6 +80,9 @@ EMSCRIPTEN_KEEPALIVE void familiar_restart() {
 EMSCRIPTEN_KEEPALIVE void familiar_to_doorstep(int house) {
     if (g) g->session->toDoorstep(house);
 }
+EMSCRIPTEN_KEEPALIVE void familiar_to_spot(int spot) {
+    if (g) g->session->toSpot(spot);
+}
 EMSCRIPTEN_KEEPALIVE void familiar_cover(double right, double bottom) {
     if (g) g->session->setCover(static_cast<float>(right), static_cast<float>(bottom));
 }
@@ -107,6 +111,15 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_status() {
     jsonBool(o, "asking", w.asking >= 0);
     jsonBool(o, "choosing", canChooseCostume(w));
     o += ",\"costume\":" + std::to_string(static_cast<int>(w.costume));
+    jsonBool(o, "bagDown", w.bagDown);
+    jsonBool(o, "haleGate", w.gateOpen[town::HaleGate]);
+    jsonBool(o, "lychgate", w.gateOpen[town::Lychgate]);
+    int shown = 0;
+    for (const Walker& sp : spirits(w)) shown += sp.shown ? 1 : 0;
+    o += ",\"spiritsShown\":" + std::to_string(shown);
+    o += ",\"spiritsSeen\":" + std::to_string(spiritsSeen(w));
+    o += ",\"use\":";
+    jsonString(o, useLabel(w));
     o += ",\"message\":";
     jsonString(o, s.message());
     o += ",\"prompt\":";

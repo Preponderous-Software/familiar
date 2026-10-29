@@ -513,4 +513,44 @@ MeshData buildCostumed(int look, float height) {
     return m;
 }
 
+MeshData buildSpirit(int who, float height) {
+    // Moonlight colours, kept plain: the town's own dead, as they were, not
+    // anything frightening.
+    const float k = height / 1.7f;
+    const Rgb coat{0.62f, 0.72f, 0.85f}, pale{0.80f, 0.86f, 0.95f}, dim{0.45f, 0.55f, 0.72f};
+    MeshData m;
+    m.cylinder({0, 0, 0}, 0.24f * k, 0.19f * k, 0.9f * k, 12, coat);  // a long coat or skirt
+    m.cylinder({0, 0.9f * k, 0}, 0.21f * k, 0.16f * k, 0.55f * k, 12, coat);
+    m.blob({0, 1.55f * k, 0}, 0.13f * k, 1.15f, pale);
+    switch (who) {
+        case 0:  // the reader: a shawl
+            m.cylinder({0, 1.3f * k, 0}, 0.25f * k, 0.15f * k, 0.18f * k, 12, dim);
+            break;
+        case 1:  // the farmer: a flat cap
+            m.cylinder({0, 1.64f * k, -0.02f * k}, 0.15f * k, 0.13f * k, 0.06f * k, 10, dim);
+            m.box({-0.1f * k, 1.64f * k, -0.24f * k}, {0.1f * k, 1.67f * k, -0.1f * k}, dim);
+            break;
+        case 2:  // the fiddler: his fiddle case under his arm
+            m.orientedBox({0.2f * k, 0.95f * k, -0.25f * k}, {0.1f * k, 0, 0}, {0, 0.22f * k, 0}, {0, 0.05f * k, 0.6f * k}, dim);
+            break;
+        default:  // the lamplighter: a peaked cap and his long pole
+            m.cylinder({0, 1.63f * k, 0}, 0.15f * k, 0.15f * k, 0.08f * k, 10, dim);
+            m.box({0.26f * k, 0.0f, -0.32f * k}, {0.3f * k, 2.3f * k, -0.28f * k}, dim);
+            break;
+    }
+    return m;
+}
+
+MeshData buildBag() {
+    MeshData m;
+    const Rgb orange{0.70f, 0.22f, 0.02f}, black{0.03f, 0.03f, 0.03f};
+    m.box({-0.16f, 0.0f, -0.1f}, {0.16f, 0.34f, 0.1f}, orange);
+    // A black jack-o'-lantern face on each broad side, and the handles.
+    for (float z : {-0.101f, 0.101f}) m.box({-0.07f, 0.15f, z - 0.001f}, {0.07f, 0.2f, z + 0.001f}, black);
+    m.box({-0.12f, 0.34f, -0.02f}, {-0.09f, 0.46f, 0.02f}, orange);
+    m.box({0.09f, 0.34f, -0.02f}, {0.12f, 0.46f, 0.02f}, orange);
+    m.box({-0.12f, 0.43f, -0.02f}, {0.12f, 0.46f, 0.02f}, orange);
+    return m;
+}
+
 }  // namespace familiar::bridge

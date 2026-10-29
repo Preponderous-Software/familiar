@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "sim/cat.h"
 #include "sim/doors.h"
 
 namespace familiar::play {
@@ -34,6 +35,9 @@ void Session::restart() {
     answerSeen_ = -1;
     formSeen_ = w_.form;
     costumeSeen_ = w_.costume;
+    bagSeen_ = w_.bagDown;
+    gatesSeen_ = w_.gateOpen;
+    spiritSeen_ = -1;
     say(kGreeting, 10);
 }
 
@@ -46,6 +50,27 @@ void Session::toDoorstep(int house) {
     float feet = 0;
     if (standAt(w_, w_.form, d.x, d.z, 10.0f, feet)) w_.player.feet = feet;
     yaw_ = std::atan2(door.x - d.x, -(door.z - d.z));
+    w_.player.yaw = yaw_;
+}
+
+void Session::toSpot(int spot) {
+    struct Place {
+        float x, z, yaw;
+    };
+    const float gx = (town::kLychgateX0 + town::kLychgateX1) / 2;
+    const Place places[SpotCount] = {
+        {-34.9f, town::kHaleGateZ, -kPi / 2},      // inside Mr. Hale's yard, at the latch
+        {gx, -30.9f, kPi},                         // inside the churchyard, at the lychgate's bolt
+        {35.0f, -37.0f, 1.89f},                    // among the stones, facing the farmer
+        {44.0f, town::kHedgeGapZ, -kPi / 2},       // outside the hedge gap
+    };
+    if (spot < 0 || spot >= SpotCount) return;
+    const Place& p = places[spot];
+    w_.player.x = p.x;
+    w_.player.z = p.z;
+    float feet = 0;
+    if (standAt(w_, w_.form, p.x, p.z, 0.0f, feet)) w_.player.feet = feet;
+    yaw_ = p.yaw;
     w_.player.yaw = yaw_;
 }
 
@@ -85,7 +110,9 @@ void Session::onKeyDown(int scancode, bool repeat) {
     if (repeat) return;
     if (scancode == kE) {
         once_.use = true;
-        if (w_.form == Form::Cat && atDoor(w_) < 0) say("A cat can't knock. Q to be Wren again.", 3);
+        if (w_.form == Form::Cat && atDoor(w_) < 0 && latchHere(w_) < 0) say("A cat can't knock, or carry things. Q to be Wren again.", 3);
+        else if (w_.form == Form::Girl && w_.bagDown && atDoor(w_) >= 0 && !nearBag(w_))
+            say("You need your candy bag to trick-or-treat. It's where you became a cat.", 4);
     } else if (scancode == kT) {
         once_.trick = true;
         if (w_.asking < 0) say("Tell a joke (T) when a neighbour asks for a trick.", 3);
@@ -155,9 +182,29 @@ void Session::frame(double dt) {
     }
     if (w_.form != formSeen_) {
         formSeen_ = w_.form;
-        say(w_.form == Form::Cat ? "You are a black cat: small, quick, and you can jump onto fences and sheds."
-                                 : "You are Wren again.",
-            3);
+        if (w_.form == Form::Cat)
+            say("You are a black cat: small and quick. Jump onto fences and sheds, slip through gaps. "
+                "Your candy bag stays here on the ground; a cat can't carry it.",
+                5);
+        else say(w_.bagDown ? "You are Wren again. Your candy bag is where you left it." : "You are Wren again.", 3);
+        bagSeen_ = w_.bagDown;
+    }
+    if (w_.bagDown != bagSeen_) {
+        bagSeen_ = w_.bagDown;
+        if (!w_.bagDown) say("You pick up your candy bag.", 3);
+    }
+    for (int g = 0; g < town::GateCount; ++g) {
+        if (w_.gateOpen[static_cast<size_t>(g)] == gatesSeen_[static_cast<size_t>(g)]) continue;
+        gatesSeen_[static_cast<size_t>(g)] = w_.gateOpen[static_cast<size_t>(g)];
+        say(g == town::HaleGate ? "Click. The latch lifts and Mr. Hale's gate swings open."
+                                : "The old bolt slides back, and the lychgate stands open.",
+            4);
+    }
+    // A spirit the cat meets: what she sees, once each time she comes near.
+    const int near = spiritNear(w_);
+    if (near != spiritSeen_) {
+        spiritSeen_ = near;
+        if (near >= 0) say(spiritText(near), 8);
     }
     // The eye eases toward its height, so a change of form or a drop is not a jump cut.
     const float target = eyePosition(w_).y;

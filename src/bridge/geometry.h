@@ -62,6 +62,13 @@ MeshData buildFigure(float height, Rgb clothes, Rgb top, Rgb skin);
 // witch; 0 a grown-up in a coat), standing at the origin facing -z.
 MeshData buildCostumed(int look, float height);
 
+// A spirit (sim/cat.h SpiritId), standing at the origin facing -z: a pale,
+// plain figure the scene draws translucent and unlit, seen only by the cat.
+MeshData buildSpirit(int who, float height);
+
+// Wren's candy bag, set down on the ground (its bottom at the origin).
+MeshData buildBag();
+
 // Where the jack-o'-lanterns sit on a house's porch (two each, none at Hale's).
 std::vector<Vec3> pumpkins(town::HouseId h);
 

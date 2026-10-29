@@ -4,6 +4,7 @@
 // session, cut down: no saves yet.)
 #pragma once
 
+#include <array>
 #include <string>
 
 #include "bridge/scene.h"
@@ -29,6 +30,10 @@ public:
     // Stand on a house's doorstep, facing the door: for the browser smoke test,
     // whose software-rendered frames are too slow to steer there.
     void toDoorstep(int house);
+    // Stand at one of the cat's places (Spot), in the form given: for the
+    // browser smoke test, like toDoorstep.
+    enum Spot { HaleLatch = 0, LychgateInside = 1, Churchyard = 2, HedgeGap = 3, SpotCount };
+    void toSpot(int spot);
 
     void look(float dx, float dy);
     void setStick(float forward, float strafe);
@@ -67,6 +72,9 @@ private:
     int64_t answerSeen_ = -1;
     Form formSeen_ = Form::Girl;
     Costume costumeSeen_ = Costume::None;
+    bool bagSeen_ = false;
+    std::array<bool, town::GateCount> gatesSeen_{};
+    int spiritSeen_ = -1;
 };
 
 }  // namespace familiar::play

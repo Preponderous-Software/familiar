@@ -34,6 +34,17 @@ whose top is no more than its climb above its feet (Wren 0.5 m: a porch, not a f
 on the highest solid it overlaps. Anything taller stops it. Gaps are just gaps: the hedge's gap is
 narrower than Wren and wider than the cat. Gates are solids that stop counting once opened.
 
+## The cat
+
+`src/sim/cat.*` holds the rest of what being a cat changes (M3). A cat cannot carry the candy bag,
+so it stays where Wren changed (`World::bag`) until she picks it up, by changing back beside it or
+with E; Wren cannot trick-or-treat without it, and a cat at a door only gets a treat for the kitty.
+Mr. Hale's gate and the lychgate open only from the inside, with E as a cat within reach of the
+latch. The spirits (three in the churchyard and the lamplighter on the hill path) are, like the
+children, a function of the clock alone; only the cat sees them, and `World::spiritsSeen` records
+each one she has met. They are the game's fairy tale, labelled as such on the page, and gentle,
+per the [sensitivity notes](RESEARCH.md#sensitivity-notes).
+
 ## Reused
 
 | From | What |

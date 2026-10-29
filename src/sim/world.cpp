@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdio>
 
+#include "sim/cat.h"
 #include "sim/doors.h"
 
 namespace familiar {
@@ -103,11 +104,15 @@ void tick(World& w, const Input& in) {
     // Forward is (sin yaw, -cos yaw) on the ground; right is (cos yaw, sin yaw).
     if (f != 0 || s != 0) move(w, (sy * f + cy * s) * step, (-cy * f + sy * s) * step);
     ++w.tick;
+    const Form before = w.form;
     if (in.toggleForm) {
         if (w.form == Form::Girl) w.form = Form::Cat;
         else if (canBecomeGirl(w)) w.form = Form::Girl;
     }
-    doorsTick(w, in);
+    // The bag, the latches and the spirits come first: E used there is not a knock.
+    Input rest = in;
+    if (catTick(w, in, before)) rest.use = false;
+    doorsTick(w, rest);
 }
 
 bool canBecomeGirl(const World& w) {
@@ -150,6 +155,11 @@ uint64_t fingerprint(const World& w) {
     f.add(w.asking);
     f.add(w.jokes);
     f.add(w.costume);
+    f.add(w.bagDown);
+    f.add(w.bag.x);
+    f.add(w.bag.y);
+    f.add(w.bag.z);
+    f.add(w.spiritsSeen);
     return f.h;
 }
 

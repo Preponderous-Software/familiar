@@ -84,7 +84,7 @@ jobs:
         run: |
           mkdir -p tour
           ./build/familiar --headless --tour --frames tour --width 960 --height 540
-          test "$(ls tour/*.png | wc -l)" -eq 9
+          test "$(ls tour/*.png | wc -l)" -eq 12
       - uses: actions/upload-artifact@v4
         with:
           name: tour-linux

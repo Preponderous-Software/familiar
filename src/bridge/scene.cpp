@@ -1,5 +1,6 @@
 #include "bridge/scene.h"
 
+#include "sim/cat.h"
 #include "sim/doors.h"
 #include "sim/npc.h"
 
@@ -49,6 +50,10 @@ Scene::Scene(strata::Engine& engine) : engine_(engine) {
     for (size_t i = 0; i < children_.size() && i < kids.size(); ++i) children_[i] = upload(buildCostumed(kids[i].look, kids[i].height));
     const Look& n = kLooks[T::Nana];
     nana_ = upload(buildFigure(n.height, n.clothes, n.top, n.skin));
+    const std::vector<Walker> ss = spirits(World{});
+    for (size_t i = 0; i < spirits_.size() && i < ss.size(); ++i)
+        spirits_[i] = upload(buildSpirit(ss[i].look, ss[i].height), true, 0.42f);
+    bag_ = upload(buildBag());
 }
 
 // Turns a figure built facing -z to `yaw` and stands it at `at`; hidden ones go
@@ -66,6 +71,9 @@ void Scene::update(const World& w) {
     for (size_t i = 0; i < children_.size() && i < kids.size(); ++i) place(children_[i], kids[i].at, kids[i].yaw, kids[i].shown);
     const Walker n = nana(w);
     place(nana_, n.at, n.yaw, n.shown);
+    const std::vector<Walker> ss = spirits(w);
+    for (size_t i = 0; i < spirits_.size() && i < ss.size(); ++i) place(spirits_[i], ss[i].at, ss[i].yaw, ss[i].shown);
+    place(bag_, w.bag, 0.4f, w.bagDown);
     for (int g = 0; g < T::GateCount; ++g) {
         const bool shut = !w.gateOpen[static_cast<size_t>(g)];
         if (shut && !gate_[static_cast<size_t>(g)]) gate_[static_cast<size_t>(g)] = upload(buildGate(static_cast<T::Gate>(g)));
@@ -103,6 +111,8 @@ Scene::~Scene() {
         for (uint32_t& id : neighbour_) remove(id);
         for (uint32_t& id : children_) remove(id);
         remove(nana_);
+        for (uint32_t& id : spirits_) remove(id);
+        remove(bag_);
         remove(town_);
         remove(glow_);
         remove(water_);
@@ -111,7 +121,7 @@ Scene::~Scene() {
     }
 }
 
-uint32_t Scene::upload(const MeshData& m, bool unlit) {
+uint32_t Scene::upload(const MeshData& m, bool unlit, float alpha) {
     if (m.empty()) return 0;
     StrataMesh mesh{};
     mesh.positions = m.positions.data();
@@ -120,12 +130,12 @@ uint32_t Scene::upload(const MeshData& m, bool unlit) {
     mesh.indices = m.indices.data();
     mesh.vertex_count = static_cast<int32_t>(m.vertexCount());
     mesh.index_count = static_cast<int32_t>(m.indices.size());
-    mesh.color[3] = 1;
+    mesh.color[3] = alpha;
     ++meshes_;
-    if (!unlit) return engine_.addMesh(mesh);
+    if (!unlit && alpha >= 1.0f) return engine_.addMesh(mesh);
     StrataTexturedMesh tm{};
     tm.mesh = mesh;
-    tm.flags = STRATA_MESH_UNLIT;
+    tm.flags = (unlit ? STRATA_MESH_UNLIT : 0u) | (alpha < 1.0f ? STRATA_MESH_TRANSLUCENT : 0u);
     return engine_.addTexturedMesh(tm);
 }
 
