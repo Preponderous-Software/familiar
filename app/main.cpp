@@ -1,17 +1,29 @@
 // familiar: the game on the Strata engine.
 //
-//   familiar [--seed N] [--width W --height H]
+//   familiar [--seed N] [--slot DIR] [--fresh] [--width W --height H]
+//   familiar --autopilot [--width W --height H]
 //   familiar --headless --tour --frames DIR [--width W --height H]
+//   familiar --headless --autopilot [--frames DIR] [--slot DIR] [--width W --height H]
 //   familiar --version
 //
 // Controls: mouse to look, W A S D to walk, Shift to hurry, E to knock or use
 // (light, pick, buy, stir, offer), T to tell a joke, Q to turn into a cat and
-// back, Tab for Wren's notebook, F1 for help, Esc to free the mouse (Esc again quits).
+// back, Tab for Wren's notebook, F5 to save, F9 to load the last save, F1 for
+// help, Esc to free the mouse (Esc again quits).
+//
+// The game continues the save in DIR (default: the user's data directory, see
+// src/save/save.h), or starts a new night with --fresh; it saves every two
+// minutes of play, on F5 and on quitting. --autopilot lets the autopilot play
+// the night (src/sim/autopilot.h) and never saves.
 //
 // --tour walks a fixed route through town into the night, as Wren and as
 // the cat (over a fence, onto Nana's roof, into Mr. Hale's yard and the
 // churchyard to open their gates, past the spirits); headless, it writes a
 // screenshot at each stop to DIR.
+// --headless --autopilot plays the whole playthrough, writes a screenshot
+// each time the autopilot turns to something new if --frames is given, and
+// fails unless it ends on the pinned fingerprint; with --slot it also saves at
+// each of those points and plays on from what it loads back.
 #include <cinttypes>
 #include <cmath>
 #include <cstdio>
@@ -21,6 +33,8 @@
 #include "bridge/scene.h"
 #include "play/session.h"
 #include "play/view.h"
+#include "save/save.h"
+#include "sim/autopilot.h"
 #include "sim/cat.h"
 #include "sim/craft.h"
 #include "sim/doors.h"
@@ -36,8 +50,8 @@ namespace {
 
 struct Args {
     uint64_t seed = 1;
-    bool headless = false, tour = false;
-    std::string framesDir;
+    bool headless = false, tour = false, autopilot = false, fresh = false;
+    std::string framesDir, slot;
     int width = 1280, height = 720;
 };
 
@@ -54,6 +68,9 @@ bool parseArgs(int argc, char** argv, Args& a) {
         if (s == "--seed") a.seed = std::strtoull(next("--seed"), nullptr, 10);
         else if (s == "--headless") a.headless = true;
         else if (s == "--tour") a.tour = true;
+        else if (s == "--autopilot") a.autopilot = true;
+        else if (s == "--fresh") a.fresh = true;
+        else if (s == "--slot") a.slot = next("--slot");
         else if (s == "--frames") a.framesDir = next("--frames");
         else if (s == "--width") a.width = std::atoi(next("--width"));
         else if (s == "--height") a.height = std::atoi(next("--height"));
@@ -65,8 +82,12 @@ bool parseArgs(int argc, char** argv, Args& a) {
             return false;
         }
     }
-    if (a.headless && !a.tour) {
-        std::fprintf(stderr, "familiar: --headless needs --tour\n");
+    if (a.headless && !a.tour && !a.autopilot) {
+        std::fprintf(stderr, "familiar: --headless needs --tour or --autopilot\n");
+        return false;
+    }
+    if (a.tour && a.autopilot) {
+        std::fprintf(stderr, "familiar: --tour and --autopilot are two different walks; choose one\n");
         return false;
     }
     return true;
@@ -319,9 +340,49 @@ int runTour(strata::Engine& engine, const Args& args) {
     return 0;
 }
 
+// ---- the autopilot's playthrough, headless
+int runAutopilot(strata::Engine& engine, const Args& args) {
+    World w = newWorld(1);  // the pinned playthrough is seed 1's
+    bridge::Scene scene(engine);
+    std::string doing;
+    int shots = 0, reloads = 0;
+    while (!playthroughDone(w) && w.tick < kPlaythroughLimit) {
+        tick(w, autopilot(w));
+        if (doing == autopilotDoing(w)) continue;
+        doing = autopilotDoing(w);
+        if (!args.slot.empty()) {
+            // Save here and play on from what the slot gives back.
+            std::string why;
+            World back;
+            if (!writeSave(args.slot, w, &why) || !loadSave(args.slot, back).ok || fingerprint(back) != fingerprint(w)) {
+                std::fprintf(stderr, "familiar: the save at %s did not come back the same %s\n", clockText(w).c_str(), why.c_str());
+                return 1;
+            }
+            w = back;
+            ++reloads;
+        }
+        scene.update(w);
+        play::render(engine, w, false, eyePosition(w).y, false, answerText(w));
+        engine.present();
+        std::printf("%-30s (%7.2f, %7.2f) at %s, candy %d\n", doing.c_str(), w.player.x, w.player.z, clockText(w).c_str(), w.candy);
+        if (!args.framesDir.empty()) {
+            char name[32];
+            std::snprintf(name, sizeof name, "/autopilot-%02d.png", ++shots);
+            engine.saveScreenshotPng(args.framesDir + name);
+        }
+    }
+    const uint64_t fp = fingerprint(w);
+    std::printf("playthrough %s at %s, %d candy, %d saves reloaded, fingerprint %016" PRIx64 " (pinned %016" PRIx64 ")\n",
+                playthroughDone(w) ? "done" : "NOT done", clockText(w).c_str(), w.candy, reloads, fp, kPlaythroughFingerprint);
+    return playthroughDone(w) && fp == kPlaythroughFingerprint ? 0 : 1;
+}
+
 int runGame(strata::Engine& engine, const Args& args) {
     play::SessionOptions o;
     o.seed = args.seed;
+    o.autopilot = args.autopilot;
+    o.fresh = args.fresh;
+    if (!args.autopilot) o.slot = args.slot.empty() ? defaultSlot() : args.slot;
     play::Session session(engine, o);
     while (session.running()) {
         StrataEvent e;
@@ -329,6 +390,7 @@ int runGame(strata::Engine& engine, const Args& args) {
         session.frame(engine.frameSeconds());
         engine.present();
     }
+    session.save("");  // on quitting
     return 0;
 }
 
@@ -337,8 +399,10 @@ int runGame(strata::Engine& engine, const Args& args) {
 int main(int argc, char** argv) {
     Args args;
     if (!parseArgs(argc, argv, args)) {
-        std::puts("usage: familiar [--seed N] [--width W --height H]\n"
+        std::puts("usage: familiar [--seed N] [--slot DIR] [--fresh] [--width W --height H]\n"
+                  "       familiar --autopilot [--width W --height H]\n"
                   "       familiar --headless --tour --frames DIR [--width W --height H]\n"
+                  "       familiar --headless --autopilot [--frames DIR] [--slot DIR] [--width W --height H]\n"
                   "       familiar --version");
         return 2;
     }
@@ -352,6 +416,7 @@ int main(int argc, char** argv) {
         auto engine = strata::Engine::create(desc);
         play::setLighting(*engine);
         if (args.tour) return runTour(*engine, args);
+        if (args.headless && args.autopilot) return runAutopilot(*engine, args);
         return runGame(*engine, args);
     } catch (const strata::Error& e) {
         std::fprintf(stderr, "familiar: %s\n", e.what());

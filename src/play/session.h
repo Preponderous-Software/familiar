@@ -1,10 +1,17 @@
 // A game being played: the world, the scene, the input and the messages, one
 // frame at a time. The desktop game (app/main.cpp) drives it from its own
 // loop; the browser game (app/web_main.cpp) from the browser's. (Atman's
-// session, cut down: no saves yet.)
+// session, cut down.)
+//
+// Saves: with a slot, the session continues the slot's save when it starts
+// (or the previous save, if the latest is damaged, and says so), saves every
+// two minutes of play, on F5 and when asked (save()), and loads on F9. New
+// (restart) starts the night over; the next save replaces the current one,
+// which is kept as the previous save.
 #pragma once
 
 #include <array>
+#include <functional>
 #include <string>
 
 #include "bridge/scene.h"
@@ -17,6 +24,11 @@ namespace familiar::play {
 struct SessionOptions {
     uint64_t seed = 1;
     bool browser = false;  // the page owns the pointer lock and the canvas size; Esc never quits
+    std::string slot;      // the save slot directory; empty = no saves
+    bool fresh = false;    // start a new night even if the slot has a save
+    bool autopilot = false;  // the autopilot plays (src/sim/autopilot.h); never saves
+    // Called after every save written (the browser flushes it to IndexedDB).
+    std::function<void()> afterSave;
 };
 
 class Session {
@@ -27,6 +39,10 @@ public:
     void frame(double dt);
     bool running() const { return running_; }
     void restart();
+    // Writes the save now; `note` is shown on success. False with no slot or on failure.
+    bool save(const char* note);
+    // Loads the slot's save (or its previous save), if it can.
+    bool load();
     // Stand on a house's doorstep, facing the door: for the browser smoke test,
     // whose software-rendered frames are too slow to steer there.
     void toDoorstep(int house);
@@ -55,6 +71,7 @@ public:
     const std::string& message() const { return message_; }
 
 private:
+    void adopt(const World& w);
     void capture(bool on);
     void onKeyDown(int scancode, bool repeat);
     void step();
@@ -71,7 +88,7 @@ private:
     float yaw_ = 0, pitch_ = 0;
     float stickForward_ = 0, stickStrafe_ = 0;
     Input once_;
-    double pending_ = 0, clock_ = 0;
+    double pending_ = 0, clock_ = 0, lastSave_ = 0;
     float eyeY_ = 0;
     std::string message_;
     double messageUntil_ = 0;

@@ -85,10 +85,18 @@ jobs:
           mkdir -p tour
           ./build/familiar --headless --tour --frames tour --width 960 --height 540
           test "$(ls tour/*.png | wc -l)" -eq 21
+      - name: Autopilot playthrough (saved and reloaded at every step, pinned fingerprint)
+        run: |
+          mkdir -p autopilot
+          ./build/familiar --headless --autopilot --frames autopilot --slot autopilot/slot --width 960 --height 540
+          test -f autopilot/slot/familiar.save
+          test -f autopilot/slot/familiar.save.prev
       - uses: actions/upload-artifact@v4
         with:
           name: tour-linux
-          path: tour/
+          path: |
+            tour/
+            autopilot/
 
   game-windows:
     name: Game (Windows, MSVC)

@@ -46,6 +46,7 @@ endfunction()
 # GPU, so it builds and tests in seconds. Never fuse multiply-adds: the rules
 # must give bit-identical results on every compiler.
 add_library(familiar_sim STATIC
+  src/sim/autopilot.cpp
   src/sim/cat.cpp
   src/sim/craft.cpp
   src/sim/doors.cpp
@@ -61,11 +62,18 @@ else()
   target_compile_options(familiar_sim PRIVATE -ffp-contract=off)
 endif()
 
+# Saves: the World as checksummed bytes, written atomically with the previous
+# save kept (src/save/save.h).
+add_library(familiar_save STATIC src/save/save.cpp src/save/sha256.cpp)
+target_link_libraries(familiar_save PUBLIC familiar_sim)
+familiar_warnings(familiar_save)
+
 if(FAMILIAR_BUILD_TESTS)
   enable_testing()
-  foreach(t movement town doors cat craft)
+  foreach(t movement town doors cat craft autopilot saves)
     add_executable(test_${t} tests/test_${t}.cpp)
-    target_link_libraries(test_${t} PRIVATE familiar_sim)
+    target_link_libraries(test_${t} PRIVATE familiar_sim familiar_save)
+    target_compile_definitions(test_${t} PRIVATE FAMILIAR_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
     target_include_directories(test_${t} PRIVATE tests)
     target_compile_definitions(test_${t} PRIVATE FAMILIAR_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
     familiar_warnings(test_${t})
@@ -74,6 +82,13 @@ if(FAMILIAR_BUILD_TESTS)
     endif()
     add_test(NAME ${t} COMMAND test_${t} "${CMAKE_CURRENT_BINARY_DIR}")
   endforeach()
+  # Writes a new format's fixtures (never an old one's): see tools/make_save_fixtures.cpp.
+  add_executable(make_save_fixtures tools/make_save_fixtures.cpp)
+  target_link_libraries(make_save_fixtures PRIVATE familiar_save)
+  familiar_warnings(make_save_fixtures)
+  if(EMSCRIPTEN)
+    target_link_options(make_save_fixtures PRIVATE -sNODERAWFS=1)
+  endif()
 endif()
 
 # ---------------------------------------------------------------- the game on Strata
@@ -99,7 +114,7 @@ if(FAMILIAR_WITH_STRATA OR FAMILIAR_WEB)
 
   add_library(familiar_play STATIC src/bridge/geometry.cpp src/bridge/scene.cpp src/play/session.cpp src/play/view.cpp)
   target_include_directories(familiar_play PUBLIC src)
-  target_link_libraries(familiar_play PUBLIC familiar_sim strata::static)
+  target_link_libraries(familiar_play PUBLIC familiar_sim familiar_save strata::static)
   familiar_warnings(familiar_play)
 endif()
 
@@ -119,8 +134,9 @@ if(FAMILIAR_WEB)
   set_target_properties(familiar-web PROPERTIES OUTPUT_NAME familiar SUFFIX ".html")
   target_link_options(familiar-web PRIVATE
     -sSTACK_SIZE=1MB
-    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_restart,_familiar_to_doorstep,_familiar_to_spot,_familiar_to_place,_familiar_notebook,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
-    -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString
+    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_save,_familiar_restart,_familiar_to_doorstep,_familiar_to_spot,_familiar_to_place,_familiar_notebook,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
+    -lidbfs.js
+    -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,FS,IDBFS,addRunDependency,removeRunDependency
     "--shell-file=${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
   set_property(TARGET familiar-web APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
   # The loading shell (web/strata-kit, vendored from Strata) and its bridge go

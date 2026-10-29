@@ -20,7 +20,10 @@
 // notebook. On the phone no two controls overlap, and all are on screen.
 // The familiar.toPlace hook stands Wren at one of the night's places
 // (sim/craft.h); every action is then done with the real keys and buttons.
-// Writes PNGs to <out-dir>. (Atman's smoke test, for
+// Then saves: a save survives a reload (IndexedDB) with the same place, time,
+// costume, candy and bag and a "Loaded your save" message; and with the latest
+// save damaged on purpose (one byte flipped), a reload refuses it, says so, and
+// loads the save before it. Writes PNGs to <out-dir>. (Atman's smoke test, for
 // Familiar.)
 const fs = require('fs');
 const path = require('path');
@@ -100,12 +103,17 @@ function colourCount(png) {
     await browser.close();
     process.exit(1);
   };
-  await page.goto(url, { waitUntil: 'commit' });
-  try {
-    await page.waitForFunction(() => window.familiar && window.familiarStatus, null, { timeout: 90000 });
-  } catch (e) {
-    await fail('the game never became ready: ' + errors.join(' | '));
-  }
+  // Opens the page (again, for a reload) and waits for the game.
+  const open = async (reload) => {
+    if (reload) await page.reload({ waitUntil: 'commit' });
+    else await page.goto(url, { waitUntil: 'commit' });
+    try {
+      await page.waitForFunction(() => window.familiar && window.familiarStatus, null, { timeout: 90000 });
+    } catch (e) {
+      await fail('the game never became ready' + (reload ? ' after a reload' : '') + ': ' + errors.join(' | '));
+    }
+  };
+  await open(false);
   const status = async () => JSON.parse(await page.evaluate(() => window.familiar.status()));
   const until = async (pred, ms = 20000) => {
     const end = Date.now() + ms;
@@ -321,6 +329,54 @@ function colourCount(png) {
     if (!s.cinnamon || s.candy !== purse - 3) await fail('buying cinnamon did not cost three candy');
     console.log('ok: E lit Grandpa Ike\'s lantern; Tab opened the notebook; candy bought a cinnamon stick');
   }
+  // Saves. Save now (and wait until IndexedDB has it), reload, and the night
+  // is where and when it was.
+  const saveNow = async (why) => {
+    await page.evaluate(() => { document.getElementById('saveNote').textContent = ''; });
+    await page.locator('#saveBtn').click();
+    await page.waitForFunction(() => /Saved in this browser/.test(document.getElementById('saveNote').textContent), null,
+      { timeout: 20000 }).catch(() => {});
+    const note = await page.locator('#saveNote').innerText();
+    if (!/Saved in this browser/.test(note)) await fail(why + ': the save note did not confirm: ' + note);
+  };
+  const same = (a, b) => Math.hypot(a.x - b.x, a.z - b.z) < 0.25 && a.candy === b.candy && a.costume === b.costume &&
+    a.jokes === b.jokes && a.knocked === b.knocked && a.cat === b.cat && a.bagDown === b.bagDown && a.spiritsSeen === b.spiritsSeen &&
+    a.haleGate === b.haleGate && a.lychgate === b.lychgate;
+  await saveNow('saving');
+  const saved = await status();
+  await open(true);
+  let back = await until((st) => /Loaded your save/.test(st.message), 10000);
+  console.log(`after a reload: at (${back.x}, ${back.z}) at ${back.clock}, candy ${back.candy}, costume ${back.costume}; "${back.message}"`);
+  if (!same(back, saved)) await fail('the save did not survive a reload: ' + JSON.stringify({ saved, back }));
+  if (back.tick < saved.tick || back.tick - saved.tick > 30 * 10) await fail(`the time of night did not survive a reload (${saved.tick} -> ${back.tick})`);
+  if (!/Loaded your save/.test(back.message)) await fail('no "Loaded your save" message after a reload: ' + back.message);
+  if (await page.locator('#help').isVisible()) await fail('How to play came back after it was closed once');
+  await page.screenshot({ path: path.join(outDir, 'familiar-reloaded.png'), timeout: 180000 });
+
+  // A damaged save is refused and the one before it loads. Save twice (so the
+  // one before is this night too), stop the page saving as it unloads, flip
+  // one byte of the latest save in IndexedDB, and reload.
+  await saveNow('saving before the damage');
+  await saveNow('saving again before the damage');
+  const kept = await status();
+  const flipped = await page.evaluate(async () => {
+    window.familiar.save = () => 0;  // the page's unload save would replace the damaged file
+    const file = '/familiar-save/default/familiar.save';
+    const bytes = Module.FS.readFile(file);
+    const at = Math.floor(bytes.length / 2);
+    bytes[at] ^= 0x01;
+    Module.FS.writeFile(file, bytes);
+    await new Promise((resolve, reject) => Module.FS.syncfs(false, (err) => (err ? reject(err) : resolve())));
+    return { at, length: bytes.length };
+  });
+  console.log(`flipped byte ${flipped.at} of ${flipped.length} in the latest save`);
+  await open(true);
+  back = await until((st) => /refused/.test(st.message), 10000);
+  console.log(`after a reload with the save damaged: "${back.message}"`);
+  if (!/refused/.test(back.message) || !/Loaded the one before it/.test(back.message))
+    await fail('a damaged save was not refused with a message: ' + back.message);
+  if (!same(back, kept)) await fail('the save before the damaged one did not load: ' + JSON.stringify({ kept, back }));
+
   // The loading shell finished; and without WebGL 2 it shows the trailer (or
   // its still) and says why, and the engine never downloads.
   {

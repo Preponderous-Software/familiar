@@ -44,6 +44,23 @@ Released versions also come as downloads for Windows, Linux and the browser on t
 [releases page](https://github.com/Preponderous-Software/familiar/releases), built by
 `.github/workflows/release.yml` ([docs/RELEASING.md](docs/RELEASING.md)).
 
+## Saves and the autopilot
+
+The desktop game continues where you left off: it saves every two minutes of play, on F5 and when
+you quit, and F9 loads the last save (`--fresh` starts a new night, `--slot DIR` saves elsewhere).
+Saves go to `%APPDATA%\Familiar\default` on Windows and `~/.local/share/familiar/default`
+elsewhere. In the browser the same saves are kept in the browser (IndexedDB), also when the page is
+closed or hidden.
+
+A save is checksummed (SHA-256) and versioned, and the save it replaces is kept. A save with any
+byte damaged is refused with a message and the previous save loads instead; a damaged save is set
+aside as `familiar.save.damaged`, never deleted. Saves from every earlier format keep loading:
+`tests/fixtures` holds one of each, and the tests load them. See `src/save/save.h`.
+
+`familiar --autopilot` lets the autopilot play the night; `familiar --headless --autopilot` plays
+it without a window and checks it ends on the pinned fingerprint (CI runs it with `--slot`, saving
+and reloading at every step).
+
 ## The loading shell
 
 The page loads behind the Strata web kit's loading shell
