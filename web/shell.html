@@ -61,6 +61,14 @@
   #pad button { min-height: 52px; padding: 0 4px; background: rgba(38, 27, 40, 0.82); }
   #pad #use { grid-column: span 2; min-height: 60px; font-weight: 700; }
   #pad #catBtn { grid-column: span 2; }
+  #pad #trickBtn { grid-column: span 2; display: none; background: rgba(90, 46, 20, 0.9); }
+  body.asking #pad #trickBtn { display: block; }
+  #costumes { position: absolute; left: 50%; transform: translateX(-50%); bottom: 12px; z-index: 2; display: none; gap: 6px; }
+  body.choosing #costumes { display: flex; }
+  /* On a phone the centred row runs under the action pad; sit it bottom left, above the stick hint. */
+  body.touch #costumes { left: max(10px, env(safe-area-inset-left)); transform: none; bottom: 36px;
+    flex-wrap: wrap; width: 176px; }
+  body.touch #costumes button { flex: 1 1 80px; min-height: 44px; }
   #clickToPlay { position: absolute; inset: 0; z-index: 1; display: none; align-items: center; justify-content: center;
     background: rgba(10, 6, 10, 0.35); cursor: pointer; }
   #clickToPlay div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; text-align: center; }
@@ -104,6 +112,11 @@
   <div id="pad" role="group" aria-label="Actions">
     <button id="use" data-key="8" title="Knock (E)">Knock</button>
     <button id="catBtn" data-key="20" title="Turn into a cat, or back (Q)">Cat</button>
+    <button id="trickBtn" data-key="23" title="Tell a joke (T)">Tell a joke</button>
+  </div>
+  <div id="costumes" role="group" aria-label="Choose a costume">
+    <button data-key="30" data-costume="1">Ghost</button><button data-key="31" data-costume="2">Pumpkin</button>
+    <button data-key="32" data-costume="3">Skeleton</button><button data-key="33" data-costume="4">Witch</button>
   </div>
   <div id="clickToPlay"><div><b>Click to play</b><br><span style="color:var(--dim)">Esc frees the mouse</span></div></div>
 </div>
@@ -113,16 +126,18 @@
 <div id="help" class="dialog" role="dialog" aria-labelledby="helpTitle">
   <h2 id="helpTitle">Familiar</h2>
   <p>Halloween night, 2026, in the hill town of Hollowell. The sun is setting where it really sets at 42&deg; north.
-  Go trick-or-treating: knock on doors where the porch light is on. And tonight you can turn into a black cat:
+  Choose a costume and go trick-or-treating: knock on doors where the porch light is on, and have a joke ready. And tonight you can turn into a black cat:
   small and quick, able to jump onto fences, sheds and even roofs.</p>
   <ul class="for-keys">
     <li>Mouse: look. <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>: walk, <kbd>Shift</kbd>: hurry.</li>
-    <li><kbd>E</kbd>: knock. <kbd>Q</kbd>: turn into a cat, and back.</li>
+    <li><kbd>1</kbd>&ndash;<kbd>4</kbd> on Nana's walk: choose a costume. <kbd>E</kbd>: knock. <kbd>T</kbd>: tell a joke
+      when a neighbour asks for a trick. <kbd>Q</kbd>: turn into a cat, and back.</li>
     <li><kbd>F1</kbd>: the controls on screen. <kbd>Esc</kbd>: free the mouse.</li>
   </ul>
   <ul class="for-touch">
     <li>Drag on the left half to walk (all the way out to hurry); drag on the right half to look.</li>
-    <li><b>Knock</b> at a door; <b>Cat</b> turns you into a cat and back.</li>
+    <li>Choose a costume with the buttons on Nana's walk. <b>Knock</b> at a door; <b>Tell a joke</b> when asked for a
+      trick; <b>Cat</b> turns you into a cat and back.</li>
   </ul>
   <p style="color:var(--dim);font-size:13px">An early version: lanterns, Nana's cider, Smoke, secrets and saves are on
   the way. The night starts over when you reload. Built on the <a href="https://github.com/Preponderous-Software/strata">Strata</a>
@@ -175,6 +190,11 @@
     $('clock').textContent = '31 October, ' + s.clock;
     $('candy').textContent = 'Candy: ' + s.candy;
     $('catBtn').textContent = s.cat ? 'Be Wren' : 'Cat';
+    document.body.classList.toggle('asking', s.asking);
+    document.body.classList.toggle('choosing', s.choosing);
+    Array.prototype.forEach.call(document.querySelectorAll('#costumes button'), function (b) {
+      b.setAttribute('aria-pressed', String(Number(b.dataset.costume) === s.costume));
+    });
     var showClick = !touchMode && !s.captured && !dialogOpen();
     $('clickToPlay').style.display = showClick ? 'flex' : 'none';
     var key = JSON.stringify(s.hud);
@@ -198,7 +218,11 @@
   // On a touch screen the game's words name the buttons, not the keys.
   function touchWords(text) {
     if (!touchMode || !text) return text;
-    return text.replace(/^E  /, 'Knock: ').replace(/\(E\)/g, '(Knock)').replace(/\(Q: ([^)]*)\)/g, '(Cat button: $1)')
+    return text.replace(/^Choose a costume:.*$/, 'Choose a costume (buttons below)')
+               .replace(/^T  tell a joke     E  just the treat$/, 'Tell a joke, or Knock for just the treat')
+               .replace(/\(T: tell a joke, E: just the treat\)/, '(Tell a joke, or Knock for just the treat)')
+               .replace(/\(1-4\)/, '(the buttons below)')
+               .replace(/^E  /, 'Knock: ').replace(/\(E\)/g, '(Knock)').replace(/\(Q: ([^)]*)\)/g, '(Cat button: $1)')
                .replace(/\bQ to\b/g, 'Tap Be Wren to').replace(/\bQ turns\b/g, 'The Cat button turns');
   }
 

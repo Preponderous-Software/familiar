@@ -73,13 +73,15 @@ struct TourStop {
     bool knock;          // knock (E) at the door here
     bool cat;            // be a cat for this stop
     const char* shot;    // screenshot file name, or null
+    bool trick = false;  // tell a joke after knocking
+    int costume = 0;     // choose this costume (1-4) first
 };
 
 const TourStop kTour[] = {
-    {-66.0f, -7.2f, 2.6f, -0.02f, 0, false, false, "01-nanas-porch"},
+    {-66.0f, -7.2f, 2.6f, -0.02f, 0, false, false, "01-nanas-porch", false, 4},
     {-60.0f, 0.0f, 1.57f, 0.0f, 0, false, false, "02-elm-street"},
     {-48.0f, -6.6f, 0.0f, 0.0f, 0, false, false, nullptr},
-    {-48.0f, -9.6f, 0.0f, 0.05f, 1, true, false, "03-knock-okafors"},
+    {-48.0f, -9.6f, 0.0f, 0.05f, 1, true, false, "03-knock-okafors", true},
     {-48.0f, -3.0f, 1.9f, -0.05f, 240, false, false, "04-dusk-street"},
     {-45.0f, -3.0f, 0.0f, 0.0f, 0, false, true, nullptr},
     {-45.0f, -8.0f, 3.14f, 0.1f, 0, false, true, "05-cat-over-fence"},
@@ -112,6 +114,12 @@ int runTour(strata::Engine& engine, const Args& args) {
                 return 1;
             }
         }
+        if (stop.costume) {
+            Input in;
+            in.yaw = w.player.yaw;
+            in.costume = stop.costume;
+            tick(w, in);
+        }
         bool arrived = false;
         for (int t = 0; t < 200 * kTickRate && !arrived; ++t) {
             const float dx = stop.x - w.player.x, dz = stop.z - w.player.z;
@@ -142,6 +150,13 @@ int runTour(strata::Engine& engine, const Args& args) {
             in.use = stop.knock && t == turn - 1;
             tick(w, in);
         }
+        if (stop.trick) {
+            Input in;
+            in.yaw = w.player.yaw;
+            in.pitch = w.player.pitch;
+            in.trick = true;
+            tick(w, in);
+        }
         if (!stop.shot) continue;
         scene.update(w);
         play::render(engine, w, false, eyePosition(w).y, false, answerText(w));
@@ -152,8 +167,8 @@ int runTour(strata::Engine& engine, const Args& args) {
         if (!args.framesDir.empty()) engine.saveScreenshotPng(args.framesDir + "/" + stop.shot + ".png");
     }
     std::printf("%zu meshes, fingerprint %016" PRIx64 "\n", scene.meshCount(), fingerprint(w));
-    if (w.candy < 2) {
-        std::fprintf(stderr, "familiar: the tour knocked and got no candy\n");
+    if (w.candy != 3 || w.costume != Costume::Witch) {
+        std::fprintf(stderr, "familiar: the tour did not dress up, knock and tell a joke for three candies\n");
         return 1;
     }
     return 0;

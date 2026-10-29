@@ -471,4 +471,46 @@ MeshData buildFigure(float height, Rgb clothes, Rgb top, Rgb skin) {
     return m;
 }
 
+MeshData buildCostumed(int look, float height) {
+    const float k = height / 1.3f;
+    const Rgb skin{0.62f, 0.45f, 0.36f};
+    MeshData m;
+    switch (look) {
+        case 1: {  // a ghost: a sheet with two dark eyes
+            const Rgb sheet{0.85f, 0.85f, 0.88f};
+            m.cylinder({0, 0, 0}, 0.32f * k, 0.2f * k, 1.0f * k, 12, sheet);
+            m.blob({0, 1.05f * k, 0}, 0.22f * k, 1.1f, sheet);
+            for (float x : {-0.07f, 0.07f}) m.box({x * k - 0.03f * k, 1.08f * k, -0.215f * k}, {x * k + 0.03f * k, 1.16f * k, -0.2f * k}, Rgb{0.02f, 0.02f, 0.02f});
+            break;
+        }
+        case 2: {  // a pumpkin: round and orange, a green stalk hat
+            m.cylinder({0, 0, 0}, 0.08f * k, 0.08f * k, 0.45f * k, 6, Rgb{0.08f, 0.10f, 0.05f});
+            m.blob({0, 0.75f * k, 0}, 0.36f * k, 0.85f, kPumpkin);
+            m.blob({0, 1.18f * k, 0}, 0.13f * k, 1.1f, skin);
+            m.cylinder({0, 1.3f * k, 0}, 0.05f * k, 0.03f * k, 0.12f * k, 6, kStem);
+            break;
+        }
+        case 3: {  // a skeleton: black, with white bones and a white skull
+            const Rgb bone{0.85f, 0.83f, 0.78f};
+            m.cylinder({0, 0, 0}, 0.13f * k, 0.16f * k, 0.6f * k, 8, Rgb{0.02f, 0.02f, 0.02f});
+            m.cylinder({0, 0.6f * k, 0}, 0.17f * k, 0.14f * k, 0.45f * k, 8, Rgb{0.02f, 0.02f, 0.02f});
+            for (int r = 0; r < 4; ++r) m.box({-0.14f * k, (0.66f + 0.09f * static_cast<float>(r)) * k, -0.17f * k}, {0.14f * k, (0.69f + 0.09f * static_cast<float>(r)) * k, -0.13f * k}, bone);
+            m.blob({0, 1.17f * k, 0}, 0.13f * k, 1.1f, bone);
+            break;
+        }
+        case 4: {  // a costume witch: black dress, green face, a tall pointed hat
+            m.cylinder({0, 0, 0}, 0.25f * k, 0.13f * k, 1.05f * k, 10, Rgb{0.03f, 0.02f, 0.04f});
+            m.blob({0, 1.15f * k, 0}, 0.12f * k, 1.1f, Rgb{0.15f, 0.40f, 0.08f});
+            m.cylinder({0, 1.22f * k, 0}, 0.26f * k, 0.26f * k, 0.02f * k, 10, Rgb{0.02f, 0.02f, 0.02f});
+            m.cylinder({0, 1.24f * k, 0}, 0.13f * k, 0.01f, 0.4f * k, 8, Rgb{0.02f, 0.02f, 0.02f});
+            break;
+        }
+        default:  // a grown-up walking with them
+            return buildFigure(height, Rgb{0.20f, 0.17f, 0.12f}, Rgb{0.15f, 0.10f, 0.06f}, skin);
+    }
+    // A candy bag in one hand.
+    m.box({0.2f * k, 0.45f * k, -0.05f * k}, {0.34f * k, 0.65f * k, 0.08f * k}, kPumpkin);
+    return m;
+}
+
 }  // namespace familiar::bridge

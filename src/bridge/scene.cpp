@@ -1,6 +1,7 @@
 #include "bridge/scene.h"
 
 #include "sim/doors.h"
+#include "sim/npc.h"
 
 namespace familiar::bridge {
 
@@ -44,9 +45,27 @@ Scene::Scene(strata::Engine& engine) : engine_(engine) {
     town_ = upload(buildTown());
     glow_ = upload(buildGlow(), true);
     water_ = upload(buildWater());
+    const std::vector<Walker> kids = children(World{});
+    for (size_t i = 0; i < children_.size() && i < kids.size(); ++i) children_[i] = upload(buildCostumed(kids[i].look, kids[i].height));
+    const Look& n = kLooks[T::Nana];
+    nana_ = upload(buildFigure(n.height, n.clothes, n.top, n.skin));
+}
+
+// Turns a figure built facing -z to `yaw` and stands it at `at`; hidden ones go
+// far below the ground.
+void Scene::place(uint32_t id, Vec3 at, float yaw, bool shown) {
+    if (!id) return;
+    const float c = detCos(yaw), s = detSin(yaw);
+    const float y = shown ? at.y : -500.0f;
+    const float model[16] = {c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, at.x, y, at.z, 1};
+    engine_.setMeshTransform(id, model);
 }
 
 void Scene::update(const World& w) {
+    const std::vector<Walker> kids = children(w);
+    for (size_t i = 0; i < children_.size() && i < kids.size(); ++i) place(children_[i], kids[i].at, kids[i].yaw, kids[i].shown);
+    const Walker n = nana(w);
+    place(nana_, n.at, n.yaw, n.shown);
     for (int g = 0; g < T::GateCount; ++g) {
         const bool shut = !w.gateOpen[static_cast<size_t>(g)];
         if (shut && !gate_[static_cast<size_t>(g)]) gate_[static_cast<size_t>(g)] = upload(buildGate(static_cast<T::Gate>(g)));
@@ -82,6 +101,8 @@ Scene::~Scene() {
     try {
         for (uint32_t& id : gate_) remove(id);
         for (uint32_t& id : neighbour_) remove(id);
+        for (uint32_t& id : children_) remove(id);
+        remove(nana_);
         remove(town_);
         remove(glow_);
         remove(water_);

@@ -17,8 +17,14 @@ constexpr double kGameMinutesPerSecond = 1.0 / 3;   // one game minute every thr
 constexpr int kStartMinute = 17 * 60 + 20;          // 5:20 pm on 31 October
 constexpr int kMidnight = 24 * 60;
 
-// Wren, or the cat she can become (from M3).
+// Wren, or the cat she can become.
 enum class Form : int32_t { Girl = 0, Cat = 1 };
+
+// What Wren wears trick-or-treating (chosen on Nana's walk, 1-4).
+enum class Costume : int32_t { None = 0, Ghost = 1, Pumpkin = 2, Skeleton = 3, Witch = 4 };
+
+// How a door was last answered.
+enum class Answer : int32_t { None = 0, Treat, Liked, Ask, Joke, Kitty };
 
 struct Player {
     float x = 0, z = 0;
@@ -36,7 +42,10 @@ struct World {
     std::array<bool, town::HouseCount> knocked{};  // each house answers once
     int32_t answered = -1;      // the house whose door last opened, or -1
     int64_t answeredTick = -1;  // and when
-    bool kitty = false;         // the answer was to a cat (a treat for the kitty, no candy)
+    Answer answer = Answer::None;
+    int32_t asking = -1;        // the house waiting for a trick, or -1
+    int32_t jokes = 0;          // jokes told so far
+    Costume costume = Costume::None;
 };
 
 // One tick's worth of player intent, already resolved from keys and mouse.
@@ -47,6 +56,8 @@ struct Input {
     float yaw = 0, pitch = 0;  // absolute view angles for this tick
     bool use = false;          // knock, or whatever E does here
     bool toggleForm = false;   // Q: Wren to cat, or back
+    bool trick = false;        // T: tell a joke when a neighbour asks for a trick
+    int32_t costume = 0;       // 1-4: choose a costume on Nana's walk
 };
 
 World newWorld(uint64_t seed);
