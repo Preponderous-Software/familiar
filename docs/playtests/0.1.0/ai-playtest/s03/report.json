@@ -1,0 +1,76 @@
+{
+  "session": "s03",
+  "goal": "Test that the night is kept safely: play a few minutes (choose a costume, knock for candy, light a lantern if you find one, turn into the cat and back), noting the clock, candy and lanterns on the HUD. Press F5 and check what it says. Then quit the way a player would (Esc, then Esc again) and run pt stop, and start the game again with exactly the same pt start command: check that the night continues where you left it (clock, candy, costume, lanterns, where you stand). Also try F9 after playing on a little, and a pt stop WITHOUT quitting (like a crash) followed by pt start, and say what was kept. Any lost or wrong progress is a blocker.",
+  "build": {"version": null, "commit": "995271c"},
+  "seed": 13,
+  "durationSec": 684,
+  "outcome": "achieved",
+  "findings": [
+    {
+      "severity": "minor",
+      "category": "ux",
+      "title": "Nana's window lantern (first NEXT objective) never offers an E prompt; E does nothing at the window",
+      "detail": "The NEXT line says 'Light Nana's window lantern: E at the window left of her door'. Standing on Nana's porch right at the lit window with the hanging lantern under the crosshair, from several angles and distances, tapping and holding E did nothing and no 'E light' prompt ever appeared (other things, like the dropped bag and Mr. Garcia's door, do show 'E pick up...' / 'E knock...' prompts when in range). I could not find the spot that works, so Lanterns stayed 0 of 4 all session and lantern persistence could not be tested. Expected: a prompt when close to the window, or a hint about where to stand.",
+      "repro": "pt start ... --seed 13; pt key 4; turn ~180 deg (pt look 315 0 x4) to face Nana on the porch; walk up to the lit window left of the red door; pt key e / pt hold e 1.0 with the lantern centred",
+      "screenshot": "shots/lantern_closeup.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "text",
+      "title": "Opening screen: Nana's greeting and the controls help list overlap and are unreadable",
+      "detail": "At start the orange greeting ('Halloween in Hollowell. Nana waves from her porch...') and the white help list (W A S D walk...) are drawn on the same lines in the lower half; both are garbled. The same happens with the cat message and the help list after a reload (shots/beforeF9.png). Expected: stacked, not overlapping.",
+      "repro": "pt start ... --seed 13; pt shot start",
+      "screenshot": "shots/overlap_text.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "ux",
+      "title": "'Choose a costume: 1 ghost 2 pumpkin...' banner stays on screen long after a costume is chosen",
+      "detail": "After pressing 4 (witch), the costume chooser line kept showing across the porch, the street and even after a quit/reload, until well into the night. Expected it to disappear once a costume is picked (or at least once you leave Nana's walk).",
+      "repro": "pt start ...; pt key 4; walk around; pt shot x",
+      "screenshot": "shots/resume_after_quit.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "ux",
+      "title": "First Esc gives no 'press Esc again to quit' hint",
+      "detail": "Pressing Esc once frees the mouse but shows nothing on screen; a player would not know a second Esc quits (and saves). The help list does say 'Esc free the mouse' only.",
+      "repro": "pt key Escape; pt shot esc1",
+      "screenshot": "shots/esc1.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "text",
+      "title": "Notebook says 'Page 0 of 0' before any page exists",
+      "detail": "Tab at the start shows 'Page 0 of 0  Secrets 0 of 8'. Reads oddly; 'No pages yet' would be nicer.",
+      "repro": "pt start ...; pt key Tab",
+      "screenshot": "shots/nb.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "ux",
+      "title": "Resume after quit has no 'welcome back / the night goes on' message",
+      "detail": "After a normal quit and restart, progress is restored correctly but the only on-screen text is the help list; the crash-restart shows 'Loaded your save.' while the clean-quit restart (first one) showed nothing. A consistent 'Loaded your save' / time line would reassure.",
+      "repro": "pt key F5; pt key Escape Escape; pt stop; pt start ... (same); pt shot resume1",
+      "screenshot": "shots/resume_after_quit.png",
+      "tick": null
+    }
+  ],
+  "metrics": {
+    "objectivesCompleted": 3,
+    "deaths": 0,
+    "secondsToObjective": {"choose costume": 12.0, "turn into cat and back": 180.0, "first candy (Mr. Garcia)": 590.0},
+    "candyAtEnd": 2,
+    "lanternsLit": 0,
+    "saveRestoreChecks": 4,
+    "saveRestoreFailures": 0,
+    "f5Message": "Saved."
+  },
+  "fun": 3,
+  "verdict": "Saving is solid: F5 shows 'Saved.', quit (Esc, Esc) then restart restored clock, costume, candy, cat/Wren form, the dropped bag, the visited door ('You have been here tonight', no double candy) and the exact position and view; F9 rolled back correctly; and a pt stop without quitting lost nothing (the game evidently saves on SIGTERM; a hard SIGKILL was not tried). No progress was lost in four save/restore checks. The main friction was the very first objective: I could not get an E prompt at Nana's window lantern, so lanterns stayed 0 of 4 and their persistence is untested; secondsToObjective are wall-clock seconds (no probe)."
+}
