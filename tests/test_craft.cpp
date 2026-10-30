@@ -314,6 +314,155 @@ int main(int, char**) {
         CHECK(tonightNext(w).find("June Hale's lantern") == 0);
     }
 
+    // ---- The night can always be finished (softlock fix). A player who never knocks at the
+    // Okafors' (or anywhere) before the porch lights go off at 9 pm can still light all four
+    // lanterns, brew the cider, make the offering, and see Smoke home at midnight; and the
+    // NEXT line never points at a step that can no longer be done.
+    {
+        World w = newWorld(1);
+        w.costume = Costume::Ghost;
+        // Before 9 pm, without a knock: Grandpa Ike's lantern waits for the Okafors.
+        w.tick = tickAt(20 * 60 + 50);
+        standAt(w, lantern(OkaforPorch).stand);
+        press(w, true);
+        CHECK(!w.lit[OkaforPorch]);
+        CHECK(craftPrompt(w).find("Knock first") != std::string::npos);
+        // Past 9 pm, never having knocked: the porch is dark, and the lantern can be lit anyway.
+        w.tick = tickAt(kPorchLightsOff + 1);
+        CHECK(!porchLightOn(w, T::Okafor) && !w.knocked[T::Okafor]);
+        CHECK(craftWord(w) == "Light");
+        press(w, true);
+        CHECK(w.lit[OkaforPorch] && w.deed == Deed::Lit && w.deedArg == OkaforPorch);
+        CHECK(w.candy == 0);  // nothing was knocked for
+
+        standAt(w, lantern(NanaWindow).stand);
+        press(w, true);
+        CHECK(w.lit[NanaWindow]);
+
+        // The gates, opened by the cat from inside with the real latches.
+        press(w, false, false, true);
+        CHECK(w.form == Form::Cat);
+        w.player.x = T::kHaleYard.x0 + 0.6f;
+        w.player.z = T::kHaleGateZ;
+        CHECK(latchHere(w) == T::HaleGate);
+        press(w, true);
+        CHECK(w.gateOpen[T::HaleGate]);
+        w.player.x = (T::kLychgateX0 + T::kLychgateX1) / 2;
+        w.player.z = T::kChurchyard.z1 - 0.8f;
+        CHECK(latchHere(w) == T::Lychgate);
+        press(w, true);
+        CHECK(w.gateOpen[T::Lychgate]);
+        // Back to the bag, and Wren again.
+        w.player.x = w.bag.x;
+        w.player.z = w.bag.z;
+        w.player.feet = w.bag.y;
+        press(w, false, false, true);
+        CHECK(w.form == Form::Girl && !w.bagDown);
+        standAt(w, lantern(HaleStep).stand);
+        press(w, true);
+        standAt(w, lantern(LychLantern).stand);
+        press(w, true);
+        CHECK(lanternsLit(w) == kLanternCount);
+
+        // The cider after the market's porch light is out (11 pm), with no candy: a joke buys the cinnamon.
+        w.tick = tickAt(23 * 60 + 1);
+        standAt(w, spotStand(2));
+        press(w, true);
+        standAt(w, spotStand(4));
+        press(w, true);
+        press(w, true);
+        standAt(w, spotStand(5));
+        CHECK(!w.knocked[T::Market] && shopOpen(w) && haggling(w));
+        press(w, false, true);
+        CHECK(w.cinnamon);
+        standAt(w, spotStand(3));
+        for (int i = 0; i < kStirs; ++i) press(w, true);
+        CHECK(w.cider && w.apples == 1);
+
+        // Smoke, found by the cat and led into the stones.
+        press(w, false, false, true);
+        w.player.x = kSmokeStart.x;
+        w.player.z = kSmokeStart.z + 1.5f;
+        idle(w, 1);
+        CHECK(w.smoke == SmokeState::Following);
+        w.player.x = T::kHill.x;
+        w.player.z = T::kHill.z;
+        idle(w, kTickRate * 20);
+        CHECK(w.smoke == SmokeState::AtCircle);
+        w.form = Form::Girl;  // (the bag walk is covered above)
+        w.bagDown = false;
+
+        // The offering once Nana is there, then midnight: Smoke goes home.
+        standAt(w, spotStand(6));
+        if (gameMinutes(w) < nanaArrivalMinute()) w.tick = tickAt(nanaArrivalMinute());
+        CHECK(tonightNext(w).find("Make the offering") == 0);
+        press(w, true);
+        CHECK(w.offered);
+        CHECK(tonightNext(w).find("Wait with Nana and Smoke for midnight") == 0);
+        w.tick = tickAt(kMidnight);
+        idle(w, 2);
+        CHECK(w.smoke == SmokeState::Home && w.deed == Deed::Home);
+    }
+
+    // ---- The old softlock's HUD: everything else done after 9 pm, Grandpa Ike's lantern never lit.
+    // NEXT used to say "Wait with Nana and Smoke for midnight" though midnight would change nothing.
+    {
+        World w = newWorld(1);
+        w.costume = Costume::Ghost;
+        w.tick = tickAt(23 * 60 + 40);
+        w.lit = {true, false, true, true};
+        w.cider = true;
+        w.offered = true;
+        w.smoke = SmokeState::AtCircle;
+        standAt(w, spotStand(6));
+        CHECK(tonightNext(w).find("Light Grandpa Ike's lantern") == 0);
+        World late = w;
+        late.tick = tickAt(kMidnight + 10);
+        idle(late, 2);
+        CHECK(late.smoke == SmokeState::AtCircle);  // not home without it...
+        standAt(late, lantern(OkaforPorch).stand);
+        press(late, true);
+        CHECK(late.lit[OkaforPorch]);
+        idle(late, 2);
+        CHECK(late.smoke == SmokeState::Home);  // ...and home as soon as it is lit, after midnight
+        // Before 9 pm the NEXT line sends Wren to knock, never to wait.
+        World early = w;
+        early.tick = tickAt(20 * 60);
+        for (int i = 0; i < T::HouseCount; ++i) early.knocked[static_cast<size_t>(i)] = i != T::Okafor;
+        CHECK(tonightNext(early).find("Wait") != 0);
+        CHECK(tonightNext(early).find("Knock") != std::string::npos);  // one lit porch to go: the Okafors'
+    }
+
+    // ---- NEXT never says to wait for midnight with a lantern unlit, at any hour, in any mix of
+    // lanterns, gates and knocks.
+    {
+        for (int minute : {19 * 60, 20 * 60 + 59, 21 * 60 + 1, 23 * 60 + 30, kMidnight + 5})
+            for (int mask = 0; mask < 16; ++mask)
+                for (int extra = 0; extra < 8; ++extra) {
+                    World w = newWorld(1);
+                    w.costume = Costume::Ghost;
+                    w.tick = tickAt(minute);
+                    for (int i = 0; i < kLanternCount; ++i) w.lit[static_cast<size_t>(i)] = (mask >> i) & 1;
+                    w.knocked[T::Okafor] = extra & 1;
+                    w.gateOpen[T::HaleGate] = (extra >> 1) & 1;
+                    w.gateOpen[T::Lychgate] = (extra >> 2) & 1;
+                    for (int i = 0; i < T::HouseCount; ++i)
+                        if (i != T::Okafor) w.knocked[static_cast<size_t>(i)] = true;
+                    w.cider = true;
+                    w.offered = true;
+                    w.smoke = SmokeState::AtCircle;
+                    const std::string next = tonightNext(w);
+                    if (lanternsLit(w) < kLanternCount) CHECK(next.find("Wait") != 0);
+                    // A lantern the hint names as ready to light can be lit.
+                    for (int i = 0; i < kLanternCount; ++i)
+                        if (next == std::string("Light ") + lantern(i).name + ", " + lantern(i).forWhom) {
+                            standAt(w, lantern(i).stand);
+                            press(w, true);
+                            CHECK(w.lit[static_cast<size_t>(i)]);
+                        }
+                }
+    }
+
     // ---- Secrets: where they are, in the right form.
     {
         World w = newWorld(1);
