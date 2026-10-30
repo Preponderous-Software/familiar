@@ -322,6 +322,17 @@ int main(int argc, char** argv) {
     // (tools/make_save_fixtures.cpp; see tests/fixtures/README.md): for each
     // format, one with Ms. Bright waiting for a joke and one at the
     // playthrough's end; from format 2, a cat who left the bag behind.
+    // The fixtures' moments come from the playthrough as it was at M5, which
+    // knocked along Elm Street and walked home: the same moment in every format
+    // is the same world today, and the autopilot plays on from it to Smoke's
+    // homecoming (the pinned playthrough itself, since, lights Nana's lantern
+    // first, so these moments are no longer on its way).
+    World askingNow, endNow;
+    {
+        std::string why;
+        CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v3-bright-asking.save"), askingNow, &why));
+        CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v3-home.save"), endNow, &why));
+    }
     for (const char* v : {"v1", "v2", "v3"}) {
         const std::string dirName = FAMILIAR_FIXTURES "/";
         World asking;
@@ -333,15 +344,18 @@ int main(int argc, char** argv) {
         CHECK(!asking.bagDown && asking.spiritsSeen == 0);
         CHECK(!asking.lit[0] && asking.apples == 0 && asking.smoke == SmokeState::Lost && asking.deed == Deed::None);
         CHECK(asking.smokeX == kSmokeStart.x && asking.smokeZ == kSmokeStart.z && asking.homeTick == -1);
-        CHECK(fingerprint(asking) == fingerprint(played(asking.tick)));  // just as the rules have it now
+        CHECK(fingerprint(asking) == fingerprint(askingNow));  // the same moment in every format
         while (!playthroughDone(asking) && asking.tick < kPlaythroughLimit) tick(asking, autopilot(asking));
-        CHECK(fingerprint(asking) == kPlaythroughFingerprint);
+        CHECK(playthroughDone(asking) && lanternsLit(asking) == kLanternCount && asking.offered);
 
         World end;
         CHECK(decodeSave(readAll(dirName + v + "-home.save"), end, &why));
-        CHECK(playthroughDone(end) && end.candy == 18);
-        CHECK(fingerprint(end) == kPlaythroughFingerprint);
+        // Home on Nana's doorstep with 18 candy, every lit porch visited.
+        CHECK(end.candy == 18 && autopilotTarget(end) < 0 && atDoor(end) == T::Nana && !playthroughDone(end));
+        CHECK(fingerprint(end) == fingerprint(endNow));
         CHECK(roundTrips(end));
+        while (!playthroughDone(end) && end.tick < kPlaythroughLimit) tick(end, autopilot(end));
+        CHECK(playthroughDone(end) && lanternsLit(end) == kLanternCount && end.offered && end.candy == 17);
     }
     {
         // A format 1 save re-saved today is format 2, and comes back the same.
