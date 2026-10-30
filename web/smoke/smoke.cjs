@@ -228,6 +228,8 @@ function colourCount(png) {
     await page.locator('#use').tap();
     s = await until((st) => st.asking);
     if (!s.asking) await fail('tapping Knock did not bring Mrs. Okafor to the door');
+    // The page restyles its buttons from the status every 250 ms.
+    await page.locator('#trickBtn').waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
     if (!(await page.locator('#trickBtn').isVisible())) await fail('no Tell a joke button when asked for a trick');
     if (!(await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Just the treat', null, { timeout: 10000 }).catch(() => false)))
       await fail('the big button did not become Just the treat');
@@ -237,6 +239,7 @@ function colourCount(png) {
     s = await until((st) => st.candy > 0);
     console.log(`after tapping Knock and Tell a joke: candy ${s.candy}, message ${s.message}`);
     if (s.candy <= 0) await fail('tapping Tell a joke at the Okafors gave no candy');
+    await page.locator('#trickBtn').waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
     if (await page.locator('#trickBtn').isVisible()) await fail('Tell a joke stayed on screen after the joke');
     await page.waitForTimeout(800);
     await page.screenshot({ path: path.join(outDir, 'familiar-knock.png'), timeout: 180000 });

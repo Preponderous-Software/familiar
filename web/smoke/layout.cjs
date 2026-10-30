@@ -142,7 +142,8 @@ function problems(m, state) {
     st0 = await until((st) => st.haggle || st.use === 'Buy');
     await check(st0.haggle ? 'haggle' : 'market');
     if (st0.haggle) {
-      if ((await page.locator('#trickBtn').innerText()).trim() !== 'Offer a joke') found.push('haggle: no Offer a joke button');
+      const offer = await page.waitForFunction(() => document.getElementById('trickBtn').textContent === 'Offer a joke', null, { timeout: 10000 }).catch(() => null);
+      if (!offer) found.push('haggle: no Offer a joke button');
       await page.locator('#trickBtn').tap({ force: true, timeout: 60000 });
     } else if (st0.use === 'Buy') {
       await page.locator('#use').tap({ force: true, timeout: 60000 });
