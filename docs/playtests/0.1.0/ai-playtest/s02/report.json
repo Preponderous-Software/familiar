@@ -1,0 +1,91 @@
+{
+  "session": "s02",
+  "goal": "Follow the witchcraft and the cat: choose a costume and knock at a door or two, then follow the HUD's NEXT line and Wren's notebook (Tab) toward the Samhain thread: light the lanterns, become the cat (Q) to climb, squeeze through gaps and look for spirits, gather what the cider needs. Get as far along the night's main thread as you can, and note anywhere you could not tell what to do or where to go, and anything that seems stuck.",
+  "build": {"version": null, "commit": "995271c"},
+  "seed": 7,
+  "durationSec": 781,
+  "outcome": "partial",
+  "findings": [
+    {
+      "severity": "major",
+      "category": "ux",
+      "title": "No way to tell where anything is: no map/compass/marker, NEXT lines give no direction",
+      "detail": "NEXT lines name places ('Nana's window...', 'Mr. Hale's back step', 'Nana's herb bed') but nothing points to them. House labels appear only when close; back yards are pitch black. Walking straight from spawn toward the lit red house led to The Garcias', not Nana's. Later I lost ~40 game minutes behind the Okafors'/Mr. Hale's looking for the back step and herb bed and ended up at Ms. Bright's and the Lindqvists' instead. Expected a minimap, compass or a NEXT line with a relative direction.",
+      "repro": "pt start --seed 7; pt key 4; pt hold Shift_L+w 8 (toward the red house ahead) -> it is The Garcias'; then try to find 'Mr. Hale's back step' or 'Nana's herb bed' from the HUD alone",
+      "screenshot": "shots/lost.png",
+      "tick": null
+    },
+    {
+      "severity": "major",
+      "category": "ux",
+      "title": "Candy bag left when turning into the cat cannot be found again; NEXT 'Fetch your candy bag' stuck",
+      "detail": "Turned into the cat in a side yard, walked to Ms. Bright's porch, turned back with Q. NEXT became 'Fetch your candy bag from where you changed (E)' and HUD says 'bag on the ground', but the bag has no glint/label/marker and was not visible in ~10 screenshots of scanning the nearby yards over 9:00-9:36. Progress on the main thread stalled there (lantern jar is in the bag). Expected the bag to be marked or a direction hint.",
+      "repro": "after lighting 2 lanterns: pt key q (cat) in a yard; pt hold w 5; pt key q; try to find the bag",
+      "screenshot": "shots/nobag.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "ux",
+      "title": "Nana's window lantern has no prompt; 'Nana's door' text overrides it and E does nothing until right on top of it",
+      "detail": "At Nana's porch with the crosshair on the window lantern from ~1-2 m, the prompt stayed 'Nana's door. The neighbours' porches are lit' and E did nothing. Walking right up to the lantern and pressing E finally lit it (2 of 4). The Okafors' lantern, by contrast, showed its own 'E light Grandpa Ike's lantern' prompt from the door.",
+      "repro": "go to Nana's porch (olive house, red door); aim at lantern in the window left of the door; pt key e -> nothing; pt hold w 0.6; pt key e -> lit",
+      "screenshot": "shots/nanalantern.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "balance",
+      "title": "Night is too short for the searching required on this renderer",
+      "detail": "~3 s per game minute plus input lag (mouse-look often applied a beat late, overshooting turns). 5:20-9:36 passed in ~13 wall minutes; I got 2 knocks (Garcias, Okafors) and 2/4 lanterns, never reached Smoke's paw prints or the cider. Porch lights went off at 9 pm with the NEXT line still at 'Knock... 6 to go'. Partly a property of the harness (time runs while screenshots are read), but navigation cost makes it much worse.",
+      "repro": "play from start; observe clock vs. progress",
+      "screenshot": "shots/pace.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "text",
+      "title": "Spawn screen: help list overlaps Nana's greeting; costume prompt wraps mid-option and stays after choosing",
+      "detail": "At start the control list is drawn on top of the orange greeting text so both are hard to read. 'Choose a costume: 1 ghost 2 pumpkin 3 / skeleton 4 witch' breaks between '3' and 'skeleton', and the line remains on screen after picking a costume.",
+      "repro": "pt start --seed 7; pt shot start; pt key 4; pt shot c4",
+      "screenshot": "shots/overlap.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "text",
+      "title": "Notebook 'Samhain' page overflows: footer (page/secrets/controls) missing",
+      "detail": "The Samhain page text runs to the panel's bottom edge and the 'Page N of 4  Secrets  Left/Right turn  Tab close' footer is not shown; other pages show it.",
+      "repro": "light Nana's lantern; pt key Tab; pt key Left (Samhain page)",
+      "screenshot": "shots/samhaincut.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "ux",
+      "title": "HUD block covers the top-left third of the view (more in cat form)",
+      "detail": "The 8-line HUD plus NEXT wraps at 640x360 (cat form wraps to 11 lines) and hides houses/objects behind it; with no map this is where you would look for landmarks.",
+      "repro": "pt key q; pt shot",
+      "screenshot": "shots/cat1.png",
+      "tick": null
+    }
+  ],
+  "metrics": {
+    "objectivesCompleted": 4,
+    "deaths": 0,
+    "secondsToObjective": {
+      "Choose a costume": 12.0,
+      "First knock (The Garcias')": 87.0,
+      "Okafors' lantern (1 of 4)": 258.0,
+      "Nana's window lantern (2 of 4)": 354.0
+    },
+    "candy": 5,
+    "doorsKnocked": 2,
+    "lanternsLit": 2,
+    "notebookPages": 5,
+    "secretsFound": 0,
+    "gameClockAtStop": "9:36 pm"
+  },
+  "fun": 3,
+  "verdict": "The writing and the knock/joke/lantern beats are lovely: Mrs. Okafor's 'tell us a joke' and the lantern for Grandpa Ike landed, and the notebook pages are rich. But the night is a race against a fast clock in a town with no map, no markers and pitch-black back yards, so most of my time went to being lost; I stalled at 2/4 lanterns looking for Mr. Hale's back step and then for my own candy bag after a cat change. secondsToObjective are wall-clock seconds (no probe), estimated from the in-game clock at ~3 s per game minute."
+}

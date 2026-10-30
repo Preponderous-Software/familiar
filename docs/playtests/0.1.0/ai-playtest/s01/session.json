@@ -1,0 +1,26 @@
+{
+  "session": "s01",
+  "dir": "<run-dir>/s01",
+  "profile": "familiar",
+  "display": ":101",
+  "window": "6291475",
+  "size": "640x360",
+  "seed": "31",
+  "args": [],
+  "command": [
+    "<game-dir>/build/familiar",
+    "--width",
+    "640",
+    "--height",
+    "360",
+    "--slot",
+    "<run-dir>/s01/data",
+    "--seed",
+    "31"
+  ],
+  "probe": false,
+  "ticksPerSecond": null,
+  "startedAtMs": 1793374358996,
+  "version": null,
+  "commit": "995271c"
+}

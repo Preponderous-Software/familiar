@@ -1,0 +1,176 @@
+{"t": 1793374360388, "cmd": "start", "args": ["--profile", "<profile-dir>/familiar.json", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793374367191, "cmd": "shot", "args": ["start"]}
+{"t": 1793374375082, "cmd": "note", "args": ["--shot", "overlap_text", "At start, the greeting text from Nana and the controls help list are drawn on top of each other in the lower half; both are hard to read."]}
+{"t": 1793374375206, "cmd": "key", "args": ["4"]}
+{"t": 1793374376645, "cmd": "key", "args": ["F1"]}
+{"t": 1793374378088, "cmd": "shot", "args": ["costume"]}
+{"t": 1793374388882, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793374388973, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793374391047, "cmd": "shot", "args": ["w1"]}
+{"t": 1793374399180, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374399283, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374399394, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374399505, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374399623, "cmd": "shot", "args": ["back"]}
+{"t": 1793374408465, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793374408566, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793374409641, "cmd": "shot", "args": ["w2"]}
+{"t": 1793374416530, "cmd": "key", "args": ["e"]}
+{"t": 1793374417974, "cmd": "shot", "args": ["e1"]}
+{"t": 1793374426960, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793374427068, "cmd": "shot", "args": ["l1"]}
+{"t": 1793374436175, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793374436258, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793374437338, "cmd": "shot", "args": ["l2"]}
+{"t": 1793374452460, "cmd": "look", "args": ["100", "0"]}
+{"t": 1793374452528, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793374453404, "cmd": "key", "args": ["e"]}
+{"t": 1793374454850, "cmd": "shot", "args": ["e2"]}
+{"t": 1793374462602, "cmd": "hold", "args": ["s", "0.6"]}
+{"t": 1793374463277, "cmd": "hold", "args": ["a", "0.8"]}
+{"t": 1793374464147, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793374464234, "cmd": "shot", "args": ["e3"]}
+{"t": 1793374472924, "cmd": "look", "args": ["110", "0"]}
+{"t": 1793374472982, "cmd": "hold", "args": ["w", "1.0"]}
+{"t": 1793374474047, "cmd": "shot", "args": ["e4"]}
+{"t": 1793374474155, "cmd": "key", "args": ["e"]}
+{"t": 1793374475599, "cmd": "shot", "args": ["e5"]}
+{"t": 1793374481493, "cmd": "look", "args": ["-60", "10"]}
+{"t": 1793374481561, "cmd": "key", "args": ["e"]}
+{"t": 1793374483006, "cmd": "shot", "args": ["e6"]}
+{"t": 1793374488748, "cmd": "hold", "args": ["w", "0.6"]}
+{"t": 1793374489420, "cmd": "key", "args": ["e"]}
+{"t": 1793374491358, "cmd": "shot", "args": ["e7"]}
+{"t": 1793374496786, "cmd": "look", "args": ["-30", "40"]}
+{"t": 1793374496851, "cmd": "key", "args": ["e"]}
+{"t": 1793374498797, "cmd": "shot", "args": ["e8"]}
+{"t": 1793374508350, "cmd": "note", "args": ["--shot", "lantern_no_response", "Standing on Nana's porch a step from the lit window, crosshair on the hanging lantern (which the NEXT line says to light with E), pressing E several times from several angles/distances does nothing; no prompt or 'too far' feedback ever appears, so a player cannot tell what is wrong."]}
+{"t": 1793374508439, "cmd": "key", "args": ["F5"]}
+{"t": 1793374509586, "cmd": "shot", "args": ["f5a"]}
+{"t": 1793374518183, "cmd": "key", "args": ["Tab"]}
+{"t": 1793374519626, "cmd": "shot", "args": ["nb"]}
+{"t": 1793374519714, "cmd": "key", "args": ["Tab"]}
+{"t": 1793374531425, "cmd": "hold", "args": ["a", "0.5"]}
+{"t": 1793374531996, "cmd": "look", "args": ["60", "0"]}
+{"t": 1793374532051, "cmd": "key", "args": ["e"]}
+{"t": 1793374533990, "cmd": "shot", "args": ["e9"]}
+{"t": 1793374542348, "cmd": "look", "args": ["40", "0"]}
+{"t": 1793374542411, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793374543280, "cmd": "key", "args": ["e"]}
+{"t": 1793374545223, "cmd": "shot", "args": ["e10"]}
+{"t": 1793374552425, "cmd": "look", "args": ["0", "30"]}
+{"t": 1793374552491, "cmd": "hold", "args": ["e", "0.4"]}
+{"t": 1793374553969, "cmd": "shot", "args": ["e11"]}
+{"t": 1793374561565, "cmd": "note", "args": ["--shot", "lantern_closeup", "Pressed and held E standing directly at Nana's window, lantern centred under the crosshair: still Lanterns 0 of 4, no message. The first objective cannot be completed by me; possibly a hidden range/position requirement."]}
+{"t": 1793374561668, "cmd": "key", "args": ["q"]}
+{"t": 1793374563617, "cmd": "shot", "args": ["cat1"]}
+{"t": 1793374570127, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793374571205, "cmd": "key", "args": ["q"]}
+{"t": 1793374573144, "cmd": "shot", "args": ["wren1"]}
+{"t": 1793374579222, "cmd": "hold", "args": ["w", "0.6"]}
+{"t": 1793374579898, "cmd": "key", "args": ["e"]}
+{"t": 1793374581837, "cmd": "shot", "args": ["bag"]}
+{"t": 1793374588109, "cmd": "look", "args": ["0", "60"]}
+{"t": 1793374588669, "cmd": "key", "args": ["e"]}
+{"t": 1793374590607, "cmd": "shot", "args": ["bag2"]}
+{"t": 1793374597119, "cmd": "log", "args": []}
+{"t": 1793374597153, "cmd": "key", "args": ["E"]}
+{"t": 1793374599089, "cmd": "shot", "args": ["bag3"]}
+{"t": 1793374610914, "cmd": "hold", "args": ["w", "0.4"]}
+{"t": 1793374611379, "cmd": "hold", "args": ["e", "1.0"]}
+{"t": 1793374613448, "cmd": "shot", "args": ["bag4"]}
+{"t": 1793374620041, "cmd": "hold", "args": ["w", "0.3"]}
+{"t": 1793374620419, "cmd": "hold", "args": ["e", "1.0"]}
+{"t": 1793374622490, "cmd": "shot", "args": ["lan2"]}
+{"t": 1793374631841, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374631946, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374632048, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374632161, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374632271, "cmd": "look", "args": ["0", "-40"]}
+{"t": 1793374632339, "cmd": "shot", "args": ["turn"]}
+{"t": 1793374640484, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793374640599, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793374643698, "cmd": "shot", "args": ["street"]}
+{"t": 1793374649489, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793374649591, "cmd": "shot", "args": ["street2"]}
+{"t": 1793374658727, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793374659116, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793374659508, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793374659894, "cmd": "shot", "args": ["street3"]}
+{"t": 1793374673691, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793374674076, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793374674459, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793374674842, "cmd": "shot", "args": ["street4"]}
+{"t": 1793374685126, "cmd": "key", "args": ["F5"]}
+{"t": 1793374686072, "cmd": "shot", "args": ["f5b"]}
+{"t": 1793374686186, "cmd": "key", "args": ["Escape"]}
+{"t": 1793374687623, "cmd": "shot", "args": ["esc1"]}
+{"t": 1793374694843, "cmd": "key", "args": ["Escape"]}
+{"t": 1793374698288, "cmd": "status", "args": []}
+{"t": 1793374698322, "cmd": "log", "args": []}
+{"t": 1793374703029, "cmd": "stop", "args": []}
+{"t": 1793374703167, "cmd": "start", "args": ["--profile", "<profile-dir>/familiar.json", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793374707975, "cmd": "shot", "args": ["resume1"]}
+{"t": 1793374718658, "cmd": "note", "args": ["--shot", "resume_after_quit", "After F5, Esc, Esc (game exits), pt stop and identical pt start: resumed at 7:12 pm (quit ~7:09), witch, candy 0, lanterns 0, same spot and view direction on the street. Progress kept. No 'welcome back / night continues' message though, just the help list."]}
+{"t": 1793374718754, "cmd": "key", "args": ["F5"]}
+{"t": 1793374719699, "cmd": "key", "args": ["q"]}
+{"t": 1793374720138, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793374722204, "cmd": "shot", "args": ["beforeF9"]}
+{"t": 1793374722341, "cmd": "key", "args": ["F9"]}
+{"t": 1793374723788, "cmd": "shot", "args": ["afterF9"]}
+{"t": 1793374735502, "cmd": "note", "args": ["--shot", "f9_load", "F9 after playing on (turned cat, walked 2s): 'Loaded your save.' Back to Wren/witch at the F5 spot, clock back to 7:16 pm. Works as expected."]}
+{"t": 1793374735619, "cmd": "key", "args": ["q"]}
+{"t": 1793374736561, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793374739661, "cmd": "shot", "args": ["precrash1"]}
+{"t": 1793374744293, "cmd": "wait", "args": ["95"]}
+{"t": 1793374839323, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793374840394, "cmd": "shot", "args": ["precrash2"]}
+{"t": 1793374849372, "cmd": "wait", "args": ["30"]}
+{"t": 1793374879417, "cmd": "shot", "args": ["precrash3"]}
+{"t": 1793374887759, "cmd": "stop", "args": []}
+{"t": 1793374888102, "cmd": "start", "args": ["--profile", "<profile-dir>/familiar.json", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793374891913, "cmd": "shot", "args": ["resume2"]}
+{"t": 1793374914205, "cmd": "note", "args": ["--shot", "resume_after_kill", "pt stop without quitting, then pt start: 'Loaded your save.', 8:12 pm, still a black cat with the bag on the ground, same spot/view as before the kill (8:08 pm a few seconds earlier). The save file mtime equals the pt stop moment, so the game evidently saves on SIGTERM; nothing lost. A hard SIGKILL crash was not tested (would fall back to the 2-min autosave)."]}
+{"t": 1793374914309, "cmd": "key", "args": ["q"]}
+{"t": 1793374915748, "cmd": "key", "args": ["F1"]}
+{"t": 1793374916189, "cmd": "shot", "args": ["wren_back"]}
+{"t": 1793374924656, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374924963, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374925267, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374925571, "cmd": "look", "args": ["315", "0"]}
+{"t": 1793374925883, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793374928991, "cmd": "shot", "args": ["back2"]}
+{"t": 1793374935470, "cmd": "hold", "args": ["Shift_L+w", "2.5"]}
+{"t": 1793374938067, "cmd": "look", "args": ["0", "50"]}
+{"t": 1793374938136, "cmd": "shot", "args": ["back3"]}
+{"t": 1793374947050, "cmd": "key", "args": ["e"]}
+{"t": 1793374947491, "cmd": "look", "args": ["60", "-50"]}
+{"t": 1793374947556, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793374950666, "cmd": "shot", "args": ["house"]}
+{"t": 1793374957518, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1793374957580, "cmd": "hold", "args": ["Shift_L+w", "2.5"]}
+{"t": 1793374960184, "cmd": "shot", "args": ["porch2"]}
+{"t": 1793374967104, "cmd": "hold", "args": ["a", "0.5"]}
+{"t": 1793374967674, "cmd": "hold", "args": ["w", "1.2"]}
+{"t": 1793374968948, "cmd": "shot", "args": ["porch3"]}
+{"t": 1793374975785, "cmd": "key", "args": ["e"]}
+{"t": 1793374978229, "cmd": "shot", "args": ["knock1"]}
+{"t": 1793374987439, "cmd": "note", "args": ["--shot", "knock_garcia", "Knocked at Mr. Garcia's lit door (prompt 'E knock: trick or treat!' appeared on the porch): Candy 0 -> 2. Good feedback."]}
+{"t": 1793374987621, "cmd": "key", "args": ["F5"]}
+{"t": 1793374988559, "cmd": "shot", "args": ["f5c"]}
+{"t": 1793374988739, "cmd": "key", "args": ["Escape"]}
+{"t": 1793374989676, "cmd": "key", "args": ["Escape"]}
+{"t": 1793374993109, "cmd": "status", "args": []}
+{"t": 1793374993138, "cmd": "stop", "args": []}
+{"t": 1793374993269, "cmd": "start", "args": ["--profile", "<profile-dir>/familiar.json", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793374997085, "cmd": "shot", "args": ["resume3"]}
+{"t": 1793375003503, "cmd": "key", "args": ["e"]}
+{"t": 1793375005439, "cmd": "shot", "args": ["reknock"]}
+{"t": 1793375024842, "cmd": "key", "args": ["1"]}
+{"t": 1793375026287, "cmd": "shot", "args": ["costume_after"]}
+{"t": 1793375041111, "cmd": "key", "args": ["Escape"]}
+{"t": 1793375042059, "cmd": "key", "args": ["Escape"]}
+{"t": 1793375044494, "cmd": "stop", "args": []}
+{"t": 1793375066232, "cmd": "report", "args": []}
+{"t": 1793375329428, "cmd": "report", "args": []}
+{"t": 1793375329453, "cmd": "status", "args": []}
