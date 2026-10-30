@@ -26,7 +26,8 @@
 // Then saves: a save survives a reload (IndexedDB) with the same place, time,
 // costume, candy and bag and a "Loaded your save" message; and with the latest
 // save damaged on purpose (one byte flipped), a reload refuses it, says so, and
-// loads the save before it. Writes PNGs to <out-dir>. (Atman's smoke test, for
+// loads the save before it. The Sound button turns the sound off, and a reload
+// keeps it off. Writes PNGs to <out-dir>. (Atman's smoke test, for
 // Familiar.)
 const fs = require('fs');
 const path = require('path');
@@ -404,6 +405,13 @@ function colourCount(png) {
   const same = (a, b) => Math.hypot(a.x - b.x, a.z - b.z) < 0.25 && a.candy === b.candy && a.costume === b.costume &&
     a.jokes === b.jokes && a.knocked === b.knocked && a.cat === b.cat && a.bagDown === b.bagDown && a.spiritsSeen === b.spiritsSeen &&
     a.haleGate === b.haleGate && a.lychgate === b.lychgate;
+  // The Sound button turns the sound off, says so, and the page remembers it.
+  if ((await status()).muted) await fail('the sound starts off');
+  await page.locator('#soundBtn').click({ timeout: 10000 }).catch(() => page.locator('#soundBtn').dispatchEvent('click'));
+  const quiet = await until((st) => st.muted, 5000);
+  if (!quiet.muted) await fail('the Sound button did not turn the sound off');
+  if ((await page.locator('#soundBtn').innerText()) !== 'Muted') await fail('the Sound button does not say the sound is off');
+  if (!/Sound off/.test(quiet.message)) await fail('turning the sound off was not said: ' + quiet.message);
   const before = await status();  // the save's tick is between this and the next
   await saveNow('saving');
   const saved = await status();
@@ -415,6 +423,7 @@ function colourCount(png) {
   if (back.tick < before.tick || back.tick - saved.tick > 30 * 10)
     await fail(`the time of night did not survive a reload (saved between ${before.tick} and ${saved.tick}; back at ${back.tick})`);
   if (!/Loaded your save/.test(back.message)) await fail('no "Loaded your save" message after a reload: ' + back.message);
+  if (!back.muted) await fail('the sound came back on after a reload');
   if (await page.locator('#help').isVisible()) await fail('How to play came back after it was closed once');
   await page.screenshot({ path: path.join(outDir, 'familiar-reloaded.png'), timeout: 180000 });
 
