@@ -81,7 +81,7 @@ function problems(m, state) {
       if (overlap(m.words[i], m.words[j])) out.push(`${m.words[i].name} overlaps ${m.words[j].name}`);
   // On a touch screen the words name the buttons: no keys, no doubled names.
   for (const w of m.words.concat(m.buttons)) {
-    if (/\(E\)|\(T\b|\(Q\b|\b[EQT]  |\bQ to\b|1-4|\bTab\b/.test(w.text)) out.push(`${w.name} names a key: "${w.text}"`);
+    if (/\(E\)|\(T\b|\(Q\b|\b[EQT]  |\bQ to\b|1-4|\bTab\b|(^|[:.] )[EQT] [a-z]/.test(w.text)) out.push(`${w.name} names a key: "${w.text}"`);
     if (/Knock \(Knock\)/.test(w.text)) out.push(`${w.name} says "Knock (Knock)"`);
   }
   return out.map((p) => `${state}: ${p}`);

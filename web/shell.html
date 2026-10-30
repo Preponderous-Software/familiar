@@ -93,7 +93,10 @@
   .dialog h2 { margin: 0 0 8px; font-size: 18px; color: var(--lamp); }
   .dialog h3 { margin: 14px 0 4px; font-size: 15px; color: var(--lamp); }
   .dialog p { margin: 4px 0; }
-  .dialog .row { position: sticky; bottom: -16px; margin: 12px -18px -16px; padding: 10px 18px 12px; background: var(--panel); }
+  /* Long dialogs (the notebook) scroll under a solid footer, so Play and Close stay in reach. */
+  .dialog { background: rgba(18, 12, 20, 0.97); }
+  .dialog .row { position: sticky; bottom: -16px; margin: 12px -18px -16px; padding: 10px 18px 12px;
+    background: #140e16; border-top: 1px solid var(--line); }
   .dialog ul { margin: 6px 0 10px; padding-left: 18px; }
   .dialog li { margin: 3px 0; }
   kbd { background: #33232f; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 12px; }
@@ -363,6 +366,8 @@
                .replace(/\bQ turns you into a cat\b/, 'The Cat button turns you into a cat')
                .replace(/\bQ to be Wren( again)?/g, 'Tap Be Wren to change back')
                .replace(/\bTell a joke \(T\)/g, 'Tell a joke')
+               .replace(/: E at\b/, ': tap Light at')
+               .replace(/\bQ to be Wren\b/g, 'Tap Be Wren to change back')
                .replace(/\.  T  offer Mr\. Abbas a joke instead/, '. Or Offer a joke instead')
                .replace(/ \(Tab\)/g, '').replace(/\bTab opens\b/g, 'The Notebook button opens')
                .replace(/ +\((?:[EQT]|1-4)(?::[^)]*)?\)/g, '')  // "(E)", "(1-4)", "(Q: a cat)": the buttons say it
