@@ -35,8 +35,9 @@ struct Cover {
 
 // Draws one frame (not presented). `eyeY` is the camera's eye height, eased
 // by the session so a cat's drop from a roof is not a jump cut.
+// `notebookPage` >= 0 draws Wren's notebook open at that page over the night.
 void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool noText = false,
-            const std::string& message = "", Cover cover = {});
+            const std::string& message = "", Cover cover = {}, int notebookPage = -1);
 
 std::vector<std::string> wrapped(const std::string& text, size_t columns);
 

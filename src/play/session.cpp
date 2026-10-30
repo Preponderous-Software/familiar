@@ -4,7 +4,9 @@
 #include <cmath>
 
 #include "sim/cat.h"
+#include "sim/craft.h"
 #include "sim/doors.h"
+#include "sim/notebook.h"
 
 namespace familiar::play {
 
@@ -12,11 +14,12 @@ namespace {
 
 // SDL scancodes.
 constexpr int kW = 26, kA = 4, kS = 22, kD = 7, kE = 8, kQ = 20, kT = 23, kOne = 30, kFour = 33, kLShift = 225, kRShift = 229, kEscape = 41, kF1 = 58;
+constexpr int kTab = 43, kRight = 79, kLeft = 80;
 constexpr float kLookPerPixel = 0.0025f;
 constexpr float kHurryStick = 0.95f;
 constexpr const char* kGreeting =
     "Halloween in Hollowell. Nana waves from her porch: \"Pick a costume, love, and knock where the porch light's on.\"\n"
-    "1-4 chooses a costume. Q turns you into a cat, and back.";
+    "1-4 chooses a costume. Q turns you into a cat, and back. Tab opens Wren's notebook.";
 
 }  // namespace
 
@@ -38,8 +41,25 @@ void Session::restart() {
     bagSeen_ = w_.bagDown;
     gatesSeen_ = w_.gateOpen;
     spiritSeen_ = -1;
+    deedSeen_ = w_.deedTick;
+    pagesSeen_ = w_.pages;
+    secretsSeen_ = w_.secrets;
+    notebook_ = -1;
     say(kGreeting, 10);
 }
+
+void Session::toPlace(int spot) {
+    if (spot < 0 || spot >= kSpotCount) return;
+    const Vec2 d = spotStand(spot), face = spotFace(spot);
+    w_.player.x = d.x;
+    w_.player.z = d.z;
+    float feet = 0;
+    if (standAt(w_, w_.form, d.x, d.z, 30.0f, feet)) w_.player.feet = feet;
+    yaw_ = std::atan2(face.x - d.x, -(face.z - d.z));
+    w_.player.yaw = yaw_;
+}
+
+void Session::toggleNotebook() { notebook_ = notebook_ < 0 ? 0 : -1; }
 
 void Session::toDoorstep(int house) {
     if (house < 0 || house >= town::HouseCount) return;
@@ -107,6 +127,15 @@ void Session::onKeyDown(int scancode, bool repeat) {
         help_ = !help_;
         return;
     }
+    if (scancode == kTab && !options_.browser) {
+        toggleNotebook();
+        return;
+    }
+    if (notebook_ >= 0 && (scancode == kLeft || scancode == kRight)) {
+        const int n = std::max<int>(1, static_cast<int>(notebook(w_).size()));
+        notebook_ = (notebook_ + (scancode == kRight ? 1 : n - 1)) % n;
+        return;
+    }
     if (repeat) return;
     if (scancode == kE) {
         once_.use = true;
@@ -115,7 +144,7 @@ void Session::onKeyDown(int scancode, bool repeat) {
             say("You need your candy bag to trick-or-treat. It's where you became a cat.", 4);
     } else if (scancode == kT) {
         once_.trick = true;
-        if (w_.asking < 0) say("Tell a joke (T) when a neighbour asks for a trick.", 3);
+        if (w_.asking < 0 && !haggling(w_)) say("Tell a joke (T) when a neighbour asks for a trick.", 3);
     } else if (scancode >= kOne && scancode <= kFour) {
         once_.costume = scancode - kOne + 1;
         if (!canChooseCostume(w_)) say("Costumes are chosen on Nana's walk, before the first knock.", 3);
@@ -171,32 +200,43 @@ void Session::frame(double dt) {
         pending_ -= 1.0 / kTickRate;
         step();
     }
+    // What happened this frame, said together so one line never hides another.
+    std::string said;
+    double seconds = 0;
+    auto add = [&](const std::string& text, double s) {
+        if (text.empty()) return;
+        said += (said.empty() ? "" : "\n") + text;
+        seconds = std::max(seconds, s);
+    };
     if (w_.answeredTick != answerSeen_) {
         answerSeen_ = w_.answeredTick;
-        const std::string a = answerText(w_);
-        if (!a.empty()) say(a, kAnswerSeconds);
+        add(answerText(w_), kAnswerSeconds);
+    }
+    if (w_.deedTick != deedSeen_) {
+        deedSeen_ = w_.deedTick;
+        add(deedText(w_), 8);
     }
     if (w_.costume != costumeSeen_) {
         costumeSeen_ = w_.costume;
-        if (w_.costume != Costume::None) say(std::string("You are dressed as ") + costumeName(w_.costume) + ".", 3);
+        if (w_.costume != Costume::None) add(std::string("You are dressed as ") + costumeName(w_.costume) + ".", 3);
     }
     if (w_.form != formSeen_) {
         formSeen_ = w_.form;
         if (w_.form == Form::Cat)
-            say("You are a black cat: small and quick. Jump onto fences and sheds, slip through gaps. "
-                "Your candy bag stays here on the ground; a cat can't carry it.",
+            add("You are a black cat: small and quick. Jump onto fences and sheds, slip through gaps. "
+                "Your candy bag (with the lantern jar and basket) stays here on the ground; a cat can't carry it.",
                 5);
-        else say(w_.bagDown ? "You are Wren again. Your candy bag is where you left it." : "You are Wren again.", 3);
+        else add(w_.bagDown ? "You are Wren again. Your candy bag is where you left it." : "You are Wren again.", 3);
         bagSeen_ = w_.bagDown;
     }
     if (w_.bagDown != bagSeen_) {
         bagSeen_ = w_.bagDown;
-        if (!w_.bagDown) say("You pick up your candy bag.", 3);
+        if (!w_.bagDown) add("You pick up your candy bag.", 3);
     }
     for (int g = 0; g < town::GateCount; ++g) {
         if (w_.gateOpen[static_cast<size_t>(g)] == gatesSeen_[static_cast<size_t>(g)]) continue;
         gatesSeen_[static_cast<size_t>(g)] = w_.gateOpen[static_cast<size_t>(g)];
-        say(g == town::HaleGate ? "Click. The latch lifts and Mr. Hale's gate swings open."
+        add(g == town::HaleGate ? "Click. The latch lifts and Mr. Hale's gate swings open."
                                 : "The old bolt slides back, and the lychgate stands open.",
             4);
     }
@@ -204,14 +244,21 @@ void Session::frame(double dt) {
     const int near = spiritNear(w_);
     if (near != spiritSeen_) {
         spiritSeen_ = near;
-        if (near >= 0) say(spiritText(near), 8);
+        if (near >= 0) add(spiritText(near), 8);
     }
+    for (int i = 0; i < SecretCount; ++i)
+        if ((w_.secrets & ~secretsSeen_) & (1u << i)) add(std::string("A secret: ") + secret(i).title + ". " + secret(i).text, 8);
+    for (int i = 0; i < PageCount; ++i)
+        if ((w_.pages & ~pagesSeen_) & (1u << i)) add(std::string("A new page in Wren's notebook: ") + page(i).title + " (Tab).", 6);
+    pagesSeen_ = w_.pages;
+    secretsSeen_ = w_.secrets;
+    if (!said.empty()) say(said, seconds);
     // The eye eases toward its height, so a change of form or a drop is not a jump cut.
     const float target = eyePosition(w_).y;
     const float k = static_cast<float>(1.0 - std::exp(-dt * 12.0));
     eyeY_ += (target - eyeY_) * k;
     scene_.update(w_);
-    render(engine_, w_, help_ && !compact_, eyeY_, compact_, message_, cover_);
+    render(engine_, w_, help_ && !compact_ && notebook_ < 0, eyeY_, compact_, message_, cover_, notebook_);
 }
 
 }  // namespace familiar::play

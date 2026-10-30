@@ -13,6 +13,13 @@
 // Open) opens the gate; in the churchyard the cat sees the spirits, and Wren
 // does not; back on the doorstep, Wren picks the bag up. Places are reached
 // with the familiar.toSpot / toDoorstep page hooks, not by steering.
+// Witchcraft (M4): on a desktop, E lights Grandpa Ike's lantern once the
+// Okafors have been knocked at, Tab opens Wren's notebook, and candy buys a
+// cinnamon stick at Abbas's Market; on the phone, the big button reads Light
+// at Nana's window and lights her lantern, and the Notebook button opens the
+// notebook. On the phone no two controls overlap, and all are on screen.
+// The familiar.toPlace hook stands Wren at one of the night's places
+// (sim/craft.h); every action is then done with the real keys and buttons.
 // Writes PNGs to <out-dir>. (Atman's smoke test, for
 // Familiar.)
 const fs = require('fs');
@@ -110,6 +117,28 @@ function colourCount(png) {
     return st;
   };
 
+  // On a phone, every visible control is on screen and none overlaps another.
+  const checkLayout = async (when) => {
+    if (!phone) return;
+    const boxes = await page.evaluate(() => {
+      const out = [];
+      document.querySelectorAll('#top button, #pad button, #costumes button').forEach((b) => {
+        const r = b.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0 && getComputedStyle(b).display !== 'none' && b.offsetParent)
+          out.push({ id: b.id || b.textContent, x: r.left, y: r.top, w: r.width, h: r.height });
+      });
+      return { out, vw: innerWidth, vh: innerHeight };
+    });
+    for (const a of boxes.out) {
+      if (a.x < 0 || a.y < 0 || a.x + a.w > boxes.vw + 0.5 || a.y + a.h > boxes.vh + 0.5) await fail(`${when}: ${a.id} is off screen`);
+      for (const b of boxes.out) {
+        if (a === b) continue;
+        if (a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h) await fail(`${when}: ${a.id} overlaps ${b.id}`);
+      }
+    }
+    console.log(`ok: ${boxes.out.length} controls on screen, none overlapping (${when})`);
+  };
+
   // As the cat: open Mr. Hale's latch from inside his yard with `use` (E, or
   // a tap on the action button), then go among the stones and see the spirits.
   const catChecks = async (use) => {
@@ -151,6 +180,7 @@ function colourCount(png) {
   const start = { x: s.x, z: s.z, yaw: s.yaw };
   const box = await page.locator('#canvas').boundingBox();
   if (phone) {
+    await checkLayout('choosing a costume');
     if (!(await page.locator('#panel').isVisible())) await fail('the HUD panel is not shown on a narrow page');
     const panel = await page.locator('#panel').innerText();
     if (!/Candy/.test(panel)) await fail('the HUD panel does not show the candy: ' + panel);
@@ -170,6 +200,30 @@ function colourCount(png) {
     s = await until((st) => Math.abs(st.yaw - start.yaw) > 0.05);
     if (Math.abs(s.yaw - start.yaw) <= 0.05) await fail('a drag on the right half did not turn the view');
     await page.waitForTimeout(400);
+
+    // Nana's window lantern with the big button, which now reads Light.
+    await page.evaluate(() => window.familiar.toPlace(0));
+    s = await until((st) => st.use === 'Light');
+    await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Light', null, { timeout: 10000 })
+      .catch(() => {});
+    const label = (await page.locator('#use').innerText()).trim();
+    console.log(`at Nana's window: button ${label}, prompt ${s.prompt}`);
+    if (label !== 'Light') await fail('at Nana\'s window the big button should read Light, not ' + label);
+    await checkLayout('at the lantern');
+    await page.locator('#use').tap();
+    s = await until((st) => st.lanterns >= 1);
+    if (s.lanterns < 1) await fail('tapping Light did not light Nana\'s window lantern');
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(outDir, 'familiar-lantern.png'), timeout: 180000 });
+    await page.locator('#bookBtn').tap();
+    await page.waitForTimeout(300);
+    if (!(await page.locator('#notebook').isVisible())) await fail('the Notebook button did not open the notebook');
+    const book = await page.locator('#bookPages').innerText();
+    if (!/Samhain/.test(book) || !/\[S1\]/.test(book)) await fail('the notebook lacks the Samhain page and its sources: ' + book.slice(0, 200));
+    await page.screenshot({ path: path.join(outDir, 'familiar-notebook.png'), timeout: 180000 });
+    await page.locator('#bookClose').tap();
+    if (await page.locator('#notebook').isVisible()) await fail('Close did not close the notebook');
+    console.log('ok: Light lit Nana\'s lantern; the notebook opened with the Samhain page');
     await page.locator('#catBtn').tap();
     s = await until((st) => st.cat);
     if (!s.cat) await fail('the Cat button did not turn Wren into a cat');
@@ -233,6 +287,39 @@ function colourCount(png) {
     s = await until((st) => !st.bagDown);
     if (s.bagDown || s.candy !== candy) await fail('E did not pick the bag up, candy and all');
     console.log('ok: the bag was picked up with ' + s.candy + ' candy');
+
+    // Grandpa Ike's lantern, now the Okafors have been knocked at.
+    await page.evaluate(() => window.familiar.toPlace(1));
+    s = await until((st) => /light Grandpa Ike/i.test(st.prompt));
+    if (!/light Grandpa Ike/i.test(s.prompt)) await fail('no prompt to light Grandpa Ike\'s lantern: ' + s.prompt);
+    await page.keyboard.press('KeyE');
+    s = await until((st) => st.lanterns >= 1);
+    if (s.lanterns < 1) await fail('E did not light Grandpa Ike\'s lantern');
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(outDir, 'familiar-lantern.png'), timeout: 180000 });
+    // Tab opens Wren's notebook, which has the guising page now.
+    await page.keyboard.press('Tab');
+    await page.waitForTimeout(300);
+    if (!(await page.locator('#notebook').isVisible())) await fail('Tab did not open the notebook');
+    const book = await page.locator('#bookPages').innerText();
+    if (!/Guising/.test(book)) await fail('the notebook lacks the guising page: ' + book.slice(0, 200));
+    await page.keyboard.press('Tab');
+    await page.waitForTimeout(300);
+    if (await page.locator('#notebook').isVisible()) await fail('Tab did not close the notebook');
+    // Candy is money: knock at Abbas's Market, then buy a cinnamon stick.
+    await page.evaluate(() => window.familiar.toDoorstep(8));
+    s = await until((st) => /knock/.test(st.prompt));
+    const before = s.candy;
+    await page.keyboard.press('KeyE');
+    s = await until((st) => st.candy > before);
+    s = await until((st) => /buy a cinnamon stick/.test(st.prompt));
+    if (!/buy a cinnamon stick/.test(s.prompt)) await fail('the market offers no cinnamon: ' + s.prompt);
+    const purse = s.candy;
+    await page.keyboard.press('KeyE');
+    s = await until((st) => st.cinnamon);
+    console.log(`at the market: candy ${purse} -> ${s.candy}, cinnamon ${s.cinnamon}`);
+    if (!s.cinnamon || s.candy !== purse - 3) await fail('buying cinnamon did not cost three candy');
+    console.log('ok: E lit Grandpa Ike\'s lantern; Tab opened the notebook; candy bought a cinnamon stick');
   }
   // The loading shell finished; and without WebGL 2 it shows the trailer (or
   // its still) and says why, and the engine never downloads.

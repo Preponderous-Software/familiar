@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "sim/cat.h"
+#include "sim/craft.h"
 
 namespace familiar {
 
@@ -12,10 +13,12 @@ namespace {
 
 const Neighbour kNeighbours[T::HouseCount] = {
     {"Nana", 0, false, Costume::None, "", "", "", ""},
-    {"Mrs. Okafor", 2, true, Costume::None, "\"Two for you, and don't tell your Nana.\"", "",
+    {"Mrs. Okafor", 2, true, Costume::None,
+     "\"Two for you, and don't tell your Nana. Would you light Grandpa Ike's lantern for us? It's at the end of the porch.\"", "",
      "\"Trick or treat? In this house it's a trick first. Tell us a joke!\" (T: tell a joke, E: just the treat)",
-     "\"Ha! Grandpa Ike would have loved that one. Three for you.\""},
-    {"Mr. Hale", 0, false, Costume::None, "", "", "", ""},
+     "\"Ha! Grandpa Ike would have loved that one. Three for you. Would you light his lantern for us, at the end of the porch?\""},
+    {"Mr. Hale", 2, false, Costume::None,
+     "\"You lit June's lantern. I couldn't, this year. Thank you. She always gave the big bars; here, two for you.\"", "", "", ""},
     {"Mrs. Lindqvist", 3, false, Costume::Pumpkin, "\"Full-size bars this year. Halloween comes once!\"",
      "\"A pumpkin! Like the ones on my step. Take another.\"", "", ""},
     {"Dr. Pell", 1, false, Costume::None, "\"A toothbrush for you... and, all right, one candy. Brush after.\"", "", "", ""},
@@ -67,7 +70,7 @@ const char* joke(int i) { return kJokes[((i % kJokeCount) + kJokeCount) % kJokeC
 
 bool porchLightOn(const World& w, T::HouseId h) {
     if (h == T::Nana) return true;
-    if (h == T::Hale) return false;  // dark since last winter
+    if (h == T::Hale) return w.lit[HaleStep];  // dark since last winter, until June's lantern is lit (however late)
     const int minute = static_cast<int>(gameMinutes(w));
     if (h == T::Market) return minute < 23 * 60;
     return minute < kPorchLightsOff;

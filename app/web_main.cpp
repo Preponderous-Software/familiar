@@ -12,7 +12,9 @@
 #include "play/session.h"
 #include "play/view.h"
 #include "sim/cat.h"
+#include "sim/craft.h"
 #include "sim/doors.h"
+#include "sim/notebook.h"
 #include "strata/strata.hpp"
 
 using namespace familiar;
@@ -23,7 +25,7 @@ struct Game {
     std::unique_ptr<strata::Engine> engine;
     std::unique_ptr<play::Session> session;
     double last = 0;
-    std::string statusJson;
+    std::string statusJson, notebookJson;
 };
 
 Game* g = nullptr;
@@ -83,6 +85,30 @@ EMSCRIPTEN_KEEPALIVE void familiar_to_doorstep(int house) {
 EMSCRIPTEN_KEEPALIVE void familiar_to_spot(int spot) {
     if (g) g->session->toSpot(spot);
 }
+EMSCRIPTEN_KEEPALIVE void familiar_to_place(int place) {
+    if (g) g->session->toPlace(place);
+}
+// Wren's notebook for the page's own dialog: [{"title": ..., "text": ...}, ...].
+EMSCRIPTEN_KEEPALIVE const char* familiar_notebook() {
+    if (!g) return "[]";
+    std::string o = "[";
+    bool first = true;
+    for (const Page* p : notebook(g->session->world())) {
+        if (!first) o += ',';
+        first = false;
+        o += "{\"title\":";
+        jsonString(o, p->title);
+        o += ",\"text\":";
+        // Keep the paragraphs: jsonString turns control characters into spaces.
+        std::string text;
+        for (char ch : std::string(p->text)) text += ch == '\n' ? '|' : ch;
+        jsonString(o, text);
+        o += '}';
+    }
+    o += ']';
+    g->notebookJson = std::move(o);
+    return g->notebookJson.c_str();
+}
 EMSCRIPTEN_KEEPALIVE void familiar_cover(double right, double bottom) {
     if (g) g->session->setCover(static_cast<float>(right), static_cast<float>(bottom));
 }
@@ -118,8 +144,19 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_status() {
     for (const Walker& sp : spirits(w)) shown += sp.shown ? 1 : 0;
     o += ",\"spiritsShown\":" + std::to_string(shown);
     o += ",\"spiritsSeen\":" + std::to_string(spiritsSeen(w));
+    jsonBool(o, "haggle", haggling(w));
+    o += ",\"lanterns\":" + std::to_string(lanternsLit(w));
+    o += ",\"apples\":" + std::to_string(w.apples);
+    jsonBool(o, "rosemary", w.rosemary);
+    jsonBool(o, "cinnamon", w.cinnamon);
+    jsonBool(o, "cider", w.cider);
+    jsonBool(o, "offered", w.offered);
+    o += ",\"smoke\":" + std::to_string(static_cast<int>(w.smoke));
+    o += ",\"pages\":" + std::to_string(pagesFound(w));
+    o += ",\"secrets\":" + std::to_string(secretsFound(w));
     o += ",\"use\":";
-    jsonString(o, useLabel(w));
+    const std::string word = craftWord(w);
+    jsonString(o, word.empty() ? useLabel(w) : word);
     o += ",\"message\":";
     jsonString(o, s.message());
     o += ",\"prompt\":";

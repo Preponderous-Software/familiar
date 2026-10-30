@@ -1,5 +1,7 @@
 #include "sim/npc.h"
 
+#include <cmath>
+
 #include "sim/doors.h"
 #include "sim/town.h"
 
@@ -59,14 +61,75 @@ std::vector<Walker> children(const World& w) {
     return out;
 }
 
-Walker nana(const World&) {
+namespace {
+
+constexpr int kNanaLeaves = 22 * 60 + 30;  // half past ten
+constexpr float kNanaSpeed = 1.2f;         // metres per second of play
+
+// Nana's way to the stones: down her front walk, east along Elm Street, over
+// the bridge and up the hill path, to her place inside the circle.
+const Vec2 kNanaPath[] = {
+    {-67.2f, -9.2f}, {-66.0f, -7.0f}, {-66.0f, -2.6f}, {42.0f, -2.6f}, {45.0f, 0.0f},
+    {59.5f, 0.0f},   {61.0f, -3.0f},  {76.0f, -57.0f}, {78.8f, -60.8f},
+};
+constexpr int kNanaPoints = sizeof kNanaPath / sizeof kNanaPath[0];
+
+float segment(int i) {
+    const float dx = kNanaPath[i + 1].x - kNanaPath[i].x, dz = kNanaPath[i + 1].z - kNanaPath[i].z;
+    return std::sqrt(dx * dx + dz * dz);
+}
+
+float pathLength() {
+    float l = 0;
+    for (int i = 0; i + 1 < kNanaPoints; ++i) l += segment(i);
+    return l;
+}
+
+// Seconds of play since Nana set off (negative before).
+float sinceLeaving(const World& w) {
+    const double minutes = gameMinutes(w) - kNanaLeaves;
+    return static_cast<float>(minutes / kGameMinutesPerSecond);
+}
+
+float feetAt(float x, float z) {
+    if (T::kBridge.contains(x, z)) return T::kBridgeDeck;
+    return T::groundHeight(x, z);
+}
+
+}  // namespace
+
+Walker nana(const World& w) {
     Walker n;
-    const Vec2 d = T::doorstep(T::Nana);
-    n.at = {d.x - 1.2f, T::kPorchHeight, d.z + 0.6f};
-    n.yaw = kPi;
     n.height = 1.62f;
     n.shown = true;
+    const float t = sinceLeaving(w);
+    if (t <= 0) {
+        const Vec2 d = T::doorstep(T::Nana);
+        n.at = {d.x - 1.2f, T::kPorchHeight, d.z + 0.6f};
+        n.yaw = kPi;
+        return n;
+    }
+    float s = t * kNanaSpeed;
+    for (int i = 0; i + 1 < kNanaPoints; ++i) {
+        const float l = segment(i);
+        const Vec2 a = kNanaPath[i], b = kNanaPath[i + 1];
+        if (s <= l || i + 2 == kNanaPoints) {
+            const float k = clampf(s / l, 0.0f, 1.0f);
+            const float x = a.x + (b.x - a.x) * k, z = a.z + (b.z - a.z) * k;
+            n.at = {x, feetAt(x, z) + 0.03f * detSin(t * 6.0f) * (k < 1 ? 1.0f : 0.0f), z};
+            n.yaw = detAtan2(b.x - a.x, -(b.z - a.z));
+            if (k >= 1) n.yaw = detAtan2(T::kHill.x - x, -(T::kHill.z - z));  // at the stones, facing the middle
+            return n;
+        }
+        s -= l;
+    }
     return n;
+}
+
+bool nanaArrived(const World& w) { return sinceLeaving(w) * kNanaSpeed >= pathLength(); }
+
+int nanaArrivalMinute() {
+    return kNanaLeaves + static_cast<int>(pathLength() / kNanaSpeed * kGameMinutesPerSecond) + 1;
 }
 
 }  // namespace familiar

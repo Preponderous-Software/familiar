@@ -68,6 +68,9 @@ MeshData buildSpirit(int who, float height);
 
 // Wren's candy bag, set down on the ground (its bottom at the origin).
 MeshData buildBag();
+// Smoke, Nana's old cat: a small cat sitting, at the origin facing -z. The
+// scene draws it translucent and unlit, the way spirits are seen tonight.
+MeshData buildSmoke();
 
 // Where the jack-o'-lanterns sit on a house's porch (two each, none at Hale's).
 std::vector<Vec3> pumpkins(town::HouseId h);

@@ -76,6 +76,8 @@
     border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; z-index: 3;
     width: min(92vw, 480px); max-height: 88vh; overflow-y: auto; display: none; }
   .dialog h2 { margin: 0 0 8px; font-size: 18px; color: var(--lamp); }
+  .dialog h3 { margin: 14px 0 4px; font-size: 15px; color: var(--lamp); }
+  .dialog p { margin: 4px 0; }
   .dialog ul { margin: 6px 0 10px; padding-left: 18px; }
   .dialog li { margin: 3px 0; }
   kbd { background: #33232f; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 12px; }
@@ -95,6 +97,7 @@
   <span class="stat" id="clock"></span>
   <span class="stat opt" id="candy"></span>
   <span class="note" title="Saves come in a later version">No saves yet: a reload starts the night over</span>
+  <button id="bookBtn" title="Wren's notebook (Tab)">Notebook</button>
   <button id="newBtn" title="Start the night again at 5:20 pm">New</button>
   <button id="helpBtn" title="How to play" aria-label="How to play">?</button>
 </div>
@@ -110,7 +113,7 @@
     <div id="stickHint">drag left: walk &middot; drag right: look</div>
   </div>
   <div id="pad" role="group" aria-label="Actions">
-    <button id="use" data-key="8" title="Knock (E)">Knock</button>
+    <button id="use" data-key="8" title="Knock, or light, pick, buy, stir, offer (E)">Knock</button>
     <button id="catBtn" data-key="20" title="Turn into a cat, or back (Q)">Cat</button>
     <button id="trickBtn" data-key="23" title="Tell a joke (T)">Tell a joke</button>
   </div>
@@ -122,6 +125,13 @@
 </div>
 
 <div id="loading" style="display: none"></div>
+
+<div id="notebook" class="dialog" role="dialog" aria-labelledby="bookTitle">
+  <h2 id="bookTitle">Wren's notebook</h2>
+  <div id="bookPages"></div>
+  <p id="bookCount" style="color:var(--dim);font-size:13px"></p>
+  <div class="row"><button id="bookClose">Close</button></div>
+</div>
 
 <div id="help" class="dialog" role="dialog" aria-labelledby="helpTitle">
   <h2 id="helpTitle">Familiar</h2>
@@ -135,6 +145,8 @@
     <li>Mouse: look. <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>: walk, <kbd>Shift</kbd>: hurry.</li>
     <li><kbd>1</kbd>&ndash;<kbd>4</kbd> on Nana's walk: choose a costume. <kbd>E</kbd>: knock, pick up your bag, or open a latch.
       <kbd>T</kbd>: tell a joke when a neighbour asks for a trick. <kbd>Q</kbd>: turn into a cat, and back.</li>
+    <li><kbd>E</kbd> also lights a lantern, picks an apple or rosemary, buys at Abbas's Market, stirs Nana's pot and makes
+      the offering. <kbd>Tab</kbd>: Wren's notebook (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> turn its pages on a desktop).</li>
     <li><kbd>F1</kbd>: the controls on screen. <kbd>Esc</kbd>: free the mouse.</li>
   </ul>
   <ul class="for-touch">
@@ -142,9 +154,12 @@
     <li>Choose a costume with the buttons on Nana's walk. <b>Knock</b> at a door; <b>Tell a joke</b> when asked for a
       trick; <b>Cat</b> turns you into a cat and back. The big button changes to <b>Pick up</b> by your bag and
       <b>Open</b> at a latch.</li>
+    <li>It also changes with what is in reach: <b>Light</b> a lantern, <b>Pick</b> an apple or rosemary,
+      <b>Buy</b> at the market, <b>Stir</b> the pot, <b>Offer</b> at the stones. <b>Notebook</b> (top) opens Wren's notebook.</li>
   </ul>
-  <p style="color:var(--dim);font-size:13px">An early version: lanterns, Nana's cider, Smoke, secrets and saves are on
-  the way. The night starts over when you reload. Built on the <a href="https://github.com/Preponderous-Software/strata">Strata</a>
+  <p>Tonight Nana keeps Samhain, and you help: light the four family lanterns, brew her cider, find Smoke, her old cat,
+  and bring her to the stones on Lantern Hill for midnight.</p>
+  <p style="color:var(--dim);font-size:13px">An early version: saves are on the way, so the night starts over when you reload. Built on the <a href="https://github.com/Preponderous-Software/strata">Strata</a>
   engine; <a href="https://github.com/Preponderous-Software/familiar">source</a>.</p>
   <div class="row"><button id="helpClose">Play</button></div>
 </div>
@@ -157,7 +172,41 @@
   var touchMode = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
   function api(name, ret, args) { return Module.cwrap(name, ret, args || []); }
-  function dialogOpen() { return $('help').style.display === 'block'; }
+  function dialogOpen() { return $('help').style.display === 'block' || $('notebook').style.display === 'block'; }
+
+  // Wren's notebook, from the game: every page found so far ('|' separates paragraphs).
+  function openNotebook() {
+    if (!ready) return;
+    if (document.pointerLockElement) document.exitPointerLock();
+    var pages = [];
+    try { pages = JSON.parse(call.notebook()); } catch (e) {}
+    var box = $('bookPages');
+    box.textContent = '';
+    if (!pages.length) {
+      var p = document.createElement('p');
+      p.textContent = 'Nothing yet. Pages fill in as the night goes: light Nana\'s window lantern first.';
+      box.appendChild(p);
+    }
+    pages.forEach(function (pg) {
+      var h = document.createElement('h3');
+      h.textContent = pg.title;
+      box.appendChild(h);
+      pg.text.split('|').forEach(function (t) {
+        var p = document.createElement('p');
+        p.textContent = t;
+        box.appendChild(p);
+      });
+    });
+    var s = window.familiarStatus || {};
+    $('bookCount').textContent = 'Pages: ' + (s.pages || 0) + ' of 7. Secrets found: ' + (s.secrets || 0) + ' of 8.';
+    $('notebook').style.display = 'block';
+    $('notebook').scrollTop = 0;
+  }
+  function closeNotebook() {
+    $('notebook').style.display = 'none';
+    if (!touchMode && canvas.requestPointerLock) canvas.requestPointerLock();
+    refresh();
+  }
 
   function setTouch(on) {
     touchMode = on;
@@ -199,7 +248,7 @@
       $('use').textContent = s.use;
       $('use').title = s.use + ' (E)';
     }
-    document.body.classList.toggle('asking', s.asking);
+    document.body.classList.toggle('asking', s.asking || s.haggle);
     document.body.classList.toggle('choosing', s.choosing);
     Array.prototype.forEach.call(document.querySelectorAll('#costumes button'), function (b) {
       b.setAttribute('aria-pressed', String(Number(b.dataset.costume) === s.costume));
@@ -219,19 +268,21 @@
       });
       tellCover();
     }
-    $('prompt').textContent = touchWords(s.prompt);
-    $('msg').textContent = touchWords(s.message);
+    $('prompt').textContent = touchWords(s.prompt, s.use);
+    $('msg').textContent = touchWords(s.message, s.use);
     window.familiarStatus = s;
   }
 
   // On a touch screen the game's words name the buttons, not the keys.
-  function touchWords(text) {
+  function touchWords(text, use) {
     if (!touchMode || !text) return text;
     return text.replace(/^Choose a costume:.*$/, 'Choose a costume (buttons below)')
                .replace(/^T  tell a joke     E  just the treat$/, 'Tell a joke, or Knock for just the treat')
                .replace(/\(T: tell a joke, E: just the treat\)/, '(Tell a joke, or Knock for just the treat)')
                .replace(/\(1-4\)/, '(the buttons below)')
                .replace(/^E  (.)/, function (m, c) { return c.toUpperCase(); }).replace(/ \(E\)/g, '').replace(/\(Q: ([^)]*)\)/g, '(Cat button: $1)')
+               .replace(/\bT  offer/, 'Tell a joke: offer').replace(/\(Tab\)/g, '(Notebook)')
+               .replace(/Tab opens/g, 'The Notebook button opens').replace(/\(Q\)/g, '(Cat button)')
                .replace(/\bQ to\b/g, 'Tap Be Wren to').replace(/\bQ turns\b/g, 'The Cat button turns');
   }
 
@@ -256,8 +307,15 @@
     call.look(dx, dy);
   });
   window.addEventListener('keydown', function (e) {
-    if (!ready || dialogOpen()) return;
-    if (e.key === 'Tab' || e.key === 'F1') e.preventDefault();
+    if (!ready) return;
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if ($('notebook').style.display === 'block') closeNotebook();
+      else if (!dialogOpen()) openNotebook();
+      return;
+    }
+    if (dialogOpen()) return;
+    if (e.key === 'F1') e.preventDefault();
   }, true);
 
   var stick = null, lookers = {};
@@ -315,6 +373,8 @@
     });
     $('panel').addEventListener('click', function () { $('panel').classList.toggle('folded'); tellCover(); });
     $('newBtn').addEventListener('click', function () { call.restart(); refresh(); });
+    $('bookBtn').addEventListener('click', openNotebook);
+    $('bookClose').addEventListener('click', closeNotebook);
     $('helpBtn').addEventListener('click', function () {
       if (document.pointerLockElement) document.exitPointerLock();
       $('help').style.display = 'block';
@@ -344,6 +404,8 @@
         restart: api('familiar_restart'),
         toDoorstep: api('familiar_to_doorstep', null, ['number']),
         toSpot: api('familiar_to_spot', null, ['number']),
+        toPlace: api('familiar_to_place', null, ['number']),
+        notebook: api('familiar_notebook', 'string'),
         help: api('familiar_help', null, ['number']),
         cover: api('familiar_cover', null, ['number', 'number']),
         resize: api('familiar_resize', null, ['number', 'number', 'number']),
