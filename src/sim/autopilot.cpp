@@ -1,5 +1,6 @@
 #include "sim/autopilot.h"
 
+#include "sim/cat.h"
 #include "sim/doors.h"
 #include "sim/town.h"
 
@@ -79,6 +80,7 @@ bool playthroughDone(const World& w) {
 const char* autopilotDoing(const World& w) {
     if (w.form == Form::Cat) return "turning back into Wren";
     if (w.costume == Costume::None && canChooseCostume(w)) return "choosing a costume";
+    if (w.bagDown) return "fetching the candy bag";
     if (w.asking >= 0) return "telling a joke";
     const int h = autopilotTarget(w);
     if (h < 0) return playthroughDone(w) ? "home on Nana's porch" : "walking home to Nana's";
@@ -99,6 +101,14 @@ Input autopilot(const World& w) {
     }
     if (w.costume == Costume::None && canChooseCostume(w)) {
         in.costume = static_cast<int32_t>(kAutopilotCostume);
+        return in;
+    }
+    if (w.bagDown) {  // the candy bag first: no door gives candy without it
+        if (nearBag(w)) {
+            in.use = true;
+            return in;
+        }
+        walkTo(w, {w.bag.x, w.bag.z}, in);
         return in;
     }
     if (w.asking >= 0 && atDoor(w) == w.asking) {

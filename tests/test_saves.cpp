@@ -6,6 +6,7 @@
 // format still load; and the playthrough saved and loaded anywhere ends on
 // the same pinned fingerprint.
 #include <cinttypes>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
@@ -19,6 +20,7 @@
 #include "save/save.h"
 #include "save/sha256.h"
 #include "sim/autopilot.h"
+#include "sim/cat.h"
 #include "sim/doors.h"
 #include "sim/world.h"
 
@@ -122,6 +124,8 @@ int main(int argc, char** argv) {
         tick(w, q);
         w.player.feet = 1.0f;
         w.gateOpen[T::HaleGate] = true;
+        CHECK(w.bagDown);
+        w.spiritsSeen = 0b1010;
         CHECK(roundTrips(w));
         World late = newWorld(1);
         late.tick = 5 * 60 * 60 * kTickRate;  // 10:20 pm
@@ -194,6 +198,13 @@ int main(int argc, char** argv) {
         CHECK(refused(odd));
         odd = newWorld(1);
         odd.player.yaw = std::numeric_limits<float>::quiet_NaN();
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.spiritsSeen = 1u << SpiritCount;
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.bagDown = true;
+        odd.bag = {1e7f, 0, 0};
         CHECK(refused(odd));
         // A bool that is neither 0 nor 1, sealed: refused.
         std::vector<uint8_t> b = encodeSave(newWorld(1));
@@ -283,24 +294,49 @@ int main(int argc, char** argv) {
         CHECK(r.message == "Loaded your previous save.");
     }
 
-    // Saves of every earlier format still load, and the night goes on from
-    // them to the same end. The fixtures were written by format 1 through
-    // writeSave (tools/make_save_fixtures.cpp; see tests/fixtures/README.md):
-    // one with Ms. Bright waiting for a joke, one at the playthrough's end.
-    {
+    // Saves of every format still load, and the night goes on from them to
+    // the same end. The fixtures were written through writeSave
+    // (tools/make_save_fixtures.cpp; see tests/fixtures/README.md): for each
+    // format, one with Ms. Bright waiting for a joke and one at the
+    // playthrough's end; from format 2, a cat who left the bag behind.
+    for (const char* v : {"v1", "v2"}) {
+        const std::string dirName = FAMILIAR_FIXTURES "/";
         World asking;
         std::string why;
-        CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v1-bright-asking.save"), asking, &why));
+        CHECK(decodeSave(readAll(dirName + v + "-bright-asking.save"), asking, &why));
         CHECK(asking.asking == T::Bright && asking.costume == Costume::Ghost);
+        // Format 1 knew nothing of the bag or the spirits: it loads with the bag in hand and none seen.
+        CHECK(!asking.bagDown && asking.spiritsSeen == 0);
         CHECK(fingerprint(asking) == fingerprint(played(asking.tick)));  // just as the rules have it now
         while (!playthroughDone(asking) && asking.tick < kPlaythroughLimit) tick(asking, autopilot(asking));
         CHECK(fingerprint(asking) == kPlaythroughFingerprint);
 
         World end;
-        CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v1-home.save"), end, &why));
+        CHECK(decodeSave(readAll(dirName + v + "-home.save"), end, &why));
         CHECK(playthroughDone(end) && end.candy == 18);
         CHECK(fingerprint(end) == kPlaythroughFingerprint);
         CHECK(roundTrips(end));
+    }
+    {
+        // A format 1 save re-saved today is format 2, and comes back the same.
+        World old;
+        const std::vector<uint8_t> v1 = readAll(FAMILIAR_FIXTURES "/v1-home.save");
+        CHECK(v1.size() > 12 && v1[8] == 1);
+        CHECK(decodeSave(v1, old, nullptr));
+        const std::vector<uint8_t> resaved = encodeSave(old);
+        CHECK(resaved[8] == kSaveVersion && resaved.size() > v1.size());
+        CHECK(roundTrips(old));
+        // And every bit of a format 1 save is still guarded.
+        CHECK(damagedAccepted(v1) == 0);
+
+        World cat;
+        std::string why;
+        CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v2-cat-bag-down.save"), cat, &why));
+        CHECK(cat.form == Form::Cat && cat.bagDown && cat.knocked[T::Garcia]);
+        CHECK(std::fabs(cat.bag.x - T::doorstep(T::Garcia).x) < 0.5f && std::fabs(cat.bag.z - T::doorstep(T::Garcia).z) < 0.5f);  // where Wren changed
+        CHECK((cat.spiritsSeen & (1u << Reader)) != 0);
+        CHECK(roundTrips(cat));
+        CHECK(damagedAccepted(readAll(FAMILIAR_FIXTURES "/v2-cat-bag-down.save")) == 0);
     }
 
     // Saved and loaded anywhere (every 97 ticks, through the slot), the

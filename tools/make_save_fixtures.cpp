@@ -5,6 +5,9 @@
 //
 //   v<N>-bright-asking.save  Ms. Bright has just asked for a trick
 //   v<N>-home.save           the playthrough's end, home on Nana's porch
+//   v<N>-cat-bag-down.save   (from format 2) after the Garcias' door Wren became
+//                            the cat, leaving the bag there, and the cat has
+//                            seen the reader in the churchyard
 //
 // Fixtures are written once per format and then kept: tests/test_saves.cpp
 // loads every one of them, so a later format that cannot read an older save
@@ -15,6 +18,7 @@
 
 #include "save/save.h"
 #include "sim/autopilot.h"
+#include "sim/cat.h"
 #include "sim/world.h"
 
 using namespace familiar;
@@ -51,5 +55,23 @@ int main(int argc, char** argv) {
     if (w.asking != town::Bright || !write(dir, "bright-asking", w)) return 1;
     while (!playthroughDone(w) && w.tick < kPlaythroughLimit) tick(w, autopilot(w));
     if (!playthroughDone(w) || !write(dir, "home", w)) return 1;
+
+    // The cat: the bag left outside the Garcias', a spirit seen.
+    World c = newWorld(1);
+    while (!c.knocked[town::Garcia] && c.tick < kPlaythroughLimit) tick(c, autopilot(c));
+    Input q;
+    q.yaw = c.player.yaw;
+    q.toggleForm = true;
+    tick(c, q);
+    const Walker reader = spirits(c)[Reader];
+    c.player.x = reader.at.x + 1.5f;
+    c.player.z = reader.at.z;
+    float feet = 0;
+    if (!standAt(c, c.form, c.player.x, c.player.z, 10.0f, feet)) return 1;
+    c.player.feet = feet;
+    Input still;
+    still.yaw = c.player.yaw;
+    tick(c, still);
+    if (!c.bagDown || c.form != Form::Cat || !(c.spiritsSeen & (1u << Reader)) || !write(dir, "cat-bag-down", c)) return 1;
     return 0;
 }

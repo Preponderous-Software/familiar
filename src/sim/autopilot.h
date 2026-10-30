@@ -1,7 +1,8 @@
 // The autopilot: a stand-in player that plays the night from the World alone.
 // It chooses a costume on Nana's walk, knocks at every lit porch along Elm
 // Street from west to east, tells a joke wherever a neighbour asks for a
-// trick, and walks home to Nana's porch, which is the pinned playthrough.
+// trick, and walks home to Nana's porch, which is the pinned playthrough. A
+// cat is turned back into Wren, and a dropped candy bag fetched, first.
 //
 // It keeps no memory between ticks: what it does next is a function of the
 // World, so a saved game it loads plays on exactly as if it had never
@@ -35,7 +36,7 @@ bool playthroughDone(const World& w);
 
 // The fingerprint the playthrough ends on with seed 1 (see
 // tests/test_autopilot.cpp and familiar --headless --autopilot).
-constexpr uint64_t kPlaythroughFingerprint = 0x8953c8ed48851dddULL;
+constexpr uint64_t kPlaythroughFingerprint = 0x82336de616910847ULL;
 
 // The playthrough's bound, in ticks: it is done long before this.
 constexpr int64_t kPlaythroughLimit = 60LL * 60 * kTickRate;

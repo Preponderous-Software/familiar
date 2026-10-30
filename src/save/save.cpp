@@ -9,6 +9,7 @@
 #include <type_traits>
 
 #include "save/sha256.h"
+#include "sim/cat.h"
 
 namespace fs = std::filesystem;
 
@@ -25,10 +26,10 @@ constexpr size_t kDigest = 32;
 // that a save from the version before still loads (tests/test_saves.cpp).
 // When the World changes size this stops the build; update the size here
 // once the save carries the new fields.
-static_assert(sizeof(World) == 88, "World changed: add its new fields to the save (src/save/save.cpp), bump kSaveVersion");
+static_assert(sizeof(World) == 112, "World changed: add its new fields to the save (src/save/save.cpp), bump kSaveVersion");
 
 // Writes little-endian.
-struct Writer {
+struct ByteWriter {
     std::vector<uint8_t> out;
     void raw(uint64_t v, int bytes) {
         for (int i = 0; i < bytes; ++i) out.push_back(static_cast<uint8_t>(v >> (8 * i)));
@@ -56,7 +57,7 @@ struct Writer {
 };
 
 // Reads little-endian, refusing to read past the end.
-struct Reader {
+struct ByteReader {
     const uint8_t* p;
     size_t n, at = 0;
     bool ok = true;
@@ -127,6 +128,12 @@ struct Fields {
         v(w.asking);
         v(w.jokes);
         v(w.costume);
+        if (version < 2) return;  // a format 1 save was made before the cat could drop the bag
+        v(w.bagDown);
+        v(w.bag.x);
+        v(w.bag.y);
+        v(w.bag.z);
+        v(w.spiritsSeen);
     }
 };
 
@@ -138,7 +145,7 @@ bool plausible(const World& w, std::string* error) {
         if (error) *error = why;
         return false;
     };
-    const float floats[] = {w.player.x, w.player.z, w.player.feet, w.player.yaw, w.player.pitch};
+    const float floats[] = {w.player.x, w.player.z, w.player.feet, w.player.yaw, w.player.pitch, w.bag.x, w.bag.y, w.bag.z};
     for (float f : floats)
         if (!std::isfinite(f)) return fail("a number in the save is not finite");
     if (std::fabs(w.player.x) > town::kWalkLimit + 1 || std::fabs(w.player.z) > town::kWalkLimit + 1)
@@ -156,6 +163,9 @@ bool plausible(const World& w, std::string* error) {
     if (w.asking < -1 || w.asking >= town::HouseCount) return fail("a trick asked for at a house that is not there");
     if (w.answeredTick < -1 || w.answeredTick > w.tick) return fail("a door answered at an impossible time");
     if (w.candy < 0 || w.jokes < 0) return fail("a count below zero");
+    if (std::fabs(w.bag.x) > town::kWalkLimit + 1 || std::fabs(w.bag.z) > town::kWalkLimit + 1 || w.bag.y < -10 || w.bag.y > 100)
+        return fail("the candy bag is outside the town");
+    if ((w.spiritsSeen >> SpiritCount) != 0) return fail("a spirit seen that is not out tonight");
     return true;
 }
 
@@ -169,12 +179,12 @@ bool readFile(const std::string& path, std::vector<uint8_t>& out) {
 }  // namespace
 
 std::vector<uint8_t> encodeSave(const World& w) {
-    Writer payload;
-    Fields<Writer> fields{payload};
-    World copy = w;  // the Writer only reads, but Fields takes the World by reference
+    ByteWriter payload;
+    Fields<ByteWriter> fields{payload};
+    World copy = w;  // the ByteWriter only reads, but Fields takes the World by reference
     fields.world(copy);
 
-    Writer file;
+    ByteWriter file;
     file.out.insert(file.out.end(), kMagic, kMagic + 8);
     file.value(kSaveVersion);
     file.value(static_cast<uint64_t>(payload.out.size()));
@@ -190,7 +200,7 @@ bool decodeSave(const std::vector<uint8_t>& bytes, World& out, std::string* erro
         return false;
     };
     if (bytes.size() < kHeader + kDigest || std::memcmp(bytes.data(), kMagic, 8) != 0) return fail("not a Familiar save");
-    Reader head{bytes.data(), bytes.size()};
+    ByteReader head{bytes.data(), bytes.size()};
     head.at = 8;
     uint32_t version = 0;
     uint64_t length = 0;
@@ -206,8 +216,8 @@ bool decodeSave(const std::vector<uint8_t>& bytes, World& out, std::string* erro
     if (version < 1 || version > kSaveVersion)
         return fail("saved by a different version of Familiar (format " + std::to_string(version) + ")");
 
-    Reader r{bytes.data() + kHeader, static_cast<size_t>(length)};
-    Fields<Reader> fields{r, version};
+    ByteReader r{bytes.data() + kHeader, static_cast<size_t>(length)};
+    Fields<ByteReader> fields{r, version};
     World w;  // fields an older format lacks keep a new game's defaults
     fields.world(w);
     if (!r.ok || r.at != r.n) return fail("the save's contents do not parse");

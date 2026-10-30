@@ -69,5 +69,29 @@ int main(int, char**) {
         CHECK(c.candy == 18);
     }
 
+    // The bag dropped on the street by a cat who wandered off: Wren turns back,
+    // fetches it, and the night goes on to the same end.
+    {
+        World c = newWorld(1);
+        Input in;
+        in.yaw = kPi;  // south, out to the street
+        in.toggleForm = true;
+        tick(c, in);
+        CHECK(c.bagDown);
+        in.toggleForm = false;
+        in.forward = 1;
+        for (int t = 0; t < 2 * kTickRate; ++t) tick(c, in);
+        CHECK(c.form == Form::Cat && c.bagDown);
+        bool fetched = false;
+        int64_t limit = kPlaythroughLimit;
+        while (!playthroughDone(c) && --limit > 0) {
+            tick(c, autopilot(c));
+            if (!c.bagDown && c.form == Form::Girl) fetched = true;
+        }
+        CHECK(fetched);
+        CHECK(playthroughDone(c));
+        CHECK(c.candy == 18);
+    }
+
     TEST_MAIN_END();
 }
