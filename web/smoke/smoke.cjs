@@ -357,13 +357,16 @@ function colourCount(png) {
   const same = (a, b) => Math.hypot(a.x - b.x, a.z - b.z) < 0.25 && a.candy === b.candy && a.costume === b.costume &&
     a.jokes === b.jokes && a.knocked === b.knocked && a.cat === b.cat && a.bagDown === b.bagDown && a.spiritsSeen === b.spiritsSeen &&
     a.haleGate === b.haleGate && a.lychgate === b.lychgate;
+  const before = await status();  // the save's tick is between this and the next
   await saveNow('saving');
   const saved = await status();
   await open(true);
   let back = await until((st) => /Loaded your save/.test(st.message), 10000);
   console.log(`after a reload: at (${back.x}, ${back.z}) at ${back.clock}, candy ${back.candy}, costume ${back.costume}; "${back.message}"`);
   if (!same(back, saved)) await fail('the save did not survive a reload: ' + JSON.stringify({ saved, back }));
-  if (back.tick < saved.tick || back.tick - saved.tick > 30 * 10) await fail(`the time of night did not survive a reload (${saved.tick} -> ${back.tick})`);
+  // (The page saves again as it unloads, so the time may be a little later than the Save button's.)
+  if (back.tick < before.tick || back.tick - saved.tick > 30 * 10)
+    await fail(`the time of night did not survive a reload (saved between ${before.tick} and ${saved.tick}; back at ${back.tick})`);
   if (!/Loaded your save/.test(back.message)) await fail('no "Loaded your save" message after a reload: ' + back.message);
   if (await page.locator('#help').isVisible()) await fail('How to play came back after it was closed once');
   await page.screenshot({ path: path.join(outDir, 'familiar-reloaded.png'), timeout: 180000 });
