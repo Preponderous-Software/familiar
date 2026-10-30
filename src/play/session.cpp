@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "save/save.h"
+#include "sim/autopilot.h"
 #include "sim/cat.h"
 #include "sim/craft.h"
 #include "sim/doors.h"
@@ -13,8 +15,10 @@ namespace familiar::play {
 namespace {
 
 // SDL scancodes.
-constexpr int kW = 26, kA = 4, kS = 22, kD = 7, kE = 8, kQ = 20, kT = 23, kOne = 30, kFour = 33, kLShift = 225, kRShift = 229, kEscape = 41, kF1 = 58;
+constexpr int kW = 26, kA = 4, kS = 22, kD = 7, kE = 8, kQ = 20, kT = 23, kOne = 30, kFour = 33, kLShift = 225, kRShift = 229, kEscape = 41, kF1 = 58,
+              kF5 = 62, kF9 = 66;
 constexpr int kTab = 43, kRight = 79, kLeft = 80;
+constexpr double kAutosaveSeconds = 120;
 constexpr float kLookPerPixel = 0.0025f;
 constexpr float kHurryStick = 0.95f;
 constexpr const char* kGreeting =
@@ -25,17 +29,19 @@ constexpr const char* kGreeting =
 
 Session::Session(strata::Engine& engine, const SessionOptions& options)
     : engine_(engine), options_(options), w_(newWorld(options.seed)), scene_(engine) {
+    if (options_.autopilot) options_.slot.clear();  // watching the autopilot never touches a save
     restart();
+    if (!options_.slot.empty() && !options_.fresh && hasSave(options_.slot)) load();
     if (!options_.browser) capture(true);
 }
 
-void Session::restart() {
-    w_ = newWorld(options_.seed);
+void Session::adopt(const World& w) {
+    w_ = w;
     yaw_ = w_.player.yaw;
     pitch_ = w_.player.pitch;
     once_ = Input{};
     eyeY_ = eyePosition(w_).y;
-    answerSeen_ = -1;
+    answerSeen_ = w_.answeredTick;  // an old answer is not said again
     formSeen_ = w_.form;
     costumeSeen_ = w_.costume;
     bagSeen_ = w_.bagDown;
@@ -45,7 +51,35 @@ void Session::restart() {
     pagesSeen_ = w_.pages;
     secretsSeen_ = w_.secrets;
     notebook_ = -1;
+    lastSave_ = clock_;
+}
+
+void Session::restart() {
+    adopt(newWorld(options_.seed));
+    answerSeen_ = -1;
     say(kGreeting, 10);
+}
+
+bool Session::save(const char* note) {
+    if (options_.slot.empty()) return false;
+    std::string why;
+    lastSave_ = clock_;
+    if (!writeSave(options_.slot, w_, &why)) {
+        say("Could not save: " + why, 6);
+        return false;
+    }
+    if (note && *note) say(note, 2);
+    if (options_.afterSave) options_.afterSave();
+    return true;
+}
+
+bool Session::load() {
+    if (options_.slot.empty()) return false;
+    World loaded;
+    const LoadResult r = loadSave(options_.slot, loaded);
+    if (r.ok) adopt(loaded);
+    say(r.message, r.ok && !r.fromPrevious ? 4 : 10);
+    return r.ok;
 }
 
 void Session::toPlace(int spot) {
@@ -127,6 +161,14 @@ void Session::onKeyDown(int scancode, bool repeat) {
         help_ = !help_;
         return;
     }
+    if (scancode == kF5) {
+        if (!repeat && !save("Saved.") && options_.slot.empty()) say("Saving is off here.", 3);
+        return;
+    }
+    if (scancode == kF9) {
+        if (!repeat) load();
+        return;
+    }
     if (scancode == kTab && !options_.browser) {
         toggleNotebook();
         return;
@@ -178,6 +220,13 @@ void Session::handle(const StrataEvent& e) {
 }
 
 void Session::step() {
+    if (options_.autopilot) {
+        const Input in = autopilot(w_);
+        tick(w_, in);
+        yaw_ = w_.player.yaw;
+        pitch_ = w_.player.pitch;
+        return;
+    }
     Input in = once_;
     once_ = Input{};
     const float f = (keys_[kW] ? 1.0f : 0.0f) - (keys_[kS] ? 1.0f : 0.0f) + stickForward_;
@@ -200,6 +249,7 @@ void Session::frame(double dt) {
         pending_ -= 1.0 / kTickRate;
         step();
     }
+    if (!options_.slot.empty() && clock_ - lastSave_ >= kAutosaveSeconds) save("");
     // What happened this frame, said together so one line never hides another.
     std::string said;
     double seconds = 0;

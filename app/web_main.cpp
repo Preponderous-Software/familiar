@@ -1,6 +1,14 @@
 // Familiar in a browser: the same game on Strata's WebGL 2 backend
 // (Emscripten), with the page's touch controls (web/shell.html). Atman's
-// web_main, cut down: no saves yet, so a reload starts the night over.
+// web_main, cut down.
+//
+// Saves are the desktop format (src/save: checksummed, previous save kept),
+// written to /familiar-save/default, which the page mounts on IndexedDB
+// (IDBFS) and loads before main() runs. Every save is flushed to IndexedDB at
+// once (Module.flushSaves in web/shell.html). The page saves when it is
+// hidden or closed and on its Save button; the session also saves every two
+// minutes of play.
+#include <algorithm>
 #include <cinttypes>
 #include <cstdio>
 #include <memory>
@@ -20,6 +28,8 @@
 using namespace familiar;
 
 namespace {
+
+constexpr const char* kSlot = "/familiar-save/default";
 
 struct Game {
     std::unique_ptr<strata::Engine> engine;
@@ -76,6 +86,8 @@ EMSCRIPTEN_KEEPALIVE void familiar_press(int scancode) {
 EMSCRIPTEN_KEEPALIVE void familiar_captured(int on) {
     if (g) g->session->setCaptured(on != 0);
 }
+// Saves now (the page calls this on its Save button and when it is hidden); 1 on success.
+EMSCRIPTEN_KEEPALIVE int familiar_save() { return g && g->session->save("Saved.") ? 1 : 0; }
 EMSCRIPTEN_KEEPALIVE void familiar_restart() {
     if (g) g->session->restart();
 }
@@ -136,6 +148,8 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_status() {
     jsonBool(o, "cat", w.form == Form::Cat);
     jsonBool(o, "asking", w.asking >= 0);
     jsonBool(o, "choosing", canChooseCostume(w));
+    o += ",\"jokes\":" + std::to_string(w.jokes);
+    o += ",\"knocked\":" + std::to_string(std::count(w.knocked.begin(), w.knocked.end(), true));
     o += ",\"costume\":" + std::to_string(static_cast<int>(w.costume));
     jsonBool(o, "bagDown", w.bagDown);
     jsonBool(o, "haleGate", w.gateOpen[town::HaleGate]);
@@ -206,6 +220,8 @@ int main() {
     play::setLighting(*g->engine, true);
     play::SessionOptions o;
     o.browser = true;
+    o.slot = kSlot;
+    o.afterSave = [] { emscripten_run_script("if (Module.flushSaves) Module.flushSaves()"); };
     g->session = std::make_unique<play::Session>(*g->engine, o);
     g->last = emscripten_get_now() / 1000.0;
     emscripten_run_script("if (Module.onGameReady) Module.onGameReady()");

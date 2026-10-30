@@ -96,7 +96,8 @@
   <span class="brand"><a href="https://danielstephenson.dev/play" title="More games">Familiar</a></span>
   <span class="stat" id="clock"></span>
   <span class="stat opt" id="candy"></span>
-  <span class="note" title="Saves come in a later version">No saves yet: a reload starts the night over</span>
+  <span class="note" id="saveNote" title="Saves stay in this browser on this device">Saves in this browser</span>
+  <button id="saveBtn" title="Save now (F5)">Save</button>
   <button id="bookBtn" title="Wren's notebook (Tab)">Notebook</button>
   <button id="newBtn" title="Start the night again at 5:20 pm">New</button>
   <button id="helpBtn" title="How to play" aria-label="How to play">?</button>
@@ -147,7 +148,7 @@
       <kbd>T</kbd>: tell a joke when a neighbour asks for a trick. <kbd>Q</kbd>: turn into a cat, and back.</li>
     <li><kbd>E</kbd> also lights a lantern, picks an apple or rosemary, buys at Abbas's Market, stirs Nana's pot and makes
       the offering. <kbd>Tab</kbd>: Wren's notebook (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> turn its pages on a desktop).</li>
-    <li><kbd>F1</kbd>: the controls on screen. <kbd>Esc</kbd>: free the mouse.</li>
+    <li><kbd>F1</kbd>: the controls on screen. <kbd>F5</kbd>: save, <kbd>F9</kbd>: load the last save. <kbd>Esc</kbd>: free the mouse.</li>
   </ul>
   <ul class="for-touch">
     <li>Drag on the left half to walk (all the way out to hurry); drag on the right half to look.</li>
@@ -159,7 +160,8 @@
   </ul>
   <p>Tonight Nana keeps Samhain, and you help: light the four family lanterns, brew her cider, find Smoke, her old cat,
   and bring her to the stones on Lantern Hill for midnight.</p>
-  <p style="color:var(--dim);font-size:13px">An early version: saves are on the way, so the night starts over when you reload. Built on the <a href="https://github.com/Preponderous-Software/strata">Strata</a>
+  <p style="color:var(--dim);font-size:13px">An early version: the game saves every two minutes, when you press Save, and when you leave the page; it picks up where you
+  left off when you come back. Saves stay in this browser on this device. Built on the <a href="https://github.com/Preponderous-Software/strata">Strata</a>
   engine; <a href="https://github.com/Preponderous-Software/familiar">source</a>.</p>
   <div class="row"><button id="helpClose">Play</button></div>
 </div>
@@ -234,6 +236,19 @@
     if (!p.offsetParent || !c.clientWidth) { call.cover(0, 0); return; }
     var scale = c.width / c.clientWidth;
     call.cover((p.offsetLeft + p.offsetWidth) * scale, (p.offsetTop + p.offsetHeight) * scale);
+  }
+
+  // ---- saves: /familiar-save lives in IndexedDB; each save is flushed at once
+  var syncing = false, again = false;
+  function flushSaves() {
+    if (syncing) { again = true; return; }
+    syncing = true;
+    FS.syncfs(false, function (err) {
+      syncing = false;
+      $('saveNote').textContent = err ? 'Could not store the save in this browser' : 'Saved in this browser';
+      if (err) console.warn('familiar: could not store the save: ' + err);
+      if (again) { again = false; flushSaves(); }
+    });
   }
 
   function refresh() {
@@ -372,9 +387,19 @@
       b.addEventListener('click', function () { call.press(Number(b.dataset.key)); setTimeout(refresh, 60); });
     });
     $('panel').addEventListener('click', function () { $('panel').classList.toggle('folded'); tellCover(); });
-    $('newBtn').addEventListener('click', function () { call.restart(); refresh(); });
+    $('saveBtn').addEventListener('click', function () { call.save(); refresh(); });
     $('bookBtn').addEventListener('click', openNotebook);
     $('bookClose').addEventListener('click', closeNotebook);
+    $('newBtn').addEventListener('click', function () {
+      if (!window.confirm('Start the night over at 5:20 pm? Your night so far is replaced the next time the game saves.')) return;
+      call.restart();
+      refresh();
+    });
+    // Leaving the page (or hiding it, as a phone does before closing a tab) saves.
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') call.save();
+    });
+    window.addEventListener('pagehide', function () { call.save(); });
     $('helpBtn').addEventListener('click', function () {
       if (document.pointerLockElement) document.exitPointerLock();
       $('help').style.display = 'block';
@@ -395,6 +420,18 @@
     canvas: canvas,
     print: function (t) { console.log(t); },
     printErr: function (t) { console.warn(t); },
+    preRun: [function () {
+      // Saves live in IndexedDB; they are loaded before the game starts.
+      FS.mkdir('/familiar-save');
+      FS.mount(IDBFS, {}, '/familiar-save');
+      addRunDependency('familiar-saves');
+      FS.syncfs(true, function (err) {
+        if (err) console.warn('familiar: could not read saves from this browser: ' + err);
+        removeRunDependency('familiar-saves');
+      });
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
+    }],
+    flushSaves: flushSaves,
     onGameReady: function () {
       call = {
         look: api('familiar_look', null, ['number', 'number']),
@@ -402,6 +439,7 @@
         press: api('familiar_press', null, ['number']),
         captured: api('familiar_captured', null, ['number']),
         restart: api('familiar_restart'),
+        save: api('familiar_save', 'number'),
         toDoorstep: api('familiar_to_doorstep', null, ['number']),
         toSpot: api('familiar_to_spot', null, ['number']),
         toPlace: api('familiar_to_place', null, ['number']),

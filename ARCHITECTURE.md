@@ -11,9 +11,9 @@ structure is copied from them on purpose (see [Reused](#reused)).
 | Geometry | `src/bridge/geometry.*` | rules | The town as triangle meshes and a terrain grid, built from the same layout the rules use |
 | Scene | `src/bridge/scene.*` | geometry, Strata | Uploads the meshes and keeps the changing ones (gates, figures, lanterns) in step with the world |
 | Play | `src/play` | scene, Strata | The camera, the sky, the lights, the HUD, input and the game session |
-| Saves | `src/save` (M5) | rules | A checksummed save format, written atomically, with the previous save kept |
+| Saves | `src/save` | rules | A checksummed, versioned save format, written atomically and read back before it replaces anything, with the previous save kept (see [Saves](#saves)) |
 | Sound | `src/audio` (M5) | rules | Cues and ambience from the world, a synthesiser, and a miniaudio device |
-| Apps | `app/` | play | `main.cpp` (desktop: play, `--tour`, `--autopilot`) and `web_main.cpp` (browser, M6) |
+| Apps | `app/` | play | `main.cpp` (desktop: play, `--tour`, `--autopilot`) and `web_main.cpp` (browser, with IndexedDB saves) |
 
 The rules build and test without a GPU in seconds (`-DFAMILIAR_WITH_STRATA=OFF`). CI builds them
 on Linux and Windows and runs the tests on both.
@@ -24,6 +24,24 @@ The rules are compiled without fused multiply-adds (`-ffp-contract=off`, `/fp:pr
 their own sine, cosine and arctangent built from `+ - * /` (`src/sim/math.h`), so the same inputs
 give bit-identical worlds on every compiler. `fingerprint()` hashes the whole `World`; tests pin
 the fingerprints of scripted runs and of the autopilot's playthrough.
+
+## Saves
+
+A save is `FAMILIAR`, a format version, the payload's length, the World field by field
+(little-endian, arrays with their length), and a SHA-256 over all of it. Nothing in a save is
+trusted until the checksum matches, every read is bounds-checked, and a world that could never
+happen (an unknown costume, a door answered in the future) is refused even with a good checksum.
+`decodeSave` either fills the whole World or leaves it untouched.
+
+The format only grows. A new version adds fields at the end, read when the save's version has them
+and left at a new night's defaults when it does not; `tests/fixtures` keeps saves from every
+version, and `tests/test_saves.cpp` loads each and plays on from it. A save from a newer Familiar
+is refused, never half-read. `save.cpp` checks `sizeof(World)` at compile time, so a field added
+to the World without a place in the save stops the build.
+
+The autopilot (`src/sim/autopilot.*`) decides each tick's input from the World alone, so a
+playthrough saved and loaded at any tick ends on the same pinned fingerprint as one that never
+stopped; the tests do exactly that, and CI's headless run does it through the save slot on disk.
 
 ## The town and climbing
 
