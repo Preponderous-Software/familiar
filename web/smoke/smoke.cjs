@@ -410,7 +410,7 @@ function colourCount(png) {
   await page.locator('#soundBtn').click({ timeout: 10000 }).catch(() => page.locator('#soundBtn').dispatchEvent('click'));
   const quiet = await until((st) => st.muted, 5000);
   if (!quiet.muted) await fail('the Sound button did not turn the sound off');
-  if ((await page.locator('#soundBtn').innerText()) !== 'Muted') await fail('the Sound button does not say the sound is off');
+  if ((await page.locator('#soundBtn').getAttribute('aria-pressed')) !== 'false') await fail('the Sound button does not show the sound is off');
   if (!/Sound off/.test(quiet.message)) await fail('turning the sound off was not said: ' + quiet.message);
   const before = await status();  // the save's tick is between this and the next
   await saveNow('saving');

@@ -111,8 +111,14 @@
   @media (max-width: 640px) { .note, .stat.opt { display: none; } button { padding: 6px 8px; } }
   /* Five things in the top bar on a 320-pixel phone: a shorter name for the notebook. */
   #bookBtn .narrow { display: none; }
-  @media (max-width: 400px) { #bookBtn .wide { display: none; } #bookBtn .narrow { display: inline; } .brand { font-size: 13px; }
+  /* Sound is a note, struck through when it is off. */
+  #soundBtn { font-size: 17px; line-height: 1; padding-left: 8px; padding-right: 8px; }
+  #soundBtn[aria-pressed="false"] { text-decoration: line-through; opacity: 0.7; }
+  @media (max-width: 440px) { #bookBtn .wide { display: none; } #bookBtn .narrow { display: inline; } .brand { font-size: 13px; }
     #top { gap: 5px; } }
+  /* Six things in the top bar on a 320-pixel phone: everything a little tighter. */
+  @media (max-width: 340px) { #top { padding-left: 5px; padding-right: 5px; gap: 3px; } #top button { padding-left: 5px; padding-right: 5px; }
+    #top .brand { font-size: 12px; } }
 </style>
 </head>
 <body>
@@ -123,7 +129,7 @@
   <span class="note" id="saveNote" title="Saves stay in this browser on this device">Saves in this browser</span>
   <button id="saveBtn" title="Save now (F5)">Save</button>
   <button id="bookBtn" title="Wren's notebook (Tab)" aria-label="Notebook"><span class="wide">Notebook</span><span class="narrow">Book</span></button>
-  <button id="soundBtn" title="Sound on or off (M)" aria-pressed="true">Sound</button>
+  <button id="soundBtn" title="Sound on or off (M)" aria-label="Sound" aria-pressed="true">&#9835;</button>
   <button id="newBtn" title="Start the night again at 5:20 pm">New</button>
   <button id="helpBtn" title="How to play" aria-label="How to play">?</button>
 </div>
@@ -184,7 +190,7 @@
       to <b>Pick up</b> by your bag and <b>Open</b> at a latch.</li>
     <li>It also changes with what is in reach: <b>Light</b> a lantern, <b>Pick</b> an apple or rosemary,
       <b>Buy</b> at the market, <b>Stir</b> the pot, <b>Offer</b> at the stones; at the market, short of candy,
-      <b>Offer a joke</b>. <b>Notebook</b> (top) opens Wren's notebook; <b>Sound</b> turns the sound off and on.</li>
+      <b>Offer a joke</b>. <b>Notebook</b> (top) opens Wren's notebook; the note (<b>&#9835;</b>, top) turns the sound off and on.</li>
     <li>Tap the words at the top left to fold them away. <b>Save</b> saves now (the game also saves by itself); <b>New</b> asks before starting the night over.</li>
   </ul>
   <p>Tonight Nana keeps Samhain, and you help: light the four family lanterns, brew her cider, find Smoke, her old cat,
@@ -289,10 +295,10 @@
     var s;
     try { s = JSON.parse(call.status()); } catch (e) { return; }
     $('clock').textContent = '31 October, ' + s.clock;
-    $('candy').textContent = 'Candy: ' + s.candy + (s.bagDown ? ' (bag on the ground)' : '');
+    $('candy').textContent = 'Candy: ' + s.candy + (s.bagDown ? (innerWidth > 800 ? ' (bag on the ground)' : ' (bag down)') : '');
     $('catBtn').textContent = s.cat ? 'Be Wren' : 'Cat';
     // Sound: the button shows it, and the choice (button or M) is remembered.
-    $('soundBtn').textContent = s.muted ? 'Muted' : 'Sound';
+    $('soundBtn').setAttribute('aria-label', s.muted ? 'Sound (off)' : 'Sound');
     $('soundBtn').setAttribute('aria-pressed', s.muted ? 'false' : 'true');
     if (s.muted !== soundRemembered) {
       soundRemembered = s.muted;
@@ -373,7 +379,7 @@
                .replace(/^E  (.)/, function (m, c) { return c.toUpperCase(); })
                .replace(/\b1-4 chooses a costume\.\s*/, 'Tap a costume. ')
                .replace(/\bQ turns you into a cat\b/, 'The Cat button turns you into a cat')
-               .replace(/\(M turns it on\)/, '(the Sound button turns it on)')
+               .replace(/\(M turns it on\)/, '(the note button, top, turns it on)')
                .replace(/\bQ to be Wren( again)?/g, 'Tap Be Wren to change back')
                .replace(/\bTell a joke \(T\)/g, 'Tell a joke')
                .replace(/: E at\b/, ': tap Light at')
