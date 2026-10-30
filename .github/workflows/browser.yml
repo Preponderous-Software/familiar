@@ -1,7 +1,8 @@
 # Builds Familiar for the browser (Emscripten + Strata's WebGL 2 backend; see
 # docs/WEB.md), runs the test suite as wasm under Node (the pinned
 # fingerprints included), smoke-tests the page
-# in headless Chromium on a desktop and a phone profile, and, when enabled,
+# in headless Chromium on a desktop and a phone profile, checks the touch
+# layout on eight phone profiles (web/smoke/layout.cjs), and, when enabled,
 # deploys it to arcade as https://familiar.play.danielstephenson.dev
 name: Browser build
 
@@ -78,6 +79,12 @@ jobs:
           sleep 1
           node web/smoke/smoke.cjs http://127.0.0.1:8080/ smoke-out/desktop
           node web/smoke/smoke.cjs http://127.0.0.1:8080/ smoke-out/phone --phone
+
+      - name: Phone layouts (iPhone SE, iPhone 13, Pixel 7, Galaxy S5; portrait and landscape)
+        run: |
+          python3 -m http.server 8081 --bind 127.0.0.1 --directory web-site > http-layout.log 2>&1 &
+          sleep 1
+          node web/smoke/layout.cjs http://127.0.0.1:8081/ smoke-out/layout
 
       - name: Upload smoke screenshots
         if: always()
