@@ -30,13 +30,14 @@ const char* autopilotDoing(const World& w);
 // candy has been visited (then it makes for Nana's).
 int autopilotTarget(const World& w);
 
-// The pinned playthrough ends here: every porch with candy knocked at, and
-// Wren home on Nana's doorstep.
+// The pinned playthrough ends here: no lit porch with candy left to knock at
+// (Mr. Hale's stays dark: the autopilot does not yet light June's lantern),
+// and Wren home on Nana's doorstep with her bag.
 bool playthroughDone(const World& w);
 
 // The fingerprint the playthrough ends on with seed 1 (see
 // tests/test_autopilot.cpp and familiar --headless --autopilot).
-constexpr uint64_t kPlaythroughFingerprint = 0x82336de616910847ULL;
+constexpr uint64_t kPlaythroughFingerprint = 0xf497318f20f51877ULL;
 
 // The playthrough's bound, in ticks: it is done long before this.
 constexpr int64_t kPlaythroughLimit = 60LL * 60 * kTickRate;

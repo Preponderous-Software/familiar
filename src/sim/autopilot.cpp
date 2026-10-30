@@ -70,11 +70,7 @@ int autopilotTarget(const World& w) {
 }
 
 bool playthroughDone(const World& w) {
-    for (int h = 0; h < T::HouseCount; ++h) {
-        const auto id = static_cast<T::HouseId>(h);
-        if (h != T::Nana && neighbour(id).candy > 0 && !w.knocked[static_cast<size_t>(h)]) return false;
-    }
-    return w.form == Form::Girl && at(w, T::doorstep(T::Nana));
+    return autopilotTarget(w) < 0 && !w.bagDown && w.form == Form::Girl && at(w, T::doorstep(T::Nana));
 }
 
 const char* autopilotDoing(const World& w) {

@@ -10,6 +10,7 @@
 
 #include "save/sha256.h"
 #include "sim/cat.h"
+#include "sim/notebook.h"
 
 namespace fs = std::filesystem;
 
@@ -26,7 +27,7 @@ constexpr size_t kDigest = 32;
 // that a save from the version before still loads (tests/test_saves.cpp).
 // When the World changes size this stops the build; update the size here
 // once the save carries the new fields.
-static_assert(sizeof(World) == 112, "World changed: add its new fields to the save (src/save/save.cpp), bump kSaveVersion");
+static_assert(sizeof(World) == 176, "World changed: add its new fields to the save (src/save/save.cpp), bump kSaveVersion");
 
 // Writes little-endian.
 struct ByteWriter {
@@ -134,6 +135,23 @@ struct Fields {
         v(w.bag.y);
         v(w.bag.z);
         v(w.spiritsSeen);
+        if (version < 3) return;  // a format 2 save was made before the witchcraft
+        io.array(w.lit);
+        v(w.apples);
+        v(w.rosemary);
+        v(w.cinnamon);
+        v(w.stirs);
+        v(w.cider);
+        v(w.offered);
+        v(w.smoke);
+        v(w.smokeX);
+        v(w.smokeZ);
+        v(w.homeTick);
+        v(w.pages);
+        v(w.secrets);
+        v(w.deed);
+        v(w.deedArg);
+        v(w.deedTick);
     }
 };
 
@@ -145,7 +163,7 @@ bool plausible(const World& w, std::string* error) {
         if (error) *error = why;
         return false;
     };
-    const float floats[] = {w.player.x, w.player.z, w.player.feet, w.player.yaw, w.player.pitch, w.bag.x, w.bag.y, w.bag.z};
+    const float floats[] = {w.player.x, w.player.z, w.player.feet, w.player.yaw, w.player.pitch, w.bag.x, w.bag.y, w.bag.z, w.smokeX, w.smokeZ};
     for (float f : floats)
         if (!std::isfinite(f)) return fail("a number in the save is not finite");
     if (std::fabs(w.player.x) > town::kWalkLimit + 1 || std::fabs(w.player.z) > town::kWalkLimit + 1)
@@ -166,6 +184,17 @@ bool plausible(const World& w, std::string* error) {
     if (std::fabs(w.bag.x) > town::kWalkLimit + 1 || std::fabs(w.bag.z) > town::kWalkLimit + 1 || w.bag.y < -10 || w.bag.y > 100)
         return fail("the candy bag is outside the town");
     if ((w.spiritsSeen >> SpiritCount) != 0) return fail("a spirit seen that is not out tonight");
+    if (w.apples < 0 || w.stirs < 0) return fail("a count below zero");
+    const int smoke = static_cast<int>(w.smoke);
+    if (smoke < 0 || smoke > static_cast<int>(SmokeState::Home)) return fail("Smoke is somewhere unknown");
+    if (std::fabs(w.smokeX) > town::kWalkLimit + 1 || std::fabs(w.smokeZ) > town::kWalkLimit + 1)
+        return fail("Smoke is outside the town");
+    if (w.homeTick < -1 || w.homeTick > w.tick) return fail("Smoke went home at an impossible time");
+    if ((w.pages >> PageCount) != 0) return fail("a notebook page that does not exist");
+    if ((w.secrets >> SecretCount) != 0) return fail("a secret that does not exist");
+    const int deed = static_cast<int>(w.deed);
+    if (deed < 0 || deed > static_cast<int>(Deed::Home)) return fail("an unknown deed");
+    if (w.deedTick < -1 || w.deedTick > w.tick) return fail("a deed done at an impossible time");
     return true;
 }
 
@@ -218,9 +247,15 @@ bool decodeSave(const std::vector<uint8_t>& bytes, World& out, std::string* erro
 
     ByteReader r{bytes.data() + kHeader, static_cast<size_t>(length)};
     Fields<ByteReader> fields{r, version};
-    World w;  // fields an older format lacks keep a new game's defaults
+    // Fields an older format lacks keep a new night's defaults (Smoke under
+    // the old oak, for one); everything the format has is read over them.
+    World w = newWorld(0);
     fields.world(w);
     if (!r.ok || r.at != r.n) return fail("the save's contents do not parse");
+    // Migration: a save from before the notebook (format 3) gets the pages its
+    // night has already earned (a joke told, a porch knocked at), as the next
+    // tick would give them; the rules derive them from the World alone.
+    if (version < 3) notebookTick(w);
     if (!plausible(w, error)) return false;
     out = w;
     return true;

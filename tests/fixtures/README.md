@@ -11,6 +11,10 @@ A format change that cannot read one of these fails the build.
 | `v2-bright-asking.save` | 2 | `make_save_fixtures` after M3 (2026-10-29) | As `v1-bright-asking.save`, with M3's fields (bag in hand, no spirits seen) |
 | `v2-home.save` | 2 | `make_save_fixtures` after M3 (2026-10-29) | As `v1-home.save`, with M3's fields |
 | `v2-cat-bag-down.save` | 2 | `make_save_fixtures` after M3 (2026-10-29) | Wren became the cat after the Garcias' door, leaving the bag on their doorstep; the cat has seen the reader in the churchyard (tick 210) |
+| `v3-bright-asking.save` | 3 | `make_save_fixtures` after M4 (2026-10-29) | As `v1-bright-asking.save`, with M3's and M4's fields |
+| `v3-home.save` | 3 | `make_save_fixtures` after M4 (2026-10-29) | As `v1-home.save`, with M3's and M4's fields |
+| `v3-cat-bag-down.save` | 3 | `make_save_fixtures` after M4 (2026-10-29) | As `v2-cat-bag-down.save` |
+| `v3-witchcraft.save` | 3 | `make_save_fixtures` after M4 (2026-10-29) | After the playthrough: Nana's window lantern lit, an apple carried, the pot stirred once, notebook pages earned (tick 3023) |
 
 Each was written through `writeSave` (so it is exactly what the game writes) by
 `tools/make_save_fixtures.cpp`:

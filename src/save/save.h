@@ -32,10 +32,14 @@
 namespace familiar {
 
 // 1: M2's night (costumes, knocking, tricks). 2: M3's cat (the dropped candy
-// bag and where it lies, the spirits seen); a format 1 save loads with the bag
-// in hand and no spirits seen, as it was. Every older version still loads
-// (see decodeSave and tests/test_saves.cpp).
-constexpr uint32_t kSaveVersion = 2;
+// bag and where it lies, the spirits seen). 3: M4's witchcraft (the family
+// lanterns, the cider's ingredients and stirs, the cider, the offering,
+// Smoke and where she is, when she went home, the notebook's pages and
+// secrets, and the last deed). An older save loads with what it lacks as a
+// new night has it: the bag in hand, no spirits seen, no lantern lit, Smoke
+// lost under the old oak. Every older version still loads (see decodeSave
+// and tests/test_saves.cpp).
+constexpr uint32_t kSaveVersion = 3;
 
 // The World as save bytes, and back. decode returns false (with a reason)
 // on anything it does not accept, and leaves `out` untouched.

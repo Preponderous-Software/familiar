@@ -39,7 +39,8 @@ int main(int, char**) {
     CHECK(w.form == Form::Girl);
     for (int h = 0; h < T::HouseCount; ++h) {
         const auto id = static_cast<T::HouseId>(h);
-        CHECK(w.knocked[static_cast<size_t>(h)] == (h != T::Nana && neighbour(id).candy > 0));
+        // Every porch with candy, except Mr. Hale's, dark until June's lantern is lit (M4).
+        CHECK(w.knocked[static_cast<size_t>(h)] == (h != T::Nana && h != T::Hale && neighbour(id).candy > 0));
     }
     CHECK(w.jokes == 2);  // the Okafors and Ms. Bright asked for a trick
     // 3 + 3 + 1 + 2 + (2 + 1 + 1 for the ghost) + 2 + 1 + 2.

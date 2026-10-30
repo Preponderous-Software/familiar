@@ -8,6 +8,9 @@
 //   v<N>-cat-bag-down.save   (from format 2) after the Garcias' door Wren became
 //                            the cat, leaving the bag there, and the cat has
 //                            seen the reader in the churchyard
+//   v<N>-witchcraft.save     (from format 3) home after the playthrough, Wren
+//                            lit Nana's window lantern, picked rosemary and
+//                            apples, bought cinnamon and stirred the pot
 //
 // Fixtures are written once per format and then kept: tests/test_saves.cpp
 // loads every one of them, so a later format that cannot read an older save
@@ -19,6 +22,7 @@
 #include "save/save.h"
 #include "sim/autopilot.h"
 #include "sim/cat.h"
+#include "sim/craft.h"
 #include "sim/world.h"
 
 using namespace familiar;
@@ -73,5 +77,27 @@ int main(int argc, char** argv) {
     still.yaw = c.player.yaw;
     tick(c, still);
     if (!c.bagDown || c.form != Form::Cat || !(c.spiritsSeen & (1u << Reader)) || !write(dir, "cat-bag-down", c)) return 1;
+
+    // Witchcraft, after the playthrough: E at Nana's window, the herb bed, an
+    // apple tree (twice), the market and the pot, standing where a player would.
+    for (int spot : {0, 2, 4, 4, 5, 3}) {
+        const Vec2 at = spotStand(spot), face = spotFace(spot);
+        w.player.x = at.x;
+        w.player.z = at.z;
+        float f = 0;
+        if (!standAt(w, w.form, at.x, at.z, 30.0f, f)) return 1;
+        w.player.feet = f;
+        Input e;
+        e.yaw = detAtan2(face.x - at.x, -(face.z - at.z));
+        tick(w, e);
+        e.use = true;
+        tick(w, e);
+        Input idle;
+        idle.yaw = e.yaw;
+        for (int t = 0; t < kTickRate; ++t) tick(w, idle);
+    }
+    std::printf("witchcraft: lit %d, apples %d, rosemary %d, cinnamon %d, stirs %d, deed %d, pages %x\n", w.lit[NanaWindow] ? 1 : 0,
+                w.apples, w.rosemary ? 1 : 0, w.cinnamon ? 1 : 0, w.stirs, static_cast<int>(w.deed), w.pages);
+    if (!w.lit[NanaWindow] || w.deed == Deed::None || !write(dir, "witchcraft", w)) return 1;
     return 0;
 }

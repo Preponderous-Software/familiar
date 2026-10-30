@@ -21,6 +21,8 @@
 #include "save/sha256.h"
 #include "sim/autopilot.h"
 #include "sim/cat.h"
+#include "sim/craft.h"
+#include "sim/notebook.h"
 #include "sim/doors.h"
 #include "sim/world.h"
 
@@ -200,6 +202,27 @@ int main(int argc, char** argv) {
         odd.player.yaw = std::numeric_limits<float>::quiet_NaN();
         CHECK(refused(odd));
         odd = newWorld(1);
+        odd.smoke = static_cast<SmokeState>(9);
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.deed = static_cast<Deed>(-4);
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.pages = 1u << PageCount;
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.secrets = 1u << SecretCount;
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.homeTick = 7;  // after the clock
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.smokeX = std::numeric_limits<float>::infinity();
+        CHECK(refused(odd));
+        odd = newWorld(1);
+        odd.apples = -1;
+        CHECK(refused(odd));
+        odd = newWorld(1);
         odd.spiritsSeen = 1u << SpiritCount;
         CHECK(refused(odd));
         odd = newWorld(1);
@@ -299,14 +322,17 @@ int main(int argc, char** argv) {
     // (tools/make_save_fixtures.cpp; see tests/fixtures/README.md): for each
     // format, one with Ms. Bright waiting for a joke and one at the
     // playthrough's end; from format 2, a cat who left the bag behind.
-    for (const char* v : {"v1", "v2"}) {
+    for (const char* v : {"v1", "v2", "v3"}) {
         const std::string dirName = FAMILIAR_FIXTURES "/";
         World asking;
         std::string why;
         CHECK(decodeSave(readAll(dirName + v + "-bright-asking.save"), asking, &why));
         CHECK(asking.asking == T::Bright && asking.costume == Costume::Ghost);
-        // Format 1 knew nothing of the bag or the spirits: it loads with the bag in hand and none seen.
+        // Formats 1 and 2 knew nothing of the bag, the spirits or the
+        // witchcraft: each loads with them as a new night has them.
         CHECK(!asking.bagDown && asking.spiritsSeen == 0);
+        CHECK(!asking.lit[0] && asking.apples == 0 && asking.smoke == SmokeState::Lost && asking.deed == Deed::None);
+        CHECK(asking.smokeX == kSmokeStart.x && asking.smokeZ == kSmokeStart.z && asking.homeTick == -1);
         CHECK(fingerprint(asking) == fingerprint(played(asking.tick)));  // just as the rules have it now
         while (!playthroughDone(asking) && asking.tick < kPlaythroughLimit) tick(asking, autopilot(asking));
         CHECK(fingerprint(asking) == kPlaythroughFingerprint);
@@ -337,6 +363,24 @@ int main(int argc, char** argv) {
         CHECK((cat.spiritsSeen & (1u << Reader)) != 0);
         CHECK(roundTrips(cat));
         CHECK(damagedAccepted(readAll(FAMILIAR_FIXTURES "/v2-cat-bag-down.save")) == 0);
+        // The same moment in format 3 is the same world.
+        World cat3;
+        CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v3-cat-bag-down.save"), cat3, &why));
+        CHECK(fingerprint(cat3) == fingerprint(cat));
+
+        // Format 3: the witchcraft comes back as it was.
+        World craft;
+        const std::vector<uint8_t> v3 = readAll(FAMILIAR_FIXTURES "/v3-witchcraft.save");
+        CHECK(decodeSave(v3, craft, &why));
+        CHECK(craft.lit[NanaWindow] && craft.apples == 1 && craft.stirs == 1 && craft.deed != Deed::None);
+        CHECK(craft.pages != 0 && craft.deedTick > 0);
+        CHECK(roundTrips(craft));
+        CHECK(damagedAccepted(v3) == 0);
+        // A format 2 save is shorter by exactly the witchcraft, and re-saved it is format 3.
+        World two;
+        const std::vector<uint8_t> v2 = readAll(FAMILIAR_FIXTURES "/v2-home.save");
+        CHECK(decodeSave(v2, two, nullptr));
+        CHECK(encodeSave(two) == readAll(FAMILIAR_FIXTURES "/v3-home.save"));
     }
 
     // Saved and loaded anywhere (every 97 ticks, through the slot), the
