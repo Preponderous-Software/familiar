@@ -105,8 +105,14 @@ function colourCount(png) {
   };
   // Opens the page (again, for a reload) and waits for the game.
   const open = async (reload) => {
-    if (reload) await page.reload({ waitUntil: 'commit' });
-    else await page.goto(url, { waitUntil: 'commit' });
+    // A software-drawn page can be slow to let go, so a reload has longer than
+    // Playwright's default 30 s, and one more try as a fresh navigation.
+    if (reload) {
+      await page.reload({ waitUntil: 'commit', timeout: 120000 }).catch(async (e) => {
+        console.log('(the reload did not commit: ' + String(e.message || e).split('\n')[0] + '; opening the page again)');
+        await page.goto(url, { waitUntil: 'commit', timeout: 120000 });
+      });
+    } else await page.goto(url, { waitUntil: 'commit' });
     try {
       await page.waitForFunction(() => window.familiar && window.familiarStatus, null, { timeout: 90000 });
     } catch (e) {
