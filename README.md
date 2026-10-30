@@ -21,6 +21,29 @@ cmake --build build -j
 ctest --test-dir build
 ```
 
+### Playing on Windows
+
+`tools/play-familiar.bat` builds and starts the game in one step: download it and double-click it.
+It needs Git; it installs CMake and the Visual Studio C++ build tools with winget if they are
+missing (then asks to be run again). It clones or updates `main` into `%USERPROFILE%\familiar-play`
+(or `%FAMILIAR_PLAY_DIR%`), builds with the newest Visual Studio that has the C++ tools (Visual
+Studio 2019 is fine, and is used when a 2022 install lacks C++), and starts the game. The first
+build fetches and builds Strata and SDL3 and takes a few minutes; later runs only rebuild what
+changed. Extra arguments go to the game, for example `play-familiar.bat --seed 7` or
+`play-familiar.bat --tour`.
+
+By hand, from a Developer or plain command prompt:
+
+```bat
+cmake -S . -B build -A x64 -DFAMILIAR_BUILD_TESTS=OFF
+cmake --build build --config Release --parallel --target familiar
+build\Release\familiar.exe
+```
+
+Released versions also come as downloads for Windows, Linux and the browser on the
+[releases page](https://github.com/Preponderous-Software/familiar/releases), built by
+`.github/workflows/release.yml` ([docs/RELEASING.md](docs/RELEASING.md)).
+
 ## The loading shell
 
 The page loads behind the Strata web kit's loading shell
