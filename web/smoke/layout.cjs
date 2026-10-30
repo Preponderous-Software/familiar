@@ -1,6 +1,6 @@
 // Phone layout check for the browser build in headless Chromium (Playwright).
 //
-//   node web/smoke/layout.cjs <url> <out-dir> [device name ...]
+//   node web/smoke/layout.cjs <url> <out-dir> [--shots] [device name ...]
 //
 // For each phone profile (portrait and landscape), walks the page through the
 // states that change the touch controls: choosing a costume, standing at a
@@ -10,12 +10,15 @@
 // every visible button is inside the screen, at least 44 by 44 CSS pixels, and
 // that no button overlaps another button or the words the game shows (the HUD
 // panel, the prompt and the message). It also checks that the words name the
-// buttons, not the keys. Writes a PNG per device and state to <out-dir>.
+// buttons, not the keys. Writes layout.json to <out-dir>, and with --shots a
+// PNG per device and state too (slow under SwiftShader, so CI leaves it off).
 const fs = require('fs');
 const path = require('path');
 const { chromium, devices } = require('playwright');
 
-const [url, outDir, ...names] = process.argv.slice(2);
+const [url, outDir, ...rest] = process.argv.slice(2);
+const shots = rest.includes('--shots');
+const names = rest.filter((a) => a !== '--shots');
 if (!url || !outDir) {
   console.error('usage: layout.cjs <url> <out-dir> [device name ...]');
   process.exit(2);
@@ -113,7 +116,7 @@ function problems(m, state) {
       await page.waitForTimeout(400);
       const m = await page.evaluate(measure);
       found.push(...problems(m, state));
-      await page.screenshot({ path: path.join(outDir, `${slug}-${state}.png`), timeout: 120000, scale: 'css' }).catch(() => {});
+      if (shots) await page.screenshot({ path: path.join(outDir, `${slug}-${state}.png`), timeout: 120000, scale: 'css' }).catch(() => {});
       return m;
     };
     if (!(await status()).choosing) found.push('start: no costume offered');
@@ -202,7 +205,7 @@ function problems(m, state) {
       });
       if (h.top < 0 || h.bottom > h.vh + 0.5) found.push('help: How to play runs off the screen');
       if (h.closeH < MIN || h.closeW < MIN) found.push(`help: Play is ${Math.round(h.closeW)}x${Math.round(h.closeH)}`);
-      await page.screenshot({ path: path.join(outDir, `${slug}-help.png`), timeout: 120000, scale: 'css' }).catch(() => {});
+      if (shots) await page.screenshot({ path: path.join(outDir, `${slug}-help.png`), timeout: 120000, scale: 'css' }).catch(() => {});
     }
     if (errors.length) found.push('page errors: ' + errors.join(' | '));
     console.log(`${found.length ? 'FAIL' : 'ok  '} ${dev} (${profile.viewport.width}x${profile.viewport.height})`);
