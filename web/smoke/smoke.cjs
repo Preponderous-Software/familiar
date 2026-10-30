@@ -6,13 +6,16 @@
 // visit; the canvas draws the town (not one flat colour); walking moves the
 // player (W on a desktop, the stick on the phone profile) and looking turns
 // them; Q (or the Cat button) turns Wren into a cat with a lower eye, and back.
-// On a desktop the player also stands at the Okafors' door and knocks, and the
-// candy count goes up after a joke. A costume is chosen first (3, skeleton).
+// On a desktop the player stands at the Okafors' door and knocks (E), and the
+// candy count goes up after a joke (T); on the phone profile the same knock is
+// tapped through (Knock, then Tell a joke). A costume is chosen first (3,
+// skeleton).
 // The cat (M3), on both profiles: the candy bag drops where Wren changes; at
 // Mr. Hale's latch, inside his yard, E (or the action button, which then says
 // Open) opens the gate; in the churchyard the cat sees the spirits, and Wren
-// does not; back on the doorstep, Wren picks the bag up. Places are reached
-// with the familiar.toSpot / toDoorstep page hooks, not by steering.
+// does not; back on the doorstep, Wren picks the bag up (E, or a tap on Pick
+// up). Places are reached with the familiar.toSpot / toDoorstep page hooks,
+// not by steering.
 // Witchcraft (M4): on a desktop, E lights Grandpa Ike's lantern once the
 // Okafors have been knocked at, Tab opens Wren's notebook, and candy buys a
 // cinnamon stick at Abbas's Market; on the phone, the big button reads Light
@@ -213,6 +216,30 @@ function colourCount(png) {
     await touch('touchEnd', []);
     s = await until((st) => Math.abs(st.yaw - start.yaw) > 0.05);
     if (Math.abs(s.yaw - start.yaw) <= 0.05) await fail('a drag on the right half did not turn the view');
+    // A whole knock by touch: stand on the Okafors' doorstep (as on a
+    // desktop), tap Knock, then tap Tell a joke when Mrs. Okafor asks.
+    await page.evaluate(() => window.familiar.toDoorstep(1));
+    s = await until((st) => /knock/.test(st.prompt));
+    if (!/knock/.test(s.prompt)) await fail('standing on the Okafors\' doorstep gave no knock prompt: ' + s.prompt);
+    if (!(await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Knock', null, { timeout: 10000 }).catch(() => false)))
+      await fail('at a door the big button says "' + (await page.locator('#use').innerText()) + '", not Knock');
+    const words = await page.locator('#prompt').innerText();
+    if (/Knock \(Knock\)|\bE\b/.test(words)) await fail('the prompt names a key or doubles the button: ' + words);
+    await page.locator('#use').tap();
+    s = await until((st) => st.asking);
+    if (!s.asking) await fail('tapping Knock did not bring Mrs. Okafor to the door');
+    if (!(await page.locator('#trickBtn').isVisible())) await fail('no Tell a joke button when asked for a trick');
+    if (!(await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Just the treat', null, { timeout: 10000 }).catch(() => false)))
+      await fail('the big button did not become Just the treat');
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(outDir, 'familiar-asked.png'), timeout: 180000 });
+    await page.locator('#trickBtn').tap();
+    s = await until((st) => st.candy > 0);
+    console.log(`after tapping Knock and Tell a joke: candy ${s.candy}, message ${s.message}`);
+    if (s.candy <= 0) await fail('tapping Tell a joke at the Okafors gave no candy');
+    if (await page.locator('#trickBtn').isVisible()) await fail('Tell a joke stayed on screen after the joke');
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(outDir, 'familiar-knock.png'), timeout: 180000 });
     await page.waitForTimeout(400);
 
     // Nana's window lantern with the big button, which now reads Light.
@@ -238,6 +265,7 @@ function colourCount(png) {
     await page.locator('#bookClose').tap();
     if (await page.locator('#notebook').isVisible()) await fail('Close did not close the notebook');
     console.log('ok: Light lit Nana\'s lantern; the notebook opened with the Samhain page');
+    // The cat leaves the bag under Nana's window.
     await page.locator('#catBtn').tap();
     s = await until((st) => st.cat);
     if (!s.cat) await fail('the Cat button did not turn Wren into a cat');
@@ -249,6 +277,16 @@ function colourCount(png) {
     s = await until((st) => !st.cat);
     if (s.cat) await fail('the Be Wren button did not turn the cat back');
     if (s.spiritsShown !== 0) await fail('Wren can see the spirits (' + s.spiritsShown + ')');
+    await page.evaluate(() => window.familiar.toPlace(0));
+    s = await until((st) => /pick up/.test(st.prompt));
+    if (!/pick up/.test(s.prompt)) await fail('back at the bag there was no pick-up prompt: ' + s.prompt);
+    if (!(await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Pick up', null, { timeout: 10000 }).catch(() => false)))
+      await fail('by the bag the action button does not say Pick up: ' + (await page.locator('#use').innerText()));
+    const candy = s.candy;
+    await page.locator('#use').tap();
+    s = await until((st) => !st.bagDown);
+    if (s.bagDown || s.candy !== candy) await fail('tapping Pick up did not pick the bag up, candy and all');
+    console.log('ok: the bag was picked up by touch with ' + s.candy + ' candy');
   } else {
     await page.keyboard.down('KeyW');
     s = await until((st) => Math.hypot(st.x - start.x, st.z - start.z) > 0.3);
