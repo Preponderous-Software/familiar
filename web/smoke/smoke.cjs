@@ -8,6 +8,11 @@
 // them; Q (or the Cat button) turns Wren into a cat with a lower eye, and back.
 // On a desktop the player also stands at the Okafors' door and knocks, and the
 // candy count goes up after a joke. A costume is chosen first (3, skeleton).
+// The cat (M3), on both profiles: the candy bag drops where Wren changes; at
+// Mr. Hale's latch, inside his yard, E (or the action button, which then says
+// Open) opens the gate; in the churchyard the cat sees the spirits, and Wren
+// does not; back on the doorstep, Wren picks the bag up. Places are reached
+// with the familiar.toSpot / toDoorstep page hooks, not by steering.
 // Writes PNGs to <out-dir>. (Atman's smoke test, for
 // Familiar.)
 const fs = require('fs');
@@ -105,6 +110,28 @@ function colourCount(png) {
     return st;
   };
 
+  // As the cat: open Mr. Hale's latch from inside his yard with `use` (E, or
+  // a tap on the action button), then go among the stones and see the spirits.
+  const catChecks = async (use) => {
+    await page.evaluate(() => window.familiar.toSpot(0));
+    s = await until((st) => /latch/.test(st.prompt) && st.use === 'Open');
+    console.log(`in Mr. Hale's yard: (${s.x}, ${s.z}), prompt ${s.prompt}, button ${s.use}`);
+    if (!/latch/.test(s.prompt) || s.use !== 'Open') await fail('inside Mr. Hale\'s yard the cat was offered no latch: ' + s.prompt + ' / ' + s.use);
+    // The page relabels its buttons from the status every 250 ms.
+    if (phone && !(await page.waitForFunction(() => document.getElementById('use').textContent.trim() === 'Open', null, { timeout: 10000 }).catch(() => false)))
+      await fail('the action button does not say Open at the latch: ' + (await page.locator('#use').innerText()));
+    await use();
+    s = await until((st) => st.haleGate);
+    if (!s.haleGate) await fail('the cat did not open Mr. Hale\'s gate');
+    await page.evaluate(() => window.familiar.toSpot(2));
+    s = await until((st) => st.spiritsSeen > 0);
+    console.log(`in the churchyard: ${s.spiritsShown} spirits shown, ${s.spiritsSeen} met; ${s.message}`);
+    if (s.spiritsShown !== 4 || s.spiritsSeen < 1) await fail('the cat did not see the spirits in the churchyard');
+    if (!/nods to you|smiles at you|tips his cap|taps his foot/.test(s.message)) await fail('meeting a spirit said nothing: ' + s.message);
+    await page.waitForTimeout(1200);
+    await page.screenshot({ path: path.join(outDir, 'familiar-spirits.png'), timeout: 180000 });
+  };
+
   if (!(await page.locator('#help').isVisible())) await fail('How to play was not shown on a first visit');
   await page.locator('#helpClose').click();
   let s = await status();
@@ -148,9 +175,12 @@ function colourCount(png) {
     if (!s.cat) await fail('the Cat button did not turn Wren into a cat');
     await page.waitForTimeout(1500);
     await page.screenshot({ path: path.join(outDir, 'familiar-cat.png'), timeout: 180000 });
+    if (!s.bagDown) await fail('turning into a cat did not leave the candy bag on the ground');
+    await catChecks(async () => { await page.locator('#use').tap(); });
     await page.locator('#catBtn').tap();
     s = await until((st) => !st.cat);
     if (s.cat) await fail('the Be Wren button did not turn the cat back');
+    if (s.spiritsShown !== 0) await fail('Wren can see the spirits (' + s.spiritsShown + ')');
   } else {
     await page.keyboard.down('KeyW');
     s = await until((st) => Math.hypot(st.x - start.x, st.z - start.z) > 0.3);
@@ -185,6 +215,24 @@ function colourCount(png) {
     if (s.candy <= 0) await fail('knocking at the Okafors gave no candy');
     await page.waitForTimeout(800);
     await page.screenshot({ path: path.join(outDir, 'familiar-knock.png'), timeout: 180000 });
+
+    // The cat: the bag drops on the doorstep; the cat can't knock.
+    await page.keyboard.press('KeyQ');
+    s = await until((st) => st.cat && st.bagDown);
+    if (!s.cat || !s.bagDown) await fail('turning into a cat did not leave the candy bag on the ground');
+    await catChecks(async () => { await page.keyboard.press('KeyE'); });
+    await page.keyboard.press('KeyQ');
+    s = await until((st) => !st.cat);
+    if (s.cat) await fail('Q did not turn the cat back into Wren in the churchyard');
+    if (s.spiritsShown !== 0) await fail('Wren can see the spirits (' + s.spiritsShown + ')');
+    await page.evaluate(() => window.familiar.toDoorstep(1));
+    s = await until((st) => /pick up/.test(st.prompt));
+    if (!/pick up/.test(s.prompt)) await fail('back at the bag there was no pick-up prompt: ' + s.prompt);
+    const candy = s.candy;
+    await page.keyboard.press('KeyE');
+    s = await until((st) => !st.bagDown);
+    if (s.bagDown || s.candy !== candy) await fail('E did not pick the bag up, candy and all');
+    console.log('ok: the bag was picked up with ' + s.candy + ' candy');
   }
   // The loading shell finished; and without WebGL 2 it shows the trailer (or
   // its still) and says why, and the engine never downloads.

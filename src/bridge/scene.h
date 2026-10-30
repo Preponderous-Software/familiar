@@ -24,7 +24,7 @@ public:
     size_t meshCount() const { return meshes_; }
 
 private:
-    uint32_t upload(const MeshData& m, bool unlit = false);
+    uint32_t upload(const MeshData& m, bool unlit = false, float alpha = 1.0f);
     void remove(uint32_t& id);
 
     strata::Engine& engine_;
@@ -34,6 +34,8 @@ private:
     int shown_ = -1;  // the neighbour in a doorway, or -1
     std::array<uint32_t, 7> children_{};
     uint32_t nana_ = 0;
+    std::array<uint32_t, 4> spirits_{};  // seen only by the cat (sim/cat.h)
+    uint32_t bag_ = 0;                   // the candy bag, while it is on the ground
     void place(uint32_t id, Vec3 at, float yaw, bool shown);
     size_t meshes_ = 0;
 };

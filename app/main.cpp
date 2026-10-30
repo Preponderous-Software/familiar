@@ -7,8 +7,10 @@
 // Controls: mouse to look, W A S D to walk, Shift to hurry, E to knock, Q to
 // turn into a cat and back, F1 for help, Esc to free the mouse (Esc again quits).
 //
-// --tour walks a fixed route through town into the night; headless, it
-// writes a screenshot at each stop to DIR.
+// --tour walks a fixed route through town into the night, as Wren and as
+// the cat (over a fence, onto Nana's roof, into Mr. Hale's yard and the
+// churchyard to open their gates, past the spirits); headless, it writes a
+// screenshot at each stop to DIR.
 #include <cinttypes>
 #include <cmath>
 #include <cstdio>
@@ -18,6 +20,7 @@
 #include "bridge/scene.h"
 #include "play/session.h"
 #include "play/view.h"
+#include "sim/cat.h"
 #include "sim/doors.h"
 #include "sim/town.h"
 #include "sim/world.h"
@@ -75,6 +78,8 @@ struct TourStop {
     const char* shot;    // screenshot file name, or null
     bool trick = false;  // tell a joke after knocking
     int costume = 0;     // choose this costume (1-4) first
+    int spirit = -1;     // >= 0: walk up to this spirit (sim/cat.h) instead of (x, z), and look at it
+    bool pickup = false; // E here picks up the candy bag (checked)
 };
 
 const TourStop kTour[] = {
@@ -83,6 +88,7 @@ const TourStop kTour[] = {
     {-48.0f, -6.6f, 0.0f, 0.0f, 0, false, false, nullptr},
     {-48.0f, -9.6f, 0.0f, 0.05f, 1, true, false, "03-knock-okafors", true},
     {-48.0f, -3.0f, 1.9f, -0.05f, 240, false, false, "04-dusk-street"},
+    // The cat (M3): the bag stays on the sidewalk here; over the fence, up onto Nana's roof.
     {-45.0f, -3.0f, 0.0f, 0.0f, 0, false, true, nullptr},
     {-45.0f, -8.0f, 3.14f, 0.1f, 0, false, true, "05-cat-over-fence"},
     {-56.5f, -18.6f, -1.57f, 0.0f, 0, false, true, nullptr},
@@ -90,12 +96,32 @@ const TourStop kTour[] = {
     {-63.0f, -18.6f, -1.57f, 0.0f, 0, false, true, nullptr},
     {-63.0f, -15.6f, 1.57f, -0.15f, 600, false, true, "06-cat-on-nanas-roof"},
     {-63.0f, -23.0f, 0.0f, 0.0f, 0, false, true, nullptr},
-    {-55.5f, -23.0f, 0.0f, 0.0f, 0, false, false, nullptr},
-    {-55.5f, -2.5f, 0.0f, 0.0f, 0, false, false, nullptr},
+    // Behind the houses to Mr. Hale's woodpile, over his fence, and the latch from inside.
+    {-63.0f, -34.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {-22.0f, -34.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {-22.0f, -26.8f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {-23.7f, -26.8f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {-28.0f, -26.8f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {-34.9f, -26.0f, -1.57f, -0.05f, 1, true, true, "07-cat-hale-latch"},
+    // Wren again, out through the open gate, back to the bag.
+    {-38.0f, -26.0f, 0.0f, 0.0f, 0, false, false, nullptr},
+    {-41.0f, -26.0f, 0.0f, 0.0f, 0, false, false, nullptr},
+    {-41.0f, -3.0f, 0.0f, 0.0f, 0, false, false, nullptr},
+    {-48.0f, -3.0f, 1.57f, 0.3f, 0, true, false, nullptr, false, 0, -1, true},
     {20.0f, -2.5f, 0.0f, 0.0f, 0, false, false, nullptr},
-    {20.0f, -6.0f, 0.0f, 0.12f, 0, false, false, "07-churchyard-lychgate"},
-    {56.0f, 0.0f, 0.9f, 0.08f, 0, false, false, "08-bridge-night"},
-    {75.0f, -55.0f, -1.9f, -0.1f, 0, false, false, "09-lantern-hill"},
+    {20.0f, -6.0f, 0.0f, 0.12f, 0, false, false, "08-churchyard-lychgate"},
+    // The cat through the hedge gap, the spirits in the churchyard, the bolt.
+    {44.0f, -6.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {44.0f, -40.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {40.0f, -40.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {0.0f, 0.0f, 0.0f, 0.12f, 2, false, true, "09-cat-churchyard-spirits", false, 0, 1},
+    {23.5f, -31.0f, 3.14f, 0.0f, 0, true, true, nullptr},
+    {23.5f, -28.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {20.0f, -6.0f, 0.0f, 0.3f, 0, true, false, nullptr, false, 0, -1, true},
+    {56.0f, 0.0f, 0.9f, 0.08f, 0, false, false, "10-bridge-night"},
+    {75.0f, -55.0f, -1.9f, -0.1f, 0, false, false, "11-lantern-hill"},
+    {72.0f, -44.0f, 0.0f, 0.0f, 0, false, true, nullptr},
+    {0.0f, 0.0f, 0.0f, 0.38f, 1, false, true, "12-cat-lamplighter", false, 0, 3},
 };
 
 int runTour(strata::Engine& engine, const Args& args) {
@@ -121,9 +147,18 @@ int runTour(strata::Engine& engine, const Args& args) {
             tick(w, in);
         }
         bool arrived = false;
+        float yawTo = stop.yaw;
         for (int t = 0; t < 200 * kTickRate && !arrived; ++t) {
-            const float dx = stop.x - w.player.x, dz = stop.z - w.player.z;
-            arrived = dx * dx + dz * dz < 0.04f;
+            float tx = stop.x, tz = stop.z, near = 0.04f;
+            if (stop.spirit >= 0) {
+                const Walker s = spirits(w)[static_cast<size_t>(stop.spirit)];
+                tx = s.at.x;
+                tz = s.at.z;
+                near = 25.0f;  // five metres off
+            }
+            const float dx = tx - w.player.x, dz = tz - w.player.z;
+            arrived = dx * dx + dz * dz < near;
+            if (arrived && stop.spirit >= 0) yawTo = std::atan2(dx, -dz);
             if (arrived) break;
             Input in;
             in.forward = 1;
@@ -133,12 +168,12 @@ int runTour(strata::Engine& engine, const Args& args) {
             tick(w, in);
         }
         if (!arrived) {
-            std::fprintf(stderr, "familiar: the tour got stuck at (%.2f, %.2f) on the way to (%.2f, %.2f)\n", w.player.x,
-                         w.player.z, stop.x, stop.z);
+            std::fprintf(stderr, "familiar: the tour got stuck at (%.2f, %.2f) on the way to (%.2f, %.2f)%s\n", w.player.x,
+                         w.player.z, stop.x, stop.z, stop.spirit >= 0 ? " (a spirit)" : "");
             return 1;
         }
         const float yaw0 = w.player.yaw;
-        float dyaw = stop.yaw - yaw0;
+        float dyaw = yawTo - yaw0;
         while (dyaw > kPi) dyaw -= 2 * kPi;
         while (dyaw < -kPi) dyaw += 2 * kPi;
         const int turn = kTickRate, wait = stop.waitSeconds * kTickRate;
@@ -150,6 +185,10 @@ int runTour(strata::Engine& engine, const Args& args) {
             in.use = stop.knock && t == turn - 1;
             tick(w, in);
         }
+        if (stop.pickup && w.bagDown) {
+            std::fprintf(stderr, "familiar: the tour could not pick up the candy bag at (%.2f, %.2f)\n", w.player.x, w.player.z);
+            return 1;
+        }
         if (stop.trick) {
             Input in;
             in.yaw = w.player.yaw;
@@ -159,16 +198,28 @@ int runTour(strata::Engine& engine, const Args& args) {
         }
         if (!stop.shot) continue;
         scene.update(w);
-        play::render(engine, w, false, eyePosition(w).y, false, answerText(w));
+        std::string said = answerText(w);
+        if (said.empty() && spiritNear(w) >= 0) said = spiritText(spiritNear(w));
+        play::render(engine, w, false, eyePosition(w).y, false, said);
         engine.present();
         const float elevation = play::setSky(engine, w);
-        std::printf("%-26s (%7.2f, %7.2f) feet %5.2f at %s, sun %5.1f deg, candy %d\n", stop.shot, w.player.x, w.player.z,
-                    w.player.feet, clockText(w).c_str(), elevation, w.candy);
+        std::printf("%-26s (%7.2f, %7.2f) feet %5.2f at %s, sun %5.1f deg, candy %d%s, spirits met %d\n", stop.shot,
+                    w.player.x, w.player.z, w.player.feet, clockText(w).c_str(), elevation, w.candy,
+                    w.bagDown ? " (bag down)" : "", spiritsSeen(w));
         if (!args.framesDir.empty()) engine.saveScreenshotPng(args.framesDir + "/" + stop.shot + ".png");
     }
     std::printf("%zu meshes, fingerprint %016" PRIx64 "\n", scene.meshCount(), fingerprint(w));
     if (w.candy != 3 || w.costume != Costume::Witch) {
         std::fprintf(stderr, "familiar: the tour did not dress up, knock and tell a joke for three candies\n");
+        return 1;
+    }
+    if (!w.gateOpen[town::HaleGate] || !w.gateOpen[town::Lychgate]) {
+        std::fprintf(stderr, "familiar: the tour's cat did not open Mr. Hale's latch and the lychgate's bolt\n");
+        return 1;
+    }
+    const uint32_t met = (1u << Farmer) | (1u << Lamplighter);
+    if ((w.spiritsSeen & met) != met) {
+        std::fprintf(stderr, "familiar: the tour's cat did not meet the farmer and the lamplighter\n");
         return 1;
     }
     return 0;

@@ -127,17 +127,21 @@
   <h2 id="helpTitle">Familiar</h2>
   <p>Halloween night, 2026, in the hill town of Hollowell. The sun is setting where it really sets at 42&deg; north.
   Choose a costume and go trick-or-treating: knock on doors where the porch light is on, and have a joke ready. And tonight you can turn into a black cat:
-  small and quick, able to jump onto fences, sheds and even roofs.</p>
+  small and quick, able to jump onto fences, sheds and even roofs, slip through gaps, and nose up a latch from the inside.
+  A cat can't knock or carry the candy bag, so the bag waits where you changed. And a cat sees the spirits out walking on the one night
+  the veil is thin: the town's own dead, visiting.</p>
+  <p style="color:var(--dim);font-size:13px">The cat and the spirits are this game's fairy tale, not something Wiccans believe or do.</p>
   <ul class="for-keys">
     <li>Mouse: look. <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>: walk, <kbd>Shift</kbd>: hurry.</li>
-    <li><kbd>1</kbd>&ndash;<kbd>4</kbd> on Nana's walk: choose a costume. <kbd>E</kbd>: knock. <kbd>T</kbd>: tell a joke
-      when a neighbour asks for a trick. <kbd>Q</kbd>: turn into a cat, and back.</li>
+    <li><kbd>1</kbd>&ndash;<kbd>4</kbd> on Nana's walk: choose a costume. <kbd>E</kbd>: knock, pick up your bag, or open a latch.
+      <kbd>T</kbd>: tell a joke when a neighbour asks for a trick. <kbd>Q</kbd>: turn into a cat, and back.</li>
     <li><kbd>F1</kbd>: the controls on screen. <kbd>Esc</kbd>: free the mouse.</li>
   </ul>
   <ul class="for-touch">
     <li>Drag on the left half to walk (all the way out to hurry); drag on the right half to look.</li>
     <li>Choose a costume with the buttons on Nana's walk. <b>Knock</b> at a door; <b>Tell a joke</b> when asked for a
-      trick; <b>Cat</b> turns you into a cat and back.</li>
+      trick; <b>Cat</b> turns you into a cat and back. The big button changes to <b>Pick up</b> by your bag and
+      <b>Open</b> at a latch.</li>
   </ul>
   <p style="color:var(--dim);font-size:13px">An early version: lanterns, Nana's cider, Smoke, secrets and saves are on
   the way. The night starts over when you reload. Built on the <a href="https://github.com/Preponderous-Software/strata">Strata</a>
@@ -188,8 +192,13 @@
     var s;
     try { s = JSON.parse(call.status()); } catch (e) { return; }
     $('clock').textContent = '31 October, ' + s.clock;
-    $('candy').textContent = 'Candy: ' + s.candy;
+    $('candy').textContent = 'Candy: ' + s.candy + (s.bagDown ? ' (bag on the ground)' : '');
     $('catBtn').textContent = s.cat ? 'Be Wren' : 'Cat';
+    // The action button says what it does here: Knock, Pick up (the bag), Open (a latch), Meow.
+    if (s.use && $('use').textContent !== s.use) {
+      $('use').textContent = s.use;
+      $('use').title = s.use + ' (E)';
+    }
     document.body.classList.toggle('asking', s.asking);
     document.body.classList.toggle('choosing', s.choosing);
     Array.prototype.forEach.call(document.querySelectorAll('#costumes button'), function (b) {
@@ -222,7 +231,7 @@
                .replace(/^T  tell a joke     E  just the treat$/, 'Tell a joke, or Knock for just the treat')
                .replace(/\(T: tell a joke, E: just the treat\)/, '(Tell a joke, or Knock for just the treat)')
                .replace(/\(1-4\)/, '(the buttons below)')
-               .replace(/^E  /, 'Knock: ').replace(/\(E\)/g, '(Knock)').replace(/\(Q: ([^)]*)\)/g, '(Cat button: $1)')
+               .replace(/^E  (.)/, function (m, c) { return c.toUpperCase(); }).replace(/ \(E\)/g, '').replace(/\(Q: ([^)]*)\)/g, '(Cat button: $1)')
                .replace(/\bQ to\b/g, 'Tap Be Wren to').replace(/\bQ turns\b/g, 'The Cat button turns');
   }
 
@@ -334,6 +343,7 @@
         captured: api('familiar_captured', null, ['number']),
         restart: api('familiar_restart'),
         toDoorstep: api('familiar_to_doorstep', null, ['number']),
+        toSpot: api('familiar_to_spot', null, ['number']),
         help: api('familiar_help', null, ['number']),
         cover: api('familiar_cover', null, ['number', 'number']),
         resize: api('familiar_resize', null, ['number', 'number', 'number']),

@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "sim/cat.h"
+
 namespace familiar {
 
 namespace T = familiar::town;
@@ -97,6 +99,7 @@ int housesLeft(const World& w) {
 }
 
 std::string usePrompt(const World& w) {
+    if (std::string c = catPrompt(w); !c.empty()) return c;
     const int h = atDoor(w);
     if (h < 0) {
         if (canChooseCostume(w)) return "Choose a costume:  1 ghost   2 pumpkin   3 skeleton   4 witch";
@@ -110,6 +113,7 @@ std::string usePrompt(const World& w) {
     if (w.asking == h) return "T  tell a joke     E  just the treat";
     if (!porchLightOn(w, id)) return id == T::Hale ? "Mr. Hale's porch light is off" : "The porch light is off now";
     if (w.knocked[h]) return "You have been here tonight";
+    if (w.form == Form::Girl && w.bagDown) return "Your candy bag is where you became a cat. Fetch it first";
     return w.form == Form::Cat ? "E  meow at the door" : "E  knock: trick or treat!";
 }
 
@@ -130,7 +134,11 @@ std::string answerText(const World& w) {
 }
 
 std::string nextStep(const World& w) {
-    if (w.form == Form::Cat) return "As a cat: climb fences and roofs. Q to be Wren";
+    if (w.form == Form::Cat) {
+        if (latchHere(w) >= 0) return "Open the gate from inside (E)";
+        return "Climb, slip through gaps, meet spirits. Q to be Wren";
+    }
+    if (w.bagDown) return "Fetch your candy bag from where you changed (E)";
     if (canChooseCostume(w) && w.costume == Costume::None) return "Choose a costume (1-4) on Nana's walk";
     const int left = housesLeft(w);
     if (left == 0) {
@@ -143,7 +151,7 @@ std::string nextStep(const World& w) {
 void doorsTick(World& w, const Input& in) {
     if (in.costume > 0 && in.costume <= 4 && canChooseCostume(w)) w.costume = static_cast<Costume>(in.costume);
     const int h = atDoor(w);
-    if (w.asking >= 0 && h != w.asking) w.asking = -1;  // walked away before the trick
+    if (w.asking >= 0 && (h != w.asking || w.form == Form::Cat)) w.asking = -1;  // walked away (or changed) before the trick
     if (h < 0 || h == T::Nana) return;
     const auto id = static_cast<T::HouseId>(h);
     const Neighbour& n = neighbour(id);
@@ -166,6 +174,7 @@ void doorsTick(World& w, const Input& in) {
         return;
     }
     if (!in.use || w.knocked[h] || !porchLightOn(w, id) || n.candy <= 0) return;
+    if (w.form == Form::Girl && w.bagDown) return;  // nothing to put the candy in
     w.answered = h;
     w.answeredTick = w.tick;
     if (w.form == Form::Cat) {

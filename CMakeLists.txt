@@ -46,6 +46,7 @@ endfunction()
 # GPU, so it builds and tests in seconds. Never fuse multiply-adds: the rules
 # must give bit-identical results on every compiler.
 add_library(familiar_sim STATIC
+  src/sim/cat.cpp
   src/sim/doors.cpp
   src/sim/npc.cpp
   src/sim/town.cpp
@@ -60,7 +61,7 @@ endif()
 
 if(FAMILIAR_BUILD_TESTS)
   enable_testing()
-  foreach(t movement town doors)
+  foreach(t movement town doors cat)
     add_executable(test_${t} tests/test_${t}.cpp)
     target_link_libraries(test_${t} PRIVATE familiar_sim)
     target_include_directories(test_${t} PRIVATE tests)
@@ -115,7 +116,7 @@ if(FAMILIAR_WEB)
   set_target_properties(familiar-web PROPERTIES OUTPUT_NAME familiar SUFFIX ".html")
   target_link_options(familiar-web PRIVATE
     -sSTACK_SIZE=1MB
-    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_restart,_familiar_to_doorstep,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
+    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_restart,_familiar_to_doorstep,_familiar_to_spot,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString
     "--shell-file=${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")
   set_property(TARGET familiar-web APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")

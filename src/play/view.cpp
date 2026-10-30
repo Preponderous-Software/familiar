@@ -5,6 +5,7 @@
 #include <cstdio>
 
 #include "bridge/geometry.h"
+#include "sim/cat.h"
 #include "sim/doors.h"
 #include "sim/town.h"
 
@@ -95,6 +96,22 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
         q.color[1] = 0.85f;
         q.color[2] = 0.6f;
         q.color[3] = 0.5f * night;
+        q.flags = STRATA_POINT_SOFT;
+        pts.push_back(q);
+    }
+    // The lamplighter's lamp, which only the cat sees.
+    if (w.form == Form::Cat) {
+        const Vec3 l = lamplighterLamp(w);
+        StrataPoint q{};
+        q.position[0] = l.x;
+        q.position[1] = l.y;
+        q.position[2] = l.z;
+        q.size_pixels = 3.0f;
+        q.world_diameter = 0.5f;
+        q.color[0] = 1.0f;
+        q.color[1] = 0.85f;
+        q.color[2] = 0.55f;
+        q.color[3] = 0.6f + 0.15f * std::sin(t * 5.0f);
         q.flags = STRATA_POINT_SOFT;
         pts.push_back(q);
     }
@@ -209,6 +226,7 @@ void setLights(strata::Engine& engine, const World& w, float sunElevation) {
         }
     }
     for (Vec2 p : T::kStreetlamps) add({p.x, T::kStreetlampHeight - 0.5f, p.z}, 14.0f, kStreetColor, 1.3f * lit);
+    if (w.form == Form::Cat) add(lamplighterLamp(w), 8.0f, kStreetColor, 0.9f * lit);
     std::sort(c.begin(), c.end(), [](const Candidate& a, const Candidate& b) { return a.d2 < b.d2; });
     std::vector<StrataPointLight> lights;
     for (size_t i = 0; i < c.size() && lights.size() < 30; ++i) lights.push_back(c[i].light);
@@ -231,9 +249,10 @@ void setLights(strata::Engine& engine, const World& w, float sunElevation) {
 std::vector<HudLine> hudLines(const World& w) {
     std::vector<HudLine> lines;
     lines.push_back({"31 October  " + clockText(w), true});
-    lines.push_back({"Candy     " + std::to_string(w.candy)});
+    lines.push_back({"Candy     " + std::to_string(w.candy) + (w.bagDown ? "  (bag on the ground)" : "")});
     if (w.form == Form::Girl) lines.push_back({std::string("Costume   ") + costumeShort(w.costume)});
     lines.push_back({std::string("You are   ") + (w.form == Form::Cat ? "a black cat  (Q: Wren)" : "Wren  (Q: a cat)")});
+    if (w.spiritsSeen) lines.push_back({"Spirits   " + std::to_string(spiritsSeen(w)) + " of " + std::to_string(SpiritCount) + " met"});
     lines.push_back({""});
     lines.push_back({"NEXT", true});
     lines.push_back({nextStep(w)});
@@ -333,7 +352,7 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     if (!here.empty()) py = centred(here, py, ink);
     if (!message.empty()) centred(message, std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine), lamp);
     if (help) {
-        std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock", "T tell a joke", "1-4 costume", "Q cat / Wren", "Esc free the mouse",
+        std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock / pick up / open", "T tell a joke", "1-4 costume", "Q cat / Wren", "Esc free the mouse",
                                           "F1 hide help"};
         std::vector<std::string> lines(1);
         for (const std::string& item : items) {

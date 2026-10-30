@@ -46,6 +46,11 @@ struct World {
     int32_t asking = -1;        // the house waiting for a trick, or -1
     int32_t jokes = 0;          // jokes told so far
     Costume costume = Costume::None;
+    // The candy bag: a cat cannot carry it, so it stays on the ground where
+    // Wren changed until she picks it up (M3). The candy stays counted.
+    bool bagDown = false;
+    Vec3 bag;                    // where it lies (feet height in y)
+    uint32_t spiritsSeen = 0;    // bit i: the cat has seen spirit i (sim/cat.h)
 };
 
 // One tick's worth of player intent, already resolved from keys and mouse.
@@ -54,7 +59,7 @@ struct Input {
     float strafe = 0;   // -1..1, + steps right
     bool hurry = false;
     float yaw = 0, pitch = 0;  // absolute view angles for this tick
-    bool use = false;          // knock, or whatever E does here
+    bool use = false;          // knock, pick up the bag, nose up a latch: whatever E does here
     bool toggleForm = false;   // Q: Wren to cat, or back
     bool trick = false;        // T: tell a joke when a neighbour asks for a trick
     int32_t costume = 0;       // 1-4: choose a costume on Nana's walk
