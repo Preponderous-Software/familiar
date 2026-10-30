@@ -12,7 +12,7 @@ structure is copied from them on purpose (see [Reused](#reused)).
 | Scene | `src/bridge/scene.*` | geometry, Strata | Uploads the meshes and keeps the changing ones (gates, figures, lanterns) in step with the world |
 | Play | `src/play` | scene, Strata | The camera, the sky, the lights, the HUD, input and the game session |
 | Saves | `src/save` | rules | A checksummed, versioned save format, written atomically and read back before it replaces anything, with the previous save kept (see [Saves](#saves)) |
-| Sound | `src/audio` (M5) | rules | Cues and ambience from the world, a synthesiser, and a miniaudio device |
+| Sound | `src/audio` (M5) | rules | Cues and ambience from the world (`cues.*`), a synthesiser that makes every sound from nothing (`synth.*`), and a miniaudio device (`device.*`, the only part that touches one; silent when there is none) |
 | Apps | `app/` | play | `main.cpp` (desktop: play, `--tour`, `--autopilot`) and `web_main.cpp` (browser, with IndexedDB saves) |
 
 The rules build and test without a GPU in seconds (`-DFAMILIAR_WITH_STRATA=OFF`). CI builds them
@@ -42,6 +42,11 @@ to the World without a place in the save stops the build.
 The autopilot (`src/sim/autopilot.*`) decides each tick's input from the World alone, so a
 playthrough saved and loaded at any tick ends on the same pinned fingerprint as one that never
 stopped; the tests do exactly that, and CI's headless run does it through the save slot on disk.
+It plays the whole night: what to do next is the first thing undone in a fixed order (see
+`autopilot.h`), and it walks a fixed graph of the town's ways (the street, the side passages, the
+cat's way over Mr. Hale's fence and through the hedge gap, the bridge and the hill path), steering
+for a point a little along the stretch of the shortest way that leaves the least to walk and that
+it can walk straight onto. The tests check that every stretch can be walked by the body it is for.
 
 ## The town and climbing
 

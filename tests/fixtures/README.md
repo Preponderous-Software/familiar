@@ -1,8 +1,14 @@
 # Save fixtures
 
 Saves written by earlier formats, kept so that every later version of Familiar is tested against
-them: `tests/test_saves.cpp` loads each one and plays on from it to the pinned playthrough's end.
+them: `tests/test_saves.cpp` loads each one and plays on from it to Smoke's homecoming at midnight.
 A format change that cannot read one of these fails the build.
+
+The `bright-asking` and `home` saves are moments of the autopilot's playthrough as it was at M5,
+when it knocked along Elm Street and walked home. Since the M5 follow-up the autopilot plays the
+whole night (lighting Nana's lantern first), so those moments are no longer on its way: the tests
+check that each format's copy of a moment is the same world, and that the autopilot plays on from
+it to the end of the night.
 
 | File | Format | Written by | What it holds |
 |---|---|---|---|

@@ -57,9 +57,21 @@ byte damaged is refused with a message and the previous save loads instead; a da
 aside as `familiar.save.damaged`, never deleted. Saves from every earlier format keep loading:
 `tests/fixtures` holds one of each, and the tests load them. See `src/save/save.h`.
 
-`familiar --autopilot` lets the autopilot play the night; `familiar --headless --autopilot` plays
-it without a window and checks it ends on the pinned fingerprint (CI runs it with `--slot`, saving
-and reloading at every step).
+`familiar --autopilot` lets the autopilot play the whole night, from choosing a costume to Smoke
+going home at midnight; `familiar --headless --autopilot` plays it without a window and checks it
+ends on the pinned fingerprint (CI runs it with `--slot`, saving and reloading at every step). See
+`src/sim/autopilot.h` for its route.
+
+## Sound
+
+Every sound is synthesised as the game runs; no recordings ship with it (`src/audio`): the wind
+and dry leaves, the creek, an owl after dark, footsteps on leaves, the road and porch boards, knocks
+and doors, candy in the bag, the cat's meow, Smoke's purr, latches, a match for each lantern, the
+cider in the pot, and the church clock striking the hours (twelve at midnight). **M** (or the
+page's **Sound** button) turns it off and on, and the game remembers. In a browser the sound starts
+with the first tap or click, as browsers (iOS Safari especially) require. The sound card is driven
+through [miniaudio](https://github.com/mackron/miniaudio) 0.11.25 (public domain or MIT No
+Attribution, `third_party/miniaudio/`).
 
 ## The loading shell
 
