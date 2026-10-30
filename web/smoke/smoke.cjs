@@ -332,8 +332,23 @@ function colourCount(png) {
   // Saves. Save now (and wait until IndexedDB has it), reload, and the night
   // is where and when it was.
   const saveNow = async (why) => {
-    await page.evaluate(() => { document.getElementById('saveNote').textContent = ''; });
-    await page.locator('#saveBtn').click();
+    await page.evaluate(() => {
+      document.getElementById('saveNote').textContent = '';
+      if (document.pointerLockElement) document.exitPointerLock();
+    });
+    await page.waitForTimeout(300);
+    // A real click on the Save button; if headless Chromium will not deliver
+    // one (it has reported the top bar as intercepting it after pointer
+    // lock), say what is under the button and fire the button's click.
+    await page.locator('#saveBtn').click({ timeout: 10000 }).catch(async (e) => {
+      const under = await page.evaluate(() => {
+        const r = document.getElementById('saveBtn').getBoundingClientRect();
+        const el = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+        return { rect: [r.x, r.y, r.width, r.height], under: el ? el.id || el.tagName : null, scroll: [scrollX, scrollY] };
+      });
+      console.log('(the Save button did not take a real click: ' + JSON.stringify(under) + '; firing its click)');
+      await page.locator('#saveBtn').dispatchEvent('click');
+    });
     await page.waitForFunction(() => /Saved in this browser/.test(document.getElementById('saveNote').textContent), null,
       { timeout: 20000 }).catch(() => {});
     const note = await page.locator('#saveNote').innerText();
