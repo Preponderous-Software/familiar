@@ -37,7 +37,11 @@ enum class Act { None, Light, Stir, Herb, Apple, Buy, Haggle, Offer };
 
 bool lanternReady(const World& w, int i) {
     switch (i) {
-        case OkaforPorch: return w.knocked[T::Okafor];
+        // Mrs. Okafor asks Wren to light it when she answers the door. After 9 pm,
+        // with the porch light off and nobody coming to the door, it is lit for
+        // Grandpa Ike anyway: otherwise a player who never knocked there could
+        // never light all four, and Smoke would never go home.
+        case OkaforPorch: return w.knocked[T::Okafor] || !porchLightOn(w, T::Okafor);
         case HaleStep: return w.gateOpen[T::HaleGate];
         case LychLantern: return w.gateOpen[T::Lychgate];
         default: return true;
@@ -210,7 +214,7 @@ std::string craftPrompt(const World& w) {
     }
     // Nothing to do here, but something to say about it.
     if (l >= 0 && atDoor(w) < 0) {
-        if (l == OkaforPorch) return "The Okafors' lantern, for Grandpa Ike. Knock first: it is theirs to ask";
+        if (l == OkaforPorch) return "The Okafors' lantern, for Grandpa Ike. Knock first (before 9 pm): it is theirs to ask";
         if (l == LychLantern) return "A lantern hangs in the lychgate, but the gate is bolted from inside";
         return "";
     }
@@ -292,6 +296,8 @@ std::string tonightNext(const World& w) {
     if (w.smoke == SmokeState::Waiting) return "Smoke waits where you left her: be a cat to lead her";
     if (!w.lit[HaleStep]) return "June Hale's lantern: Mr. Hale's back gate is latched from inside. A cat could open it";
     if (!w.lit[LychLantern]) return "The lychgate is bolted from inside. A cat could find a way into the churchyard";
+    // Only before 9 pm, with the Okafors' porch still lit (after it, the lantern is ready and the loop above names it).
+    if (!w.lit[OkaforPorch]) return "Knock at the Okafors' before 9 pm: Grandpa Ike's lantern is theirs to ask";
     if (!w.offered) {
         if (!nanaArrived(w)) return "Meet Nana at the stones on Lantern Hill (about " + minuteText(nanaArrives()) + " pm)";
         return "Make the offering with Nana in the middle of the stones";
