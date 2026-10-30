@@ -36,6 +36,7 @@ private:
     uint32_t nana_ = 0;
     std::array<uint32_t, 4> spirits_{};  // seen only by the cat (sim/cat.h)
     uint32_t bag_ = 0;                   // the candy bag, while it is on the ground
+    uint32_t smoke_ = 0;  // Smoke, seen as spirits are tonight: translucent and faintly glowing
     void place(uint32_t id, Vec3 at, float yaw, bool shown);
     size_t meshes_ = 0;
 };

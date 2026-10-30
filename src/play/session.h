@@ -34,6 +34,12 @@ public:
     // browser smoke test, like toDoorstep.
     enum Spot { HaleLatch = 0, LychgateInside = 1, Churchyard = 2, HedgeGap = 3, SpotCount };
     void toSpot(int spot);
+    // Stand at one of the night's places (sim/craft.h spotStand), facing it:
+    // the same, for the witchcraft.
+    void toPlace(int place);
+    // Wren's notebook (Tab on a desktop; the page opens its own in a browser).
+    void toggleNotebook();
+    int notebookPage() const { return notebook_; }
 
     void look(float dx, float dy);
     void setStick(float forward, float strafe);
@@ -75,6 +81,9 @@ private:
     bool bagSeen_ = false;
     std::array<bool, town::GateCount> gatesSeen_{};
     int spiritSeen_ = -1;
+    int64_t deedSeen_ = -1;
+    uint32_t pagesSeen_ = 0, secretsSeen_ = 0;
+    int notebook_ = -1;  // the open page, or -1
 };
 
 }  // namespace familiar::play

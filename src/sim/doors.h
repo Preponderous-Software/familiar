@@ -34,6 +34,7 @@ const Neighbour& neighbour(town::HouseId h);
 // The jokes Wren knows, in the order she tells them.
 const char* joke(int i);
 
+// Mr. Hale's is off until June's lantern is lit on his back step (M4).
 bool porchLightOn(const World& w, town::HouseId h);
 int atDoor(const World& w);
 bool canChooseCostume(const World& w);

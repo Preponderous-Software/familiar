@@ -352,6 +352,9 @@ wins.
 - Sensitivity "Do" 2: what counts as a "spell" in the game.
 - Every notebook page about Wicca, Samhain and the Wheel of the Year.
 
+The game's words for all of these are in two files: `src/sim/notebook.cpp` (the notebook's pages)
+and `src/sim/craft.cpp` (the lanterns, the cider, the offering, Smoke, and Nana's lines).
+
 ### Checklist for the practitioner reviewer
 
 - [ ] Does Nana read as a real Wiccan grandmother, not a stereotype?

@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "sim/craft.h"
+
 namespace familiar::bridge {
 
 namespace T = familiar::town;
@@ -389,6 +391,38 @@ MeshData buildTown() {
     m.cylinder({sc.x, sg + 2.05f, sc.z}, 0.4f, 0.02f, 0.45f, 8, kHay);
 
     for (size_t i = 0; i < T::trees().size(); ++i) tree(m, T::trees()[i], static_cast<int>(i));
+
+    // The four family lanterns: an open glass jar with a tin rim and a wire
+    // handle, waiting for a light (the view draws the glow once lit).
+    for (int i = 0; i < kLanternCount; ++i) {
+        const Vec3 a = lantern(i).at;
+        m.cylinder({a.x, a.y, a.z}, 0.11f, 0.1f, 0.22f, 8, Rgb{0.16f, 0.19f, 0.18f});
+        m.cylinder({a.x, a.y + 0.22f, a.z}, 0.105f, 0.105f, 0.03f, 8, Rgb{0.35f, 0.33f, 0.30f});  // the rim
+        m.box({a.x - 0.012f, a.y + 0.25f, a.z - 0.012f}, {a.x + 0.012f, a.y + 0.42f, a.z + 0.012f}, kLampPost);
+        if (i == LychLantern)  // hung from the lychgate's beam
+            m.box({a.x - 0.01f, a.y + 0.42f, a.z - 0.01f}, {a.x + 0.01f, T::kChurchyardWall + 0.4f, a.z + 0.01f}, kLampPost);
+    }
+    // A carved turnip on Nana's step, beside the pumpkins: the older lantern.
+    {
+        const Vec2 d = T::doorAt(T::Nana);
+        m.blob({d.x + 2.15f, T::kPorchHeight + 0.14f, d.z + 2.15f}, 0.15f, 0.9f, Rgb{0.62f, 0.55f, 0.42f});
+        m.box({d.x + 2.13f, T::kPorchHeight + 0.27f, d.z + 2.13f}, {d.x + 2.17f, T::kPorchHeight + 0.36f, d.z + 2.17f}, Rgb{0.20f, 0.30f, 0.10f});
+    }
+    return m;
+}
+
+MeshData buildSmoke() {
+    // A small grey cat sitting up, facing -z, about 30 cm tall, with a white chin.
+    MeshData m;
+    const Rgb grey{0.55f, 0.6f, 0.68f}, white{0.9f, 0.92f, 0.95f};
+    m.blob({0, 0.11f, 0.05f}, 0.11f, 1.05f, grey);           // haunches
+    m.blob({0, 0.19f, -0.02f}, 0.075f, 1.4f, grey);          // chest
+    m.blob({0, 0.3f, -0.05f}, 0.065f, 0.95f, grey);          // head
+    m.blob({0, 0.265f, -0.1f}, 0.03f, 0.8f, white);          // chin
+    for (float x : {-0.035f, 0.035f})                        // ears
+        m.triangle({x - 0.025f, 0.34f, -0.05f}, {x + 0.025f, 0.34f, -0.05f}, {x, 0.39f, -0.055f}, grey);
+    m.cylinder({0.08f, 0.01f, 0.12f}, 0.018f, 0.012f, 0.06f, 5, grey);  // tail, curled round
+    m.box({-0.01f, 0.0f, 0.12f}, {0.09f, 0.03f, 0.15f}, grey);
     return m;
 }
 

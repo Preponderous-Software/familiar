@@ -6,7 +6,9 @@
 
 #include "bridge/geometry.h"
 #include "sim/cat.h"
+#include "sim/craft.h"
 #include "sim/doors.h"
+#include "sim/notebook.h"
 #include "sim/town.h"
 
 namespace familiar::play {
@@ -22,6 +24,7 @@ constexpr float kMargin = 16.0f;
 constexpr bridge::Rgb kPorchColor{1.0f, 0.70f, 0.38f};
 constexpr bridge::Rgb kPumpkinColor{1.0f, 0.45f, 0.08f};
 constexpr bridge::Rgb kStreetColor{1.0f, 0.82f, 0.55f};
+constexpr bridge::Rgb kLanternColor{1.0f, 0.62f, 0.25f};
 constexpr float kLabelRange = 22.0f;
 constexpr float kLabelNear = 3.0f;
 
@@ -85,6 +88,63 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
             pts.push_back(q);
         }
     }
+    // The family lanterns that are lit: a candle flame in each jar.
+    for (int i = 0; i < kLanternCount; ++i) {
+        if (!w.lit[static_cast<size_t>(i)]) continue;
+        // The flame over the rim, and a halo round the jar.
+        const Vec3 a = lantern(i).at;
+        const float flicker = 0.15f * std::sin(t * 7.0f + static_cast<float>(i));
+        for (int k = 0; k < 2; ++k) {
+            StrataPoint q{};
+            q.position[0] = a.x;
+            q.position[1] = a.y + (k ? 0.18f : 0.3f);
+            q.position[2] = a.z;
+            q.size_pixels = 3.0f;
+            q.world_diameter = k ? 0.75f : 0.16f;
+            q.color[0] = 1.0f;
+            q.color[1] = k ? 0.55f : 0.8f;
+            q.color[2] = k ? 0.15f : 0.4f;
+            q.color[3] = (k ? 0.35f : 0.85f) + flicker;
+            q.flags = STRATA_POINT_SOFT;
+            pts.push_back(q);
+        }
+    }
+    const Vec3 eye = eyePosition(w);
+    auto soft = [&](Vec3 p, float diameter, float r, float g, float b, float a) {
+        StrataPoint q{};
+        q.position[0] = p.x;
+        q.position[1] = p.y;
+        q.position[2] = p.z;
+        q.size_pixels = 2.0f;
+        q.world_diameter = diameter;
+        q.color[0] = r;
+        q.color[1] = g;
+        q.color[2] = b;
+        q.color[3] = a;
+        q.flags = STRATA_POINT_SOFT;
+        pts.push_back(q);
+    };
+    // Smoke's paw prints, from Nana's herb bed to the oak, glowing for a cat.
+    if (w.form == Form::Cat && (w.smoke == SmokeState::Lost || w.smoke == SmokeState::Waiting)) {
+        const auto& trail = smokeTrail();
+        int k = 0;
+        for (size_t i = 0; i + 1 < trail.size(); ++i) {
+            const Vec2 a = trail[i], b = trail[i + 1];
+            const float dx = b.x - a.x, dz = b.z - a.z, len = std::sqrt(dx * dx + dz * dz);
+            const float nx = -dz / len, nz = dx / len;
+            for (float s = 0; s < len; s += 0.7f, ++k) {
+                const float side = k % 2 ? 0.07f : -0.07f;
+                const float x = a.x + dx * s / len + nx * side, z = a.z + dz * s / len + nz * side;
+                const float ex = x - eye.x, ez = z - eye.z;
+                if (ex * ex + ez * ez > 28.0f * 28.0f) continue;
+                const float y = T::kBridge.contains(x, z) ? T::kBridgeDeck : T::groundHeight(x, z);
+                soft({x, y + 0.03f, z}, 0.13f, 0.55f, 0.85f, 1.0f, 0.75f);
+            }
+        }
+    }
+    // The owl's eyes in the old oak, after dark.
+    if (night > 0.5f)
+        for (float dx : {-0.07f, 0.07f}) soft({T::kOldOak.x + dx, 4.6f, T::kOldOak.z + 0.85f}, 0.06f, 1.0f, 0.85f, 0.3f, 0.9f);
     for (Vec2 p : T::kStreetlamps) {
         StrataPoint q{};
         q.position[0] = p.x;
@@ -227,6 +287,11 @@ void setLights(strata::Engine& engine, const World& w, float sunElevation) {
     }
     for (Vec2 p : T::kStreetlamps) add({p.x, T::kStreetlampHeight - 0.5f, p.z}, 14.0f, kStreetColor, 1.3f * lit);
     if (w.form == Form::Cat) add(lamplighterLamp(w), 8.0f, kStreetColor, 0.9f * lit);
+    for (int i = 0; i < kLanternCount; ++i)
+        if (w.lit[static_cast<size_t>(i)]) {
+            const Vec3 a = lantern(i).at;
+            add({a.x, a.y + 0.3f, a.z}, 6.0f, kLanternColor, 1.1f * lit);
+        }
     std::sort(c.begin(), c.end(), [](const Candidate& a, const Candidate& b) { return a.d2 < b.d2; });
     std::vector<StrataPointLight> lights;
     for (size_t i = 0; i < c.size() && lights.size() < 30; ++i) lights.push_back(c[i].light);
@@ -253,13 +318,20 @@ std::vector<HudLine> hudLines(const World& w) {
     if (w.form == Form::Girl) lines.push_back({std::string("Costume   ") + costumeShort(w.costume)});
     lines.push_back({std::string("You are   ") + (w.form == Form::Cat ? "a black cat  (Q: Wren)" : "Wren  (Q: a cat)")});
     if (w.spiritsSeen) lines.push_back({"Spirits   " + std::to_string(spiritsSeen(w)) + " of " + std::to_string(SpiritCount) + " met"});
+    lines.push_back({"Lanterns  " + lanternLine(w)});
+    lines.push_back({"Basket    " + basketLine(w)});
+    lines.push_back({"Smoke     " + smokeLine(w)});
     lines.push_back({""});
     lines.push_back({"NEXT", true});
-    lines.push_back({nextStep(w)});
+    lines.push_back({tonightNext(w)});
     return lines;
 }
 
-std::string prompt(const World& w) { return usePrompt(w); }
+std::string prompt(const World& w) {
+    if (std::string b = catPrompt(w); !b.empty()) return b;  // the bag, a latch (M3)
+    const std::string c = craftPrompt(w);
+    return c.empty() ? usePrompt(w) : c;
+}
 
 std::vector<std::string> wrapped(const std::string& text, size_t columns) {
     std::vector<std::string> out;
@@ -285,7 +357,7 @@ std::vector<std::string> wrapped(const std::string& text, size_t columns) {
 }
 
 void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool noText, const std::string& message,
-            Cover cover) {
+            Cover cover, int notebookPage) {
     const float elevation = setSky(engine, w);
     setLights(engine, w, elevation);
     int32_t width = 0, height = 0;
@@ -313,7 +385,17 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     const float lamp[4] = {1.0f, 0.55f, 0.12f, 1.0f};
     float y = kMargin;
     std::vector<float> hudRight;
+    // Long HUD lines (the NEXT line) wrap within the left part of the screen.
+    std::vector<HudLine> shown;
+    const auto hudColumns = static_cast<size_t>(std::max(24.0f, (static_cast<float>(width) * 0.62f - kMargin) / gTextSize));
     for (const HudLine& l : hudLines(w)) {
+        if (l.text.size() <= hudColumns) {
+            shown.push_back(l);
+            continue;
+        }
+        for (const std::string& part : wrapped(l.text, hudColumns)) shown.push_back({part, l.heading});
+    }
+    for (const HudLine& l : shown) {
         hudRight.push_back(noText ? 0 : kMargin + gTextSize * static_cast<float>(l.text.size()));
         if (!l.text.empty()) text(texts, keep, kMargin, y, l.text, l.heading ? lamp : ink);
         y += gLine;
@@ -352,8 +434,8 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     if (!here.empty()) py = centred(here, py, ink);
     if (!message.empty()) centred(message, std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine), lamp);
     if (help) {
-        std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock / pick up / open", "T tell a joke", "1-4 costume", "Q cat / Wren", "Esc free the mouse",
-                                          "F1 hide help"};
+        std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock / use", "T tell a joke", "1-4 costume", "Q cat / Wren",
+                                          "Tab notebook", "Esc free the mouse", "F1 hide help"};
         std::vector<std::string> lines(1);
         for (const std::string& item : items) {
             if (!lines.back().empty() && lines.back().size() + 3 + item.size() > columns) lines.emplace_back();
@@ -363,6 +445,51 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
         for (size_t i = lines.size(); i-- > 0;) {
             text(texts, keep, kMargin, bottom, lines[i], ink);
             bottom -= gLine;
+        }
+    }
+    // Wren's notebook, open over the night (Tab): one page at a time.
+    const std::vector<const Page*> pages = notebook(w);
+    if (!noText && notebookPage >= 0) {
+        texts.clear();
+        keep.clear();
+        const float pw = std::min(static_cast<float>(width) - 2 * kMargin, gTextSize * 64 + 2 * kMargin);
+        const auto cols = static_cast<size_t>((pw - 2 * kMargin) / gTextSize);
+        const float px = (static_cast<float>(width) - pw) / 2;
+        float ty = kMargin * 2;
+        std::vector<std::string> body;
+        std::string title = "Wren's notebook";
+        if (pages.empty()) {
+            body = wrapped("Nothing yet. Pages fill in as the night goes: light Nana's window lantern first.", cols);
+        } else {
+            const Page& pg = *pages[static_cast<size_t>(notebookPage) % pages.size()];
+            title = pg.title;
+            body = wrapped(pg.text, cols);
+        }
+        const std::string foot = "Page " + std::to_string(pages.empty() ? 0 : notebookPage % static_cast<int>(pages.size()) + 1) +
+                                 " of " + std::to_string(pages.size()) + "   Secrets " + std::to_string(secretsFound(w)) + " of " +
+                                 std::to_string(SecretCount) + "   Left/Right turn   Tab close";
+        const float ph = gLine * static_cast<float>(body.size() + 4) + 2 * kMargin;
+        StrataRect r{};
+        r.x = px;
+        r.y = ty - kMargin;
+        r.width = pw;
+        r.height = std::min(ph, static_cast<float>(height) - ty);
+        r.color[0] = 0.07f;
+        r.color[1] = 0.05f;
+        r.color[2] = 0.08f;
+        r.color[3] = 0.9f;
+        engine.submitRects(&r, 1);
+        text(texts, keep, px + kMargin, ty, title, lamp);
+        ty += gLine * 2;
+        for (const std::string& line : body) {
+            text(texts, keep, px + kMargin, ty, line, ink);
+            ty += gLine;
+        }
+        ty += gLine;
+        for (const std::string& line : wrapped(foot, cols)) {
+            const float dim[4] = {0.7f, 0.64f, 0.62f, 1.0f};
+            text(texts, keep, px + kMargin, ty, line, dim);
+            ty += gLine;
         }
     }
     for (size_t i = 0; i < texts.size(); ++i) texts[i].utf8 = keep[i].c_str();

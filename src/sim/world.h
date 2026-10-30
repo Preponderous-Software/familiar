@@ -26,6 +26,23 @@ enum class Costume : int32_t { None = 0, Ghost = 1, Pumpkin = 2, Skeleton = 3, W
 // How a door was last answered.
 enum class Answer : int32_t { None = 0, Treat, Liked, Ask, Joke, Kitty };
 
+// The four family lanterns (M4, sim/craft.h).
+constexpr int kLanternCount = 4;
+
+// Smoke, Nana's old cat, who died this spring (M4, sim/craft.h).
+enum class SmokeState : int32_t {
+    Lost = 0,   // by the old oak, where her trail ends
+    Following,  // behind the cat
+    Waiting,    // sat down where Wren stopped being a cat
+    AtCircle,   // at the stones on Lantern Hill
+    Home        // gone home at midnight
+};
+
+// The last thing the night's witchcraft did, for the message line (sim/craft.h).
+enum class Deed : int32_t {
+    None = 0, Lit, Apple, Rosemary, Bought, BoughtJoke, Stir, Brewed, Found, Waits, Circle, Offered, Home
+};
+
 struct Player {
     float x = 0, z = 0;
     float feet = 0;            // the height she stands at: the ground, or something she climbed onto
@@ -51,6 +68,24 @@ struct World {
     bool bagDown = false;
     Vec3 bag;                    // where it lies (feet height in y)
     uint32_t spiritsSeen = 0;    // bit i: the cat has seen spirit i (sim/cat.h)
+
+    // Witchcraft (M4): the family lanterns, the cider's ingredients, Smoke and
+    // the offering, and Wren's notebook.
+    std::array<bool, kLanternCount> lit{};
+    int32_t apples = 0;       // carried: one for the pot, one for the offering
+    bool rosemary = false;
+    bool cinnamon = false;
+    int32_t stirs = 0;        // at the pot
+    bool cider = false;       // brewed
+    bool offered = false;     // the offering made at the stones
+    SmokeState smoke = SmokeState::Lost;
+    float smokeX = 0, smokeZ = 0;  // where Smoke is
+    int64_t homeTick = -1;    // when Smoke went home
+    uint32_t pages = 0;       // bit i: notebook page i (sim/notebook.h)
+    uint32_t secrets = 0;     // bit i: secret i found
+    Deed deed = Deed::None;   // the last deed,
+    int32_t deedArg = 0;      // what it was done to (a lantern, a stir),
+    int64_t deedTick = -1;    // and when
 };
 
 // One tick's worth of player intent, already resolved from keys and mouse.

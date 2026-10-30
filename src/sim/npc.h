@@ -23,7 +23,11 @@ constexpr int kChildCount = 7;
 // trick-or-treating ends.
 std::vector<Walker> children(const World& w);
 
-// Nana: on her porch until half past ten, then up the hill path (M4).
+// Nana: on her porch until half past ten, then along Elm Street, over the
+// bridge and up the hill path to the stones, where she waits (M4).
 Walker nana(const World& w);
+// Whether Nana has reached the stones, and the minute she does.
+bool nanaArrived(const World& w);
+int nanaArrivalMinute();
 
 }  // namespace familiar

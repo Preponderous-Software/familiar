@@ -4,7 +4,9 @@
 #include <cstdio>
 
 #include "sim/cat.h"
+#include "sim/craft.h"
 #include "sim/doors.h"
+#include "sim/notebook.h"
 
 namespace familiar {
 
@@ -83,6 +85,8 @@ World newWorld(uint64_t seed) {
     w.player.yaw = town::kStartYaw;
     float feet = 0;
     if (standAt(w, w.form, w.player.x, w.player.z, 10.0f, feet)) w.player.feet = feet;
+    w.smokeX = kSmokeStart.x;
+    w.smokeZ = kSmokeStart.z;
     return w;
 }
 
@@ -109,10 +113,16 @@ void tick(World& w, const Input& in) {
         if (w.form == Form::Girl) w.form = Form::Cat;
         else if (canBecomeGirl(w)) w.form = Form::Girl;
     }
-    // The bag, the latches and the spirits come first: E used there is not a knock.
+    // The bag, the latches and the spirits come first, then the night's
+    // witchcraft: E used there, at a lantern, a tree or the pot, is not a knock.
     Input rest = in;
     if (catTick(w, in, before)) rest.use = false;
+    if (craftTick(w, rest)) {
+        rest.use = false;
+        rest.trick = false;
+    }
     doorsTick(w, rest);
+    notebookTick(w);
 }
 
 bool canBecomeGirl(const World& w) {
@@ -160,6 +170,22 @@ uint64_t fingerprint(const World& w) {
     f.add(w.bag.y);
     f.add(w.bag.z);
     f.add(w.spiritsSeen);
+    for (bool l : w.lit) f.add(l);
+    f.add(w.apples);
+    f.add(w.rosemary);
+    f.add(w.cinnamon);
+    f.add(w.stirs);
+    f.add(w.cider);
+    f.add(w.offered);
+    f.add(w.smoke);
+    f.add(w.smokeX);
+    f.add(w.smokeZ);
+    f.add(w.homeTick);
+    f.add(w.pages);
+    f.add(w.secrets);
+    f.add(w.deed);
+    f.add(w.deedArg);
+    f.add(w.deedTick);
     return f.h;
 }
 
