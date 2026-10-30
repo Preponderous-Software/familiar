@@ -121,6 +121,11 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_notebook() {
     g->notebookJson = std::move(o);
     return g->notebookJson.c_str();
 }
+// Sound on or off, from the page's Sound button (or its remembered choice,
+// quietly, when the page opens).
+EMSCRIPTEN_KEEPALIVE void familiar_sound(int on, int announce) {
+    if (g) g->session->setMuted(on == 0, announce != 0);
+}
 EMSCRIPTEN_KEEPALIVE void familiar_cover(double right, double bottom) {
     if (g) g->session->setCover(static_cast<float>(right), static_cast<float>(bottom));
 }
@@ -145,6 +150,7 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_status() {
     o += buf;
     jsonBool(o, "captured", s.captured());
     jsonBool(o, "help", s.help());
+    jsonBool(o, "muted", s.muted());
     jsonBool(o, "cat", w.form == Form::Cat);
     jsonBool(o, "asking", w.asking >= 0);
     jsonBool(o, "choosing", canChooseCostume(w));

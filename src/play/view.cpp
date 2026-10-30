@@ -435,7 +435,7 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     if (!message.empty()) centred(message, std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine), lamp);
     if (help) {
         std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock / use", "T tell a joke", "1-4 costume", "Q cat / Wren",
-                                          "Tab notebook", "Esc free the mouse", "F1 hide help"};
+                                          "Tab notebook", "M sound", "Esc free the mouse", "F1 hide help"};
         std::vector<std::string> lines(1);
         for (const std::string& item : items) {
             if (!lines.back().empty() && lines.back().size() + 3 + item.size() > columns) lines.emplace_back();

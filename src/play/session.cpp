@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
+#include <fstream>
 
 #include "save/save.h"
 #include "sim/autopilot.h"
@@ -17,10 +19,14 @@ namespace {
 // SDL scancodes.
 constexpr int kW = 26, kA = 4, kS = 22, kD = 7, kE = 8, kQ = 20, kT = 23, kOne = 30, kFour = 33, kLShift = 225, kRShift = 229, kEscape = 41, kF1 = 58,
               kF5 = 62, kF9 = 66;
-constexpr int kTab = 43, kRight = 79, kLeft = 80;
+constexpr int kTab = 43, kRight = 79, kLeft = 80, kM = 16;
 constexpr double kAutosaveSeconds = 120;
 constexpr float kLookPerPixel = 0.0025f;
 constexpr float kHurryStick = 0.95f;
+constexpr float kStride = 0.75f;  // metres a step: footsteps from how fast the body goes
+
+// The slot's settings file (a desktop game's): "sound <0|1>".
+std::string settingsPath(const std::string& slot) { return slot + "/settings.txt"; }
 constexpr const char* kGreeting =
     "Halloween in Hollowell. Nana waves from her porch: \"Pick a costume, love, and knock where the porch light's on.\"\n"
     "1-4 chooses a costume. Q turns you into a cat, and back. Tab opens Wren's notebook.";
@@ -30,6 +36,14 @@ constexpr const char* kGreeting =
 Session::Session(strata::Engine& engine, const SessionOptions& options)
     : engine_(engine), options_(options), w_(newWorld(options.seed)), scene_(engine) {
     if (options_.autopilot) options_.slot.clear();  // watching the autopilot never touches a save
+    if (options_.sound) sound_.start();
+    if (!options_.slot.empty() && !options_.browser) {
+        std::ifstream f(settingsPath(options_.slot));
+        std::string key;
+        int value = 0;
+        while (f >> key >> value)
+            if (key == "sound") sound_.setMuted(value == 0);
+    }
     restart();
     if (!options_.slot.empty() && !options_.fresh && hasSave(options_.slot)) load();
     if (!options_.browser) capture(true);
@@ -52,6 +66,7 @@ void Session::adopt(const World& w) {
     secretsSeen_ = w_.secrets;
     notebook_ = -1;
     lastSave_ = clock_;
+    heard_ = w_;  // a new night or a load is not something to hear
 }
 
 void Session::restart() {
@@ -133,6 +148,26 @@ void Session::say(const std::string& text, double seconds) {
     messageUntil_ = clock_ + seconds;
 }
 
+void Session::setMuted(bool muted, bool announce) {
+    sound_.setMuted(muted);
+    if (announce) say(muted ? "Sound off (M turns it on)" : "Sound on", 3);
+    if (options_.slot.empty() || options_.browser) return;  // the page remembers its own
+    std::error_code ec;
+    std::filesystem::create_directories(options_.slot, ec);
+    std::ofstream(settingsPath(options_.slot)) << "sound " << (muted ? 0 : 1) << "\n";
+}
+
+void Session::listen(double dt) {
+    for (audio::Cue c : audio::cues(heard_, w_)) sound_.play(c);
+    // Footsteps from how far the body went this frame.
+    const float dx = w_.player.x - heard_.player.x, dz = w_.player.z - heard_.player.z;
+    const float speed = dt > 0 ? std::sqrt(dx * dx + dz * dz) / static_cast<float>(dt) : 0.0f;
+    const float stride = w_.form == Form::Cat ? kStride * 0.5f : kStride;
+    const float steps = speed > 0.3f && speed < 20.0f ? speed / stride : 0.0f;
+    sound_.setAmbience(audio::ambience(w_, eyePosition(w_), steps));
+    heard_ = w_;
+}
+
 void Session::capture(bool on) {
     if (!options_.browser) engine_.setRelativeMouseMode(on);
     captured_ = on;
@@ -179,6 +214,10 @@ void Session::onKeyDown(int scancode, bool repeat) {
         return;
     }
     if (repeat) return;
+    if (scancode == kM) {
+        setMuted(!sound_.muted());
+        return;
+    }
     if (scancode == kE) {
         once_.use = true;
         if (w_.form == Form::Cat && atDoor(w_) < 0 && latchHere(w_) < 0) say("A cat can't knock, or carry things. Q to be Wren again.", 3);
@@ -303,6 +342,7 @@ void Session::frame(double dt) {
     pagesSeen_ = w_.pages;
     secretsSeen_ = w_.secrets;
     if (!said.empty()) say(said, seconds);
+    listen(dt);
     // The eye eases toward its height, so a change of form or a drop is not a jump cut.
     const float target = eyePosition(w_).y;
     const float k = static_cast<float>(1.0 - std::exp(-dt * 12.0));

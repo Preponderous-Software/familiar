@@ -8,12 +8,17 @@
 // two minutes of play, on F5 and when asked (save()), and loads on F9. New
 // (restart) starts the night over; the next save replaces the current one,
 // which is kept as the previous save.
+//
+// Sound: the night's steady sounds and one-off cues (src/audio), on or off
+// with M (or the page's Sound button). A desktop game remembers the choice in
+// the slot's settings.txt; the page remembers it itself.
 #pragma once
 
 #include <array>
 #include <functional>
 #include <string>
 
+#include "audio/device.h"
 #include "bridge/scene.h"
 #include "play/view.h"
 #include "sim/world.h"
@@ -27,6 +32,7 @@ struct SessionOptions {
     std::string slot;      // the save slot directory; empty = no saves
     bool fresh = false;    // start a new night even if the slot has a save
     bool autopilot = false;  // the autopilot plays (src/sim/autopilot.h); never saves
+    bool sound = true;       // open the sound card (silent if there is none)
     // Called after every save written (the browser flushes it to IndexedDB).
     std::function<void()> afterSave;
 };
@@ -64,6 +70,9 @@ public:
     void setHelp(bool on) { help_ = on; }
     void setCompactHud(bool on) { compact_ = on; }
     void setCover(float right, float bottom) { cover_ = {right, bottom}; }
+    // Sound on or off (M); `announce` says so on the message line.
+    void setMuted(bool muted, bool announce = true);
+    bool muted() const { return sound_.muted(); }
 
     const World& world() const { return w_; }
     bool captured() const { return captured_; }
@@ -76,6 +85,7 @@ private:
     void onKeyDown(int scancode, bool repeat);
     void step();
     void say(const std::string& text, double seconds = 5);
+    void listen(double dt);
 
     strata::Engine& engine_;
     SessionOptions options_;
@@ -101,6 +111,8 @@ private:
     int64_t deedSeen_ = -1;
     uint32_t pagesSeen_ = 0, secretsSeen_ = 0;
     int notebook_ = -1;  // the open page, or -1
+    audio::Sound sound_;
+    World heard_;  // the world as the sound last heard it
 };
 
 }  // namespace familiar::play

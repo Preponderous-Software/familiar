@@ -68,11 +68,18 @@ add_library(familiar_save STATIC src/save/save.cpp src/save/sha256.cpp)
 target_link_libraries(familiar_save PUBLIC familiar_sim)
 familiar_warnings(familiar_save)
 
+# Sound: what the night sounds like (cues, from the world) and the synth that
+# makes every sound from nothing (no recordings). No device and no engine.
+add_library(familiar_audio STATIC src/audio/cues.cpp src/audio/synth.cpp)
+target_include_directories(familiar_audio PUBLIC src)
+target_link_libraries(familiar_audio PUBLIC familiar_sim)
+familiar_warnings(familiar_audio)
+
 if(FAMILIAR_BUILD_TESTS)
   enable_testing()
-  foreach(t movement town doors cat craft autopilot saves)
+  foreach(t movement town doors cat craft autopilot saves audio)
     add_executable(test_${t} tests/test_${t}.cpp)
-    target_link_libraries(test_${t} PRIVATE familiar_sim familiar_save)
+    target_link_libraries(test_${t} PRIVATE familiar_sim familiar_save familiar_audio)
     target_compile_definitions(test_${t} PRIVATE FAMILIAR_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
     target_include_directories(test_${t} PRIVATE tests)
     target_compile_definitions(test_${t} PRIVATE FAMILIAR_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
@@ -112,9 +119,20 @@ if(FAMILIAR_WITH_STRATA OR FAMILIAR_WEB)
     GIT_TAG ${FAMILIAR_STRATA_REF})
   FetchContent_MakeAvailable(strata)
 
+  # The sound card, through miniaudio (public domain, third_party/miniaudio/),
+  # built with its own warnings. In a browser it is Web Audio, unlocked by
+  # the first tap or click (iOS needs one).
+  find_package(Threads REQUIRED)
+  add_library(familiar_miniaudio STATIC src/audio/miniaudio.cpp)
+  target_include_directories(familiar_miniaudio SYSTEM PUBLIC third_party/miniaudio)
+  target_link_libraries(familiar_miniaudio PUBLIC Threads::Threads ${CMAKE_DL_LIBS})
+  add_library(familiar_sound STATIC src/audio/device.cpp)
+  target_link_libraries(familiar_sound PUBLIC familiar_audio PRIVATE familiar_miniaudio)
+  familiar_warnings(familiar_sound)
+
   add_library(familiar_play STATIC src/bridge/geometry.cpp src/bridge/scene.cpp src/play/session.cpp src/play/view.cpp)
   target_include_directories(familiar_play PUBLIC src)
-  target_link_libraries(familiar_play PUBLIC familiar_sim familiar_save strata::static)
+  target_link_libraries(familiar_play PUBLIC familiar_sim familiar_save familiar_sound strata::static)
   familiar_warnings(familiar_play)
 endif()
 
@@ -134,7 +152,7 @@ if(FAMILIAR_WEB)
   set_target_properties(familiar-web PROPERTIES OUTPUT_NAME familiar SUFFIX ".html")
   target_link_options(familiar-web PRIVATE
     -sSTACK_SIZE=1MB
-    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_save,_familiar_restart,_familiar_to_doorstep,_familiar_to_spot,_familiar_to_place,_familiar_notebook,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status"
+    "-sEXPORTED_FUNCTIONS=_main,_familiar_look,_familiar_stick,_familiar_press,_familiar_captured,_familiar_save,_familiar_restart,_familiar_to_doorstep,_familiar_to_spot,_familiar_to_place,_familiar_notebook,_familiar_cover,_familiar_help,_familiar_resize,_familiar_status,_familiar_sound"
     -lidbfs.js
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF8ToString,FS,IDBFS,addRunDependency,removeRunDependency
     "--shell-file=${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html")

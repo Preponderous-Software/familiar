@@ -85,12 +85,20 @@ jobs:
           mkdir -p tour
           ./build/familiar --headless --tour --frames tour --width 960 --height 540
           test "$(ls tour/*.png | wc -l)" -eq 21
-      - name: Autopilot playthrough (saved and reloaded at every step, pinned fingerprint)
+      - name: Autopilot playthrough of the whole night (saved and reloaded at every step, pinned fingerprint)
         run: |
           mkdir -p autopilot
-          ./build/familiar --headless --autopilot --frames autopilot --slot autopilot/slot --width 960 --height 540
+          ./build/familiar --headless --autopilot --frames autopilot --slot autopilot/slot --width 960 --height 540 | tee autopilot/log.txt
           test -f autopilot/slot/familiar.save
           test -f autopilot/slot/familiar.save.prev
+          # Every step of the night, to Smoke going home at midnight.
+          for step in "lighting Nana's window lantern" "buying a cinnamon stick" "slipping into the churchyard" \
+                      "picking apples" "climbing in to Mr. Hale's latch" "brewing Nana's cider" "leading Smoke to the stones" \
+                      "making the offering with Nana" "Smoke has gone home"; do
+            grep -q "$step" autopilot/log.txt || { echo "the autopilot never got to: $step"; exit 1; }
+          done
+          grep -q "playthrough done at 12:00 am" autopilot/log.txt
+          test "$(ls autopilot/autopilot-*.png | wc -l)" -ge 30
       - uses: actions/upload-artifact@v4
         with:
           name: tour-linux
