@@ -12,7 +12,7 @@
 namespace familiar {
 
 constexpr int kPorchLightsOff = 21 * 60;  // trick-or-treating ends at 9 pm
-constexpr float kDoorReach = 1.6f;        // from the doorstep
+constexpr float kDoorReach = 1.85f;       // from the doorstep (1.6 in 0.1.0 felt like touching the door)
 constexpr float kCostumeReach = 9.0f;     // costumes are chosen near Nana's porch
 constexpr int kJokeCount = 8;
 

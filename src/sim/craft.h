@@ -32,7 +32,9 @@ struct LanternSpot {
 const LanternSpot& lantern(int i);
 int lanternsLit(const World& w);
 
-constexpr float kReach = 1.6f;          // a lantern, a tree, from where Wren stands
+constexpr float kReach = 1.6f;          // a tree, from where Wren stands
+constexpr float kLanternReach = 2.3f;   // a lantern jar (0.1.0 playtest: 1.6 m felt like touching it)
+constexpr float kHintRange = 8.0f;      // "come closer": something usable this far off, straight ahead
 constexpr float kPotReach = 1.9f;       // the pot, from beside the fire pit's stones
 constexpr float kHerbReach = 1.8f;
 constexpr float kOfferReach = 2.6f;     // the middle of the stone circle
@@ -77,6 +79,11 @@ bool haggling(const World& w);
 
 // What E (or T) does here for the night's witchcraft, or "" to leave it to the doors.
 std::string craftPrompt(const World& w);
+// When nothing is in reach: what Wren is looking straight at that she could
+// use from closer (an unlit lantern she can light, a door that would answer),
+// as "... come closer", or "". Read from the view (yaw), not the rules.
+std::string reachHint(const World& w);
+
 // One word for the touch button that does E here ("Light", "Pick", "Buy",
 // "Stir", "Offer"), or "" when E is the doors' (a knock).
 std::string craftWord(const World& w);
