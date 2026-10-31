@@ -268,6 +268,18 @@ std::string smokeLine(const World& w) {
     return "";
 }
 
+namespace {
+
+constexpr const char* kNanaLanternNext = "Light Nana's window lantern: E at the window left of her door";
+
+bool knockedAnywhere(const World& w) {
+    for (bool k : w.knocked)
+        if (k) return true;
+    return false;
+}
+
+}  // namespace
+
 std::string tonightNext(const World& w) {
     const int minute = static_cast<int>(gameMinutes(w));
     if (w.form == Form::Cat) {
@@ -280,8 +292,9 @@ std::string tonightNext(const World& w) {
         return nextStep(w);
     }
     if (w.bagDown || (canChooseCostume(w) && w.costume == Costume::None)) return nextStep(w);  // fetch the bag first (M3)
-    if (!w.lit[NanaWindow]) return "Light Nana's window lantern: E at the window left of her door";
-    if (housesLeft(w) > 0 && minute < kPorchLightsOff) {
+    const bool knocking = housesLeft(w) > 0 && minute < kPorchLightsOff;
+    if (!w.lit[NanaWindow] && !(knocking && knockedAnywhere(w))) return kNanaLanternNext;
+    if (knocking) {
         if (w.knocked[T::Okafor] && !w.lit[OkaforPorch]) return "Light Grandpa Ike's lantern on the Okafors' porch";
         return nextStep(w);
     }
@@ -305,6 +318,14 @@ std::string tonightNext(const World& w) {
     if (w.smoke == SmokeState::AtCircle) return "Wait with Nana and Smoke for midnight";
     if (w.smoke == SmokeState::Home) return "Smoke is home. The night carries on: walk home when you like";
     return nextStep(w);
+}
+
+std::string tonightAlso(const World& w) {
+    if (w.form != Form::Girl || w.bagDown || (canChooseCostume(w) && w.costume == Costume::None)) return "";
+    const bool knocking = housesLeft(w) > 0 && static_cast<int>(gameMinutes(w)) < kPorchLightsOff;
+    if (!knocking || w.lit[NanaWindow]) return "";
+    if (tonightNext(w) == kNanaLanternNext) return "Then knock where a porch light is on, before 9 pm (" + std::to_string(housesLeft(w)) + " to go)";
+    return "And light Nana's window lantern, left of her door";
 }
 
 std::string deedText(const World& w) {

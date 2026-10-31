@@ -86,7 +86,13 @@ std::string lanternLine(const World& w);  // "2 of 4"
 std::string basketLine(const World& w);   // "2 apples, rosemary" / "Nana's cider" / "empty"
 std::string smokeLine(const World& w);    // "not found yet" ...
 // The NEXT line: the night's witchcraft, falling back to the doors' nextStep.
+// Nana's window lantern comes first, until Wren has knocked somewhere: then,
+// while porch lights are on, trick-or-treating (and Mrs. Okafor's request)
+// leads, and the lantern is the second line (tonightAlso).
 std::string tonightNext(const World& w);
+// A second NEXT line, or "": the other thread of the evening, when NEXT names
+// one of Nana's lantern and trick-or-treating (before 9 pm) and not the other.
+std::string tonightAlso(const World& w);
 
 // What the last deed said, for the message line, or "" (shown once by the session).
 std::string deedText(const World& w);
