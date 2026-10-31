@@ -90,6 +90,14 @@ std::string smokeLine(const World& w);    // "not found yet" ...
 // while porch lights are on, trick-or-treating (and Mrs. Okafor's request)
 // leads, and the lantern is the second line (tonightAlso).
 std::string tonightNext(const World& w);
+// The NEXT line and where it points (#14): the place to go for it, for the
+// view's marker, when it names one (not for "wait", "explore" or the costume).
+struct NextStep {
+    std::string text;
+    bool goal = false;
+    Vec3 at{};
+};
+NextStep tonightStep(const World& w);
 // A second NEXT line, or "": the other thread of the evening, when NEXT names
 // one of Nana's lantern and trick-or-treating (before 9 pm) and not the other.
 std::string tonightAlso(const World& w);

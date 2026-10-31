@@ -27,6 +27,7 @@ constexpr bridge::Rgb kStreetColor{1.0f, 0.82f, 0.55f};
 constexpr bridge::Rgb kLanternColor{1.0f, 0.62f, 0.25f};
 constexpr float kLabelRange = 22.0f;
 constexpr float kLabelNear = 3.0f;
+constexpr float kGoalNear = 3.5f;  // the NEXT marker hides this close to its place
 
 StrataCamera lookFrom(Vec3 eye, float yaw, float pitch, float aspect, float nearPlane) {
     const Vec3 d = lookDirection(yaw, pitch);
@@ -124,6 +125,18 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
         q.flags = STRATA_POINT_SOFT;
         pts.push_back(q);
     };
+    // The dropped candy bag glints, so it can be found again in a dark yard (#15),
+    // and the NEXT line's place glows faintly (#14), seen from afar.
+    if (w.bagDown) {
+        const float glint = 0.6f + 0.3f * std::sin(t * 4.0f);
+        soft({w.bag.x, w.bag.y + 0.35f, w.bag.z}, 0.45f, 1.0f, 0.9f, 0.55f, glint);
+        soft({w.bag.x, w.bag.y + 0.35f, w.bag.z}, 1.4f, 1.0f, 0.75f, 0.35f, 0.25f * glint);
+    }
+    if (const NextStep n = tonightStep(w); n.goal) {
+        const float dx = n.at.x - eye.x, dz = n.at.z - eye.z;
+        if (dx * dx + dz * dz > kGoalNear * kGoalNear)
+            soft(n.at, 0.9f, 0.75f, 0.85f, 1.0f, 0.35f + 0.15f * std::sin(t * 3.0f));
+    }
     // Smoke's paw prints, from Nana's herb bed to the oak, glowing for a cat.
     if (w.form == Form::Cat && (w.smoke == SmokeState::Lost || w.smoke == SmokeState::Waiting)) {
         const auto& trail = smokeTrail();
@@ -206,8 +219,9 @@ struct Place {
     float range;
 };
 
-std::vector<Place> places() {
+std::vector<Place> places(const World& w) {
     std::vector<Place> out;
+    if (w.bagDown) out.push_back({"Your candy bag", {w.bag.x, w.bag.y + 0.9f, w.bag.z}, 40.0f});
     for (int i = 0; i < T::HouseCount; ++i) {
         const T::House& h = T::kHouses[i];
         const Vec2 d = T::doorAt(static_cast<T::HouseId>(i));
@@ -403,7 +417,7 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     }
     const size_t hudTexts = texts.size();
     // The names of places nearby, fading with distance.
-    for (const Place& place : places()) {
+    for (const Place& place : places(w)) {
         const float dx = place.at.x - eye.x, dz = place.at.z - eye.z;
         const float d = std::sqrt(dx * dx + dz * dz);
         float sx = 0, sy = 0;
@@ -419,6 +433,35 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
         }
         if (left < cover.right && sy < cover.bottom) covered = true;
         if (!covered) text(texts, keep, left, sy, name, fade);
+    }
+    // Where the NEXT line points (#14): a "v" over the place, with how far it is,
+    // or an arrow at the side of the screen to turn toward it.
+    if (const NextStep n = tonightStep(w); n.goal) {
+        const float dx = n.at.x - eye.x, dz = n.at.z - eye.z;
+        const float d = std::sqrt(dx * dx + dz * dz);
+        if (d > kGoalNear) {
+            const float goal[4] = {0.75f, 0.85f, 1.0f, 0.95f};
+            const std::string far = std::to_string(static_cast<int>(d + 0.5f)) + " m";
+            float sx = 0, sy = 0;
+            if (toScreen(camera, n.at, width, height, sx, sy)) {
+                text(texts, keep, sx - gTextSize / 2, sy - gTextSize * 1.6f, "v", goal);
+                text(texts, keep, sx - gTextSize * 0.5f * static_cast<float>(far.size()), sy - gTextSize * 2.8f, far, goal);
+            } else {
+                // Which way to turn: the bearing to the place, against the way she faces.
+                float turn = std::atan2(dx, -dz) - w.player.yaw;
+                while (turn > kPi) turn -= 2 * kPi;
+                while (turn < -kPi) turn += 2 * kPi;
+                const float ay = std::round(static_cast<float>(height) * 0.58f);
+                if (turn < 0) {
+                    text(texts, keep, kMargin, ay, "<", goal);
+                    text(texts, keep, kMargin + gTextSize * 1.5f, ay, far, goal);
+                } else {
+                    const float right = static_cast<float>(width) - kMargin - gTextSize;
+                    text(texts, keep, right, ay, ">", goal);
+                    text(texts, keep, right - gTextSize * (0.5f + static_cast<float>(far.size())), ay, far, goal);
+                }
+            }
+        }
     }
     const size_t labelsEnd = texts.size();
     text(texts, keep, static_cast<float>(width) / 2 - gTextSize / 2, static_cast<float>(height) / 2 - gTextSize / 2, "+", ink);
