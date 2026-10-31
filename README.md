@@ -11,6 +11,16 @@ the first playable version holds and its milestones, [RESEARCH.md](RESEARCH.md) 
 behind its portrayal of Samhain and Wicca, and [ARCHITECTURE.md](ARCHITECTURE.md) for how it is
 built.
 
+## Play it
+
+In a browser, on a desktop or a phone:
+
+- **itch.io:** <https://danthetechman.itch.io/familiar>
+- **Arcade:** <https://familiar.play.danielstephenson.dev>
+
+Saves stay in the browser and site where you play: a night saved on itch.io doesn't carry over to
+the arcade, or the other way round.
+
 ## Building
 
 The rules and tests build without a GPU:
