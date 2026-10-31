@@ -296,6 +296,37 @@ int main(int, char**) {
         }
     }
 
+    // ---- 0.1.0 playtest (#17): NEXT is not stuck on Nana's lantern. It comes first, with
+    // trick-or-treating as a second line; after the first knock the doors (and Mrs. Okafor's
+    // request) lead, and the lantern is the second line; after 9 pm the lanterns lead again.
+    {
+        World w = newWorld(1);
+        w.costume = Costume::Witch;
+        standAt(w, {-60.0f, 0.0f});
+        CHECK(tonightNext(w).find("Light Nana's window lantern") == 0);
+        CHECK(tonightAlso(w).find("Then knock where a porch light is on, before 9 pm") == 0);
+        w.knocked[T::Garcia] = true;
+        w.candy = 2;
+        CHECK(tonightNext(w).find("Knock (E) where a porch light is on") == 0);
+        CHECK(tonightAlso(w).find("Nana's window lantern") != std::string::npos);
+        w.knocked[T::Okafor] = true;  // and Mrs. Okafor asked for Grandpa Ike's lantern
+        CHECK(tonightNext(w).find("Light Grandpa Ike's lantern") == 0);
+        CHECK(tonightAlso(w).find("Nana's window lantern") != std::string::npos);
+        w.lit[NanaWindow] = true;
+        CHECK(tonightAlso(w).empty());
+        World late = w;
+        late.lit[NanaWindow] = false;
+        late.tick = tickAt(21 * 60 + 5);  // porch lights off: the lanterns lead, Nana's first
+        CHECK(tonightNext(late).find("Light Nana's window lantern") == 0);
+        CHECK(tonightAlso(late).empty());
+        // No second line before a costume, or with the bag on the ground.
+        World start = newWorld(1);
+        CHECK(tonightAlso(start).empty());
+        w.lit[NanaWindow] = false;
+        w.bagDown = true;
+        CHECK(tonightAlso(w).empty());
+    }
+
     // ---- The NEXT line walks through the night.
     {
         World w = newWorld(1);
