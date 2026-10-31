@@ -338,6 +338,7 @@ std::vector<HudLine> hudLines(const World& w) {
     lines.push_back({""});
     lines.push_back({"NEXT", true});
     lines.push_back({tonightNext(w)});
+    if (std::string also = tonightAlso(w); !also.empty()) lines.push_back({also});
     return lines;
 }
 
