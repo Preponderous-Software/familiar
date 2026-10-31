@@ -174,7 +174,7 @@ int lanternHere(const World& w) {
     for (int i = 0; i < kLanternCount; ++i) {
         if (w.lit[static_cast<size_t>(i)]) continue;
         const Vec3 a = kLanterns[i].at;
-        if (near(w, {a.x, a.z}, kReach)) return i;
+        if (near(w, {a.x, a.z}, kLanternReach)) return i;
     }
     return -1;
 }
@@ -213,8 +213,14 @@ std::string craftPrompt(const World& w) {
         case Act::Offer: return "E  make the offering with Nana";
         case Act::None: break;
     }
-    // Nothing to do here, but something to say about it.
-    if (l >= 0 && atDoor(w) < 0) {
+    // Nothing to do here, but something to say about it (when the lantern is
+    // nearer than any door in reach, so the door's own line is not hidden).
+    const int door = atDoor(w);
+    const bool lanternNearer =
+        l >= 0 && (door < 0 || dist2(w.player.x, w.player.z, kLanterns[l].at.x, kLanterns[l].at.z) <
+                                   dist2(w.player.x, w.player.z, T::doorstep(static_cast<T::HouseId>(door)).x,
+                                         T::doorstep(static_cast<T::HouseId>(door)).z));
+    if (lanternNearer) {
         if (l == OkaforPorch) return "The Okafors' lantern, for Grandpa Ike. Knock first (before 9 pm): it is theirs to ask";
         if (l == LychLantern) return "A lantern hangs in the lychgate, but the gate is bolted from inside";
         return "";
@@ -229,6 +235,40 @@ std::string craftPrompt(const World& w) {
         return "For the offering: Nana's cider and an apple";
     }
     return "";
+}
+
+std::string reachHint(const World& w) {
+    if (w.form != Form::Girl || w.asking >= 0) return "";
+    const float fx = std::sin(w.player.yaw), fz = -std::cos(w.player.yaw);
+    // How far off, if (x, z) is within kHintRange and within about 20 degrees of straight ahead; else -1.
+    auto ahead = [&](float x, float z) {
+        const float dx = x - w.player.x, dz = z - w.player.z;
+        const float d = std::sqrt(dx * dx + dz * dz);
+        if (d < 0.01f || d > kHintRange) return -1.0f;
+        return (dx * fx + dz * fz) / d > 0.94f ? d : -1.0f;
+    };
+    std::string best;
+    float bestD = kHintRange + 1;
+    if (carrying(w))
+        for (int i = 0; i < kLanternCount; ++i) {
+            if (w.lit[static_cast<size_t>(i)] || !lanternReady(w, i)) continue;
+            const float d = ahead(kLanterns[i].at.x, kLanterns[i].at.z);
+            if (d < 0 || d >= bestD) continue;
+            bestD = d;
+            best = std::string(kLanterns[i].name) + ": come closer to light it";
+        }
+    if (!w.bagDown)
+        for (int i = 0; i < T::HouseCount; ++i) {
+            const auto id = static_cast<T::HouseId>(i);
+            if (id == T::Nana || w.knocked[i] || !porchLightOn(w, id) || neighbour(id).candy <= 0) continue;
+            const Vec2 d0 = T::doorAt(id);
+            const float d = ahead(d0.x, d0.z);
+            if (d < 0 || d >= bestD) continue;
+            bestD = d;
+            best = std::string(T::kHouses[i].name) + (id == T::Market ? "" : " door") + ": come closer to knock";
+        }
+    if (!best.empty() && best[0] >= 'a' && best[0] <= 'z') best[0] = static_cast<char>(best[0] - 'a' + 'A');
+    return best;
 }
 
 std::string craftWord(const World& w) {

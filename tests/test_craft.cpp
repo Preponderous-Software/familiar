@@ -5,6 +5,7 @@
 // midnight only with everything done. Then the notebook: pages earned as the
 // night goes, secrets found where they are, every page about belief or history
 // citing a source that exists in RESEARCH.md, and nothing but ASCII.
+#include <cmath>
 #include <cstdio>
 #include <fstream>
 #include <regex>
@@ -85,6 +86,44 @@ int main(int, char**) {
         press(c, true);
         CHECK(!c.lit[NanaWindow]);
         CHECK(c.pages & (1u << CatsPage));  // the black cats page, on first becoming one
+    }
+
+    // ---- 0.1.0 playtest (#12, #13): lanterns and doors in reach from a step
+    // away, Nana out of the way of her window, and "come closer" straight ahead.
+    {
+        World w = newWorld(1);
+        const Vec3 a = lantern(NanaWindow).at;
+        standAt(w, {-67.2f, -9.2f});  // where Nana stood in 0.1.0
+        CHECK(lanternHere(w) == NanaWindow);
+        standAt(w, {a.x + 1.0f, a.z + 1.9f});  // about 2.1 m off, on the porch
+        CHECK(lanternHere(w) == NanaWindow);
+        const Walker n = nana(w);
+        CHECK((n.at.x - a.x) * (n.at.x - a.x) + (n.at.z - a.z) * (n.at.z - a.z) > 3.0f * 3.0f);
+        CHECK(n.at.x > T::doorAt(T::Nana).x);  // to the right of her door, the window is to the left
+        // On Nana's doorstep with the lantern unlit (and the costume line gone), her door points at it.
+        w.candy = 1;
+        standAt(w, T::doorstep(T::Nana));
+        CHECK(usePrompt(w).find("window lantern") != std::string::npos);
+        // A door answers from a step back off the doorstep.
+        World d = newWorld(1);
+        standAt(d, {T::doorstep(T::Okafor).x, T::doorstep(T::Okafor).z + 1.75f});
+        CHECK(atDoor(d) == T::Okafor);
+        press(d, true);
+        CHECK(d.asking == T::Okafor);
+        // Out of reach, looking straight at it: come closer.
+        World h = newWorld(1);
+        standAt(h, {-66.0f, -4.0f});
+        CHECK(lanternHere(h) == -1);
+        h.player.yaw = std::atan2(a.x - h.player.x, -(a.z - h.player.z));
+        CHECK(reachHint(h).find("Nana's window lantern: come closer") == 0);
+        h.player.yaw += kPi;  // looking away
+        CHECK(reachHint(h).empty());
+        standAt(h, {-48.0f, -4.0f});
+        h.player.yaw = 0;  // north, at the Okafors' door
+        CHECK(reachHint(h).find("The Okafors' door: come closer to knock") == 0);
+        h.lit[NanaWindow] = true;
+        h.knocked[T::Okafor] = true;
+        CHECK(reachHint(h).empty());  // been there (and Grandpa Ike's lantern is off to the left)
     }
 
     // ---- Grandpa Ike's lantern: only once the Okafors have been knocked at.
