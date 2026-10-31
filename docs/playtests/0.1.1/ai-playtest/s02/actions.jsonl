@@ -1,0 +1,467 @@
+{"t": 1793414080508, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "7"]}
+{"t": 1793414086061, "cmd": "shot", "args": ["start"]}
+{"t": 1793414092992, "cmd": "note", "args": ["--shot", "overlap", "At start the help list (W A S D walk...) is drawn on top of Nana's greeting text at the bottom; both are unreadable where they overlap."]}
+{"t": 1793414093118, "cmd": "key", "args": ["4"]}
+{"t": 1793414093574, "cmd": "key", "args": ["F1"]}
+{"t": 1793414094045, "cmd": "shot", "args": ["c1"]}
+{"t": 1793414097939, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414098069, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414098220, "cmd": "shot", "args": ["c2"]}
+{"t": 1793414101658, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793414101775, "cmd": "wait", "args": ["1"]}
+{"t": 1793414102846, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793414102968, "cmd": "wait", "args": ["1"]}
+{"t": 1793414104059, "cmd": "shot", "args": ["c3"]}
+{"t": 1793414104171, "cmd": "status", "args": []}
+{"t": 1793414108001, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793414108909, "cmd": "wait", "args": ["1"]}
+{"t": 1793414109976, "cmd": "shot", "args": ["c4"]}
+{"t": 1793414113916, "cmd": "look", "args": ["70", "15"]}
+{"t": 1793414113990, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414115549, "cmd": "shot", "args": ["c5"]}
+{"t": 1793414119458, "cmd": "hold", "args": ["w", "1.0"]}
+{"t": 1793414120560, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414122125, "cmd": "shot", "args": ["c6"]}
+{"t": 1793414126311, "cmd": "note", "args": ["--shot", "lantern_prompt", "Fix 1/2: on Nana's porch facing the window lantern the prompt reads 'E light Nana's window lantern' and the crosshair turns orange; a step further back it said 'come closer to light it'."]}
+{"t": 1793414126425, "cmd": "key", "args": ["e"]}
+{"t": 1793414126897, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414128451, "cmd": "shot", "args": ["c7"]}
+{"t": 1793414133615, "cmd": "note", "args": ["--shot", "lit", "Lantern lit with E: Lanterns 1 of 4, NEXT moved on to 'Knock (E) where a porch light is on: 8 to go', marker '30 m >' at right edge. But the 'Choose a costume: 1 ghost 2 pumpkin...' line is still on screen after the witch was chosen and the lantern lit."]}
+{"t": 1793414133751, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414133862, "cmd": "wait", "args": ["1"]}
+{"t": 1793414134915, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414135029, "cmd": "wait", "args": ["2"]}
+{"t": 1793414137094, "cmd": "shot", "args": ["c8"]}
+{"t": 1793414141352, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414141476, "cmd": "wait", "args": ["0.7"]}
+{"t": 1793414142228, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414142370, "cmd": "wait", "args": ["0.7"]}
+{"t": 1793414143136, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414143277, "cmd": "wait", "args": ["0.7"]}
+{"t": 1793414144038, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414144161, "cmd": "wait", "args": ["0.7"]}
+{"t": 1793414144925, "cmd": "wait", "args": ["1"]}
+{"t": 1793414145982, "cmd": "shot", "args": ["c9"]}
+{"t": 1793414150820, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414150942, "cmd": "wait", "args": ["0.7"]}
+{"t": 1793414151694, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793414151799, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414153353, "cmd": "shot", "args": ["c10"]}
+{"t": 1793414158161, "cmd": "look", "args": ["-120", "0"]}
+{"t": 1793414158251, "cmd": "wait", "args": ["1"]}
+{"t": 1793414159318, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793414161411, "cmd": "wait", "args": ["1"]}
+{"t": 1793414162471, "cmd": "shot", "args": ["c11"]}
+{"t": 1793414167874, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414168016, "cmd": "wait", "args": ["0.7"]}
+{"t": 1793414168778, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414168914, "cmd": "wait", "args": ["1"]}
+{"t": 1793414169983, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414172584, "cmd": "wait", "args": ["1"]}
+{"t": 1793414173642, "cmd": "shot", "args": ["c12"]}
+{"t": 1793414177360, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414177495, "cmd": "wait", "args": ["1"]}
+{"t": 1793414178566, "cmd": "shot", "args": ["c13"]}
+{"t": 1793414183042, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414183164, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414183724, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414183855, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414184421, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414184546, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414186114, "cmd": "shot", "args": ["c14"]}
+{"t": 1793414191458, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414191569, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414192126, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414192244, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414193823, "cmd": "shot", "args": ["c15"]}
+{"t": 1793414198019, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414201148, "cmd": "wait", "args": ["1"]}
+{"t": 1793414202217, "cmd": "shot", "args": ["c16"]}
+{"t": 1793414206604, "cmd": "look", "args": ["-20", "0"]}
+{"t": 1793414206685, "cmd": "hold", "args": ["Shift_L+w", "2.5"]}
+{"t": 1793414209307, "cmd": "wait", "args": ["1"]}
+{"t": 1793414210374, "cmd": "shot", "args": ["c17"]}
+{"t": 1793414214225, "cmd": "key", "args": ["e"]}
+{"t": 1793414214682, "cmd": "wait", "args": ["2"]}
+{"t": 1793414216750, "cmd": "shot", "args": ["c18"]}
+{"t": 1793414221254, "cmd": "key", "args": ["t"]}
+{"t": 1793414221724, "cmd": "wait", "args": ["2"]}
+{"t": 1793414223800, "cmd": "shot", "args": ["c19"]}
+{"t": 1793414228399, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414228526, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414229095, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414229240, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414230808, "cmd": "shot", "args": ["c20"]}
+{"t": 1793414235806, "cmd": "look", "args": ["0", "150"]}
+{"t": 1793414235921, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414237479, "cmd": "shot", "args": ["c21"]}
+{"t": 1793414242185, "cmd": "hold", "args": ["w", "0.6"]}
+{"t": 1793414242875, "cmd": "look", "args": ["0", "40"]}
+{"t": 1793414242969, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414244542, "cmd": "shot", "args": ["c22"]}
+{"t": 1793414249258, "cmd": "look", "args": ["0", "120"]}
+{"t": 1793414249352, "cmd": "wait", "args": ["2"]}
+{"t": 1793414251405, "cmd": "shot", "args": ["c23"]}
+{"t": 1793414256309, "cmd": "look", "args": ["0", "-45"]}
+{"t": 1793414256402, "cmd": "wait", "args": ["2"]}
+{"t": 1793414258467, "cmd": "shot", "args": ["c24"]}
+{"t": 1793414262683, "cmd": "key", "args": ["e"]}
+{"t": 1793414263138, "cmd": "wait", "args": ["2"]}
+{"t": 1793414265206, "cmd": "shot", "args": ["c25"]}
+{"t": 1793414275877, "cmd": "note", "args": ["--shot", "ike_nomarker", "After Mrs. Okafor asks me to light Grandpa Ike's lantern at the end of the porch, NEXT updates but no wayfinding marker (no v distance, no side arrow) appears; the glowing jack-o-lantern at the porch's right end gives no prompt and E does nothing on it. Only 'You have been here tonight' shows."]}
+{"t": 1793414276078, "cmd": "look", "args": ["0", "-60"]}
+{"t": 1793414276175, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414276314, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414276867, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414277005, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414277559, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414277689, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414278247, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414278374, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414278949, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414280511, "cmd": "shot", "args": ["c26"]}
+{"t": 1793414285257, "cmd": "hold", "args": ["s", "0.8"]}
+{"t": 1793414286153, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414286292, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414286857, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414286975, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414288547, "cmd": "shot", "args": ["c27"]}
+{"t": 1793414293048, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414294649, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414296205, "cmd": "shot", "args": ["c28"]}
+{"t": 1793414299780, "cmd": "key", "args": ["e"]}
+{"t": 1793414300252, "cmd": "wait", "args": ["2"]}
+{"t": 1793414302315, "cmd": "shot", "args": ["c29"]}
+{"t": 1793414306023, "cmd": "key", "args": ["Tab"]}
+{"t": 1793414306492, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414308053, "cmd": "shot", "args": ["nb1"]}
+{"t": 1793414312390, "cmd": "key", "args": ["Right"]}
+{"t": 1793414312867, "cmd": "wait", "args": ["1.2"]}
+{"t": 1793414314127, "cmd": "shot", "args": ["nb2"]}
+{"t": 1793414314255, "cmd": "key", "args": ["Tab"]}
+{"t": 1793414319860, "cmd": "note", "args": ["--shot", "nb1", "Notebook page 'Samhain' overflows: text runs to the bottom edge and the page footer (Page x of 4 / Left/Right turn / Tab close) that page 2 shows is missing, so the last line(s) may be cut."]}
+{"t": 1793414320069, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414320224, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414320801, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414320918, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414322497, "cmd": "shot", "args": ["c30"]}
+{"t": 1793414327264, "cmd": "look", "args": ["0", "-80"]}
+{"t": 1793414327363, "cmd": "hold", "args": ["Shift_L+w", "3.5"]}
+{"t": 1793414330994, "cmd": "wait", "args": ["1"]}
+{"t": 1793414332046, "cmd": "shot", "args": ["c31"]}
+{"t": 1793414336156, "cmd": "look", "args": ["-40", "-80"]}
+{"t": 1793414336249, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414336820, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414339954, "cmd": "wait", "args": ["1"]}
+{"t": 1793414341006, "cmd": "shot", "args": ["c32"]}
+{"t": 1793414346385, "cmd": "note", "args": ["--shot", "marker_hud", "Wayfinding marker 'v 6 m' is drawn on top of the HUD stat block (Basket/Smoke lines) when the goal is up-left; both become hard to read. Same when looking down: the distance label clips off the top edge."]}
+{"t": 1793414346526, "cmd": "look", "args": ["-180", "0"]}
+{"t": 1793414346625, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414347186, "cmd": "hold", "args": ["Shift_L+w", "2"]}
+{"t": 1793414349313, "cmd": "wait", "args": ["1"]}
+{"t": 1793414350373, "cmd": "shot", "args": ["c33"]}
+{"t": 1793414354120, "cmd": "look", "args": ["40", "0"]}
+{"t": 1793414354200, "cmd": "hold", "args": ["w", "1.6"]}
+{"t": 1793414355901, "cmd": "wait", "args": ["1"]}
+{"t": 1793414356958, "cmd": "shot", "args": ["c34"]}
+{"t": 1793414360656, "cmd": "key", "args": ["e"]}
+{"t": 1793414361119, "cmd": "wait", "args": ["2"]}
+{"t": 1793414363173, "cmd": "shot", "args": ["c35"]}
+{"t": 1793414367660, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414368763, "cmd": "key", "args": ["q"]}
+{"t": 1793414369224, "cmd": "wait", "args": ["2"]}
+{"t": 1793414371294, "cmd": "shot", "args": ["cat1"]}
+{"t": 1793414375357, "cmd": "look", "args": ["0", "120"]}
+{"t": 1793414375442, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414377006, "cmd": "shot", "args": ["cat2"]}
+{"t": 1793414381358, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414382467, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414384025, "cmd": "shot", "args": ["cat3"]}
+{"t": 1793414389662, "cmd": "key", "args": ["q"]}
+{"t": 1793414390135, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414391691, "cmd": "shot", "args": ["w1"]}
+{"t": 1793414395975, "cmd": "hold", "args": ["w", "0.7"]}
+{"t": 1793414396778, "cmd": "look", "args": ["0", "40"]}
+{"t": 1793414396873, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414398432, "cmd": "shot", "args": ["w2"]}
+{"t": 1793414403518, "cmd": "note", "args": ["--shot", "bag_prompt", "Fix 5: after Q back to Wren, NEXT says 'Fetch your candy bag from where you changed (E)'; the bag is visible on the ground with a warm glint and 'E pick up your candy bag'. No floating label on the bag itself, and as the cat the bag was not obvious (looked down, nothing; only spotted it on a step behind)."]}
+{"t": 1793414403707, "cmd": "key", "args": ["e"]}
+{"t": 1793414404175, "cmd": "wait", "args": ["2"]}
+{"t": 1793414406242, "cmd": "shot", "args": ["w3"]}
+{"t": 1793414413037, "cmd": "look", "args": ["0", "-40"]}
+{"t": 1793414413129, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414413266, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414413852, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414413978, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414414537, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414414674, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414415239, "cmd": "wait", "args": ["1"]}
+{"t": 1793414416297, "cmd": "shot", "args": ["w4"]}
+{"t": 1793414420551, "cmd": "look", "args": ["120", "-40"]}
+{"t": 1793414420664, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414421242, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1793414425412, "cmd": "wait", "args": ["1"]}
+{"t": 1793414426488, "cmd": "shot", "args": ["w5"]}
+{"t": 1793414430885, "cmd": "key", "args": ["q"]}
+{"t": 1793414431392, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414432966, "cmd": "shot", "args": ["cat4"]}
+{"t": 1793414437025, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793414437124, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414437696, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414440814, "cmd": "wait", "args": ["1"]}
+{"t": 1793414441876, "cmd": "shot", "args": ["cat5"]}
+{"t": 1793414446082, "cmd": "look", "args": ["180", "-60"]}
+{"t": 1793414446198, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414446759, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414449892, "cmd": "wait", "args": ["1"]}
+{"t": 1793414450965, "cmd": "shot", "args": ["cat6"]}
+{"t": 1793414455795, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414456895, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414457047, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414457514, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414457657, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414458127, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414458262, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414458724, "cmd": "wait", "args": ["1"]}
+{"t": 1793414459789, "cmd": "shot", "args": ["cat7"]}
+{"t": 1793414465191, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414465317, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414465766, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414465880, "cmd": "wait", "args": ["1"]}
+{"t": 1793414466940, "cmd": "shot", "args": ["cat8"]}
+{"t": 1793414471377, "cmd": "hold", "args": ["Shift_L+w", "2"]}
+{"t": 1793414473493, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414473635, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414474098, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414474214, "cmd": "wait", "args": ["1"]}
+{"t": 1793414475283, "cmd": "shot", "args": ["cat9"]}
+{"t": 1793414479188, "cmd": "look", "args": ["-120", "-30"]}
+{"t": 1793414479269, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414479741, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414482859, "cmd": "wait", "args": ["1"]}
+{"t": 1793414483908, "cmd": "shot", "args": ["cat10"]}
+{"t": 1793414487701, "cmd": "look", "args": ["-300", "60"]}
+{"t": 1793414487837, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414488304, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414488418, "cmd": "wait", "args": ["1.2"]}
+{"t": 1793414489668, "cmd": "shot", "args": ["cat11"]}
+{"t": 1793414494648, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414494774, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414495236, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414495369, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414495825, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414495951, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414496405, "cmd": "look", "args": ["0", "80"]}
+{"t": 1793414496480, "cmd": "wait", "args": ["1.2"]}
+{"t": 1793414497752, "cmd": "shot", "args": ["cat12"]}
+{"t": 1793414504114, "cmd": "note", "args": ["--shot", "cat12", "Fix 5 (as cat): from a few metres away the dropped bag shows a floating 'Your candy bag' label. Good. Faint teal dots on the dark ground nearby (paw prints?) are very hard to see on the dark lawn."]}
+{"t": 1793414504209, "cmd": "look", "args": ["200", "-80"]}
+{"t": 1793414504305, "cmd": "wait", "args": ["1.2"]}
+{"t": 1793414505574, "cmd": "shot", "args": ["cat13"]}
+{"t": 1793414509537, "cmd": "look", "args": ["60", "0"]}
+{"t": 1793414509624, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414509989, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414511587, "cmd": "wait", "args": ["1.2"]}
+{"t": 1793414512845, "cmd": "shot", "args": ["cat14"]}
+{"t": 1793414517220, "cmd": "look", "args": ["0", "100"]}
+{"t": 1793414517308, "cmd": "wait", "args": ["1.2"]}
+{"t": 1793414518573, "cmd": "shot", "args": ["cat15"]}
+{"t": 1793414522954, "cmd": "look", "args": ["0", "-100"]}
+{"t": 1793414523033, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414523167, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414523623, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414523744, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414524195, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414524329, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414524784, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414524917, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414525388, "cmd": "wait", "args": ["1"]}
+{"t": 1793414526442, "cmd": "shot", "args": ["cat16"]}
+{"t": 1793414532122, "cmd": "note", "args": ["--shot", "cat16", "Reached the herb-bed marker as the cat behind Nana's house: the marker disappears at ~3 m but NEXT still says 'follow them from Nana's herb bed'; the yard is near-black and I can't see any glowing paw prints, the herb bed itself, or a next marker. Not clear where to go."]}
+{"t": 1793414532277, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414532417, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414532881, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414533004, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414533473, "cmd": "wait", "args": ["1"]}
+{"t": 1793414534522, "cmd": "shot", "args": ["cat17"]}
+{"t": 1793414538592, "cmd": "look", "args": ["40", "0"]}
+{"t": 1793414538667, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414541800, "cmd": "wait", "args": ["1"]}
+{"t": 1793414542850, "cmd": "shot", "args": ["cat18"]}
+{"t": 1793414547928, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414548070, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414548522, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414548658, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414549119, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414549260, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414549710, "cmd": "wait", "args": ["1"]}
+{"t": 1793414550771, "cmd": "shot", "args": ["cat19"]}
+{"t": 1793414554282, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414554416, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414554884, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414558011, "cmd": "wait", "args": ["1"]}
+{"t": 1793414559077, "cmd": "shot", "args": ["cat20"]}
+{"t": 1793414563231, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414563368, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414563847, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414563963, "cmd": "wait", "args": ["1"]}
+{"t": 1793414565023, "cmd": "shot", "args": ["cat21"]}
+{"t": 1793414569989, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414570143, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414570596, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414570731, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414571191, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414571327, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414571790, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414571948, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414572417, "cmd": "wait", "args": ["1"]}
+{"t": 1793414573465, "cmd": "shot", "args": ["cat22"]}
+{"t": 1793414577836, "cmd": "hold", "args": ["Shift_L+w", "2"]}
+{"t": 1793414579967, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414580097, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414580561, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414580676, "cmd": "wait", "args": ["1"]}
+{"t": 1793414581737, "cmd": "shot", "args": ["cat23"]}
+{"t": 1793414586195, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414586320, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414586780, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414586906, "cmd": "wait", "args": ["1"]}
+{"t": 1793414587970, "cmd": "shot", "args": ["cat24"]}
+{"t": 1793414592003, "cmd": "look", "args": ["110", "0"]}
+{"t": 1793414592076, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414592535, "cmd": "hold", "args": ["Shift_L+w", "2"]}
+{"t": 1793414594653, "cmd": "wait", "args": ["1"]}
+{"t": 1793414595701, "cmd": "shot", "args": ["cat25"]}
+{"t": 1793414600778, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414600925, "cmd": "wait", "args": ["0.4"]}
+{"t": 1793414601376, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414601483, "cmd": "wait", "args": ["1"]}
+{"t": 1793414602537, "cmd": "shot", "args": ["cat26"]}
+{"t": 1793414608980, "cmd": "hold", "args": ["d", "1.5"]}
+{"t": 1793414610580, "cmd": "wait", "args": ["1"]}
+{"t": 1793414611640, "cmd": "shot", "args": ["cat27"]}
+{"t": 1793414619233, "cmd": "note", "args": ["--shot", "cat27", "As the cat near Nana's house the herb-bed marker keeps flipping: shows '4 m >' at the right edge, I turn right ~90 degrees and it still says '4 m >', then strafing it vanishes. Nothing on screen marks the herb bed and NEXT never advances. ~4 game-hours of night spent circling Nana's yard (7:16 to 8:15 pm)."]}
+{"t": 1793414619326, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414619445, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414619805, "cmd": "shot", "args": ["s1"]}
+{"t": 1793414619886, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414620016, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414620364, "cmd": "shot", "args": ["s2"]}
+{"t": 1793414620450, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414620593, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414620946, "cmd": "shot", "args": ["s3"]}
+{"t": 1793414621069, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414621187, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414621534, "cmd": "shot", "args": ["s4"]}
+{"t": 1793414621623, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414621756, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414622104, "cmd": "shot", "args": ["s5"]}
+{"t": 1793414622190, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414622320, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414622670, "cmd": "shot", "args": ["s6"]}
+{"t": 1793414633541, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414633674, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414634023, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414634161, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414634714, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1793414638831, "cmd": "wait", "args": ["1"]}
+{"t": 1793414639881, "cmd": "shot", "args": ["p1"]}
+{"t": 1793414646423, "cmd": "look", "args": ["80", "0"]}
+{"t": 1793414646541, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414646909, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1793414652035, "cmd": "wait", "args": ["1"]}
+{"t": 1793414653098, "cmd": "shot", "args": ["p2"]}
+{"t": 1793414659544, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414659673, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414660034, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414660158, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414660505, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414660636, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414660988, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414661106, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414661454, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414661574, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414661921, "cmd": "wait", "args": ["1"]}
+{"t": 1793414662984, "cmd": "shot", "args": ["p3"]}
+{"t": 1793414668137, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414668276, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414668842, "cmd": "shot", "args": ["p4"]}
+{"t": 1793414673966, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414680079, "cmd": "wait", "args": ["1"]}
+{"t": 1793414681135, "cmd": "shot", "args": ["p5"]}
+{"t": 1793414685987, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1793414686066, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1793414690178, "cmd": "wait", "args": ["1"]}
+{"t": 1793414691245, "cmd": "shot", "args": ["p6"]}
+{"t": 1793414696107, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414696235, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414696584, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414696681, "cmd": "wait", "args": ["0.8"]}
+{"t": 1793414697529, "cmd": "shot", "args": ["p7"]}
+{"t": 1793414703356, "cmd": "hold", "args": ["s", "1.2"]}
+{"t": 1793414704650, "cmd": "wait", "args": ["0.8"]}
+{"t": 1793414705504, "cmd": "shot", "args": ["p8"]}
+{"t": 1793414710439, "cmd": "hold", "args": ["a", "1.5"]}
+{"t": 1793414712040, "cmd": "wait", "args": ["0.8"]}
+{"t": 1793414712894, "cmd": "shot", "args": ["p9"]}
+{"t": 1793414718456, "cmd": "key", "args": ["e"]}
+{"t": 1793414718911, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414720463, "cmd": "look", "args": ["0", "120"]}
+{"t": 1793414720539, "cmd": "wait", "args": ["1"]}
+{"t": 1793414721608, "cmd": "shot", "args": ["p10"]}
+{"t": 1793414731144, "cmd": "look", "args": ["0", "-120"]}
+{"t": 1793414731250, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414731385, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414731734, "cmd": "shot", "args": ["r1"]}
+{"t": 1793414731831, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414731967, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414732327, "cmd": "shot", "args": ["r2"]}
+{"t": 1793414732441, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414732559, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414732908, "cmd": "shot", "args": ["r3"]}
+{"t": 1793414733013, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414733133, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414733497, "cmd": "shot", "args": ["r4"]}
+{"t": 1793414733611, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414733729, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414734080, "cmd": "shot", "args": ["r5"]}
+{"t": 1793414734168, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414734287, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414734634, "cmd": "shot", "args": ["r6"]}
+{"t": 1793414739682, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1793414739771, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414740118, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414746245, "cmd": "wait", "args": ["1"]}
+{"t": 1793414747294, "cmd": "shot", "args": ["t1"]}
+{"t": 1793414752342, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414758452, "cmd": "wait", "args": ["1"]}
+{"t": 1793414759505, "cmd": "shot", "args": ["t2"]}
+{"t": 1793414765591, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414765728, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414766076, "cmd": "shot", "args": ["u1"]}
+{"t": 1793414766153, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414766274, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414766622, "cmd": "shot", "args": ["u2"]}
+{"t": 1793414766704, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414766829, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414767180, "cmd": "shot", "args": ["u3"]}
+{"t": 1793414767277, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414767400, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414767754, "cmd": "shot", "args": ["u4"]}
+{"t": 1793414779943, "cmd": "note", "args": ["--shot", "trail_lost", "Followed the faint teal paw-print line away from Nana's yard (toward the church steeple) as the cat; the wayfinding marker keeps pointing BACK to the herb bed (33 m, then 66 m) and NEXT never changes, so the marker actively pulls you off the trail. In the dark lawn the prints fade out after ~20 m and I lost them. 9:07 pm, porch lights out, Smoke not found."]}
+{"t": 1793414780048, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414780183, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414780541, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414780673, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414781033, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414781156, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414781523, "cmd": "shot", "args": ["v1"]}
+{"t": 1793414781663, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414781782, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414782138, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414782263, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414782621, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414782757, "cmd": "wait", "args": ["0.3"]}
+{"t": 1793414783113, "cmd": "shot", "args": ["v2"]}
+{"t": 1793414787124, "cmd": "stop", "args": []}
+{"t": 1793414812623, "cmd": "report", "args": []}

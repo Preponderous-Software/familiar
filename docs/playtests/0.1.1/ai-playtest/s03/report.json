@@ -1,0 +1,91 @@
+{
+ "session": "s03",
+ "goal": "Test that the night is kept safely: play a few minutes (choose a costume, knock for candy, light a lantern if you find one, turn into the cat and back), noting the clock, candy and lanterns on the HUD. Press F5 and check what it says. Then quit the way a player would (Esc, then Esc again) and run pt stop, and start the game again with exactly the same pt start command: check that the night continues where you left it (clock, candy, costume, lanterns, where you stand). Also try F9 after playing on a little, and a pt stop WITHOUT quitting (like a crash) followed by pt start, and say what was kept. Any lost or wrong progress is a blocker.",
+ "build": {
+  "version": null,
+  "commit": "4d61f43"
+ },
+ "seed": 13,
+ "durationSec": 538,
+ "outcome": "achieved",
+ "findings": [
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "F5 'Saved.', F9 'Loaded your save.' and autosave tell the player nothing about when the save is from",
+   "detail": "Saving and loading worked every time, but F9 at 7:10 pm (Candy 5) silently rolled back to the 6:44 save (Candy 3). It asked for no confirmation, and 'Loaded your save.' did not say what time it went back to. The two-minute autosave showed no cue I could see. Expected something like 'Saved at 6:41 pm' and 'Loaded the 6:41 pm save', or a confirm on F9.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; play; F5 at ~6:41; play on to the Garcias (Candy 5); F9",
+   "screenshot": "shots/f9_rollback.png",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "The dropped candy bag has no glint or label until the crosshair is right on it",
+   "detail": "As the cat I walked ~2 m off the Okafors' porch and turned back. The porch was in view, but nothing marked the bag (a small red box), and the HUD said only '(bag on the ground)'. Back as Wren, NEXT said 'Fetch your candy bag from where you changed (E)', which helped. With the crosshair on the box, 'E pick up your candy bag' appeared and E worked (Candy 3 kept). No glint or label was visible from a distance, and no wayfinding marker pointed at the bag.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; on a porch: pt key q; pt hold w 1.5; turn 180; pt key q; look for the bag",
+   "screenshot": "shots/cat_lookback.png",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "The wayfinding marker and its target hide behind the left HUD block",
+   "detail": "Heading from the Okafors' to the Garcias and then to Ms. Bright, the 'v 17 m' marker sat over the Costume/You are lines of the HUD, so both were hard to read. The direct line to the house was also cut by low fences with no gate hint, and I had to strafe along them. The marker still got me to each door.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; load at the Okafors' porch; turn left ~100 deg; follow the marker",
+   "screenshot": "shots/hud_occludes.png",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "bug",
+   "title": "Grandpa Ike's jar lantern still looks unlit after it is lit",
+   "detail": "E lit the Okafors' lantern (HUD went from Lanterns 1 to 2 of 4, with message text), but the jar beside the pumpkin on the porch stayed dark with no flame or glow. It was also lit by E while the crosshair was on the door, with the lantern off screen.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; knock at the Okafors' (T); pt key e; look down at the end of the porch",
+   "screenshot": "shots/bag_picked.png",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "text",
+   "title": "At start the help list is drawn over Nana's greeting",
+   "detail": "On the first frame, the controls list (W A S D walk...) overlaps the orange greeting lines, so both are unreadable where they cross. F1 hides the help.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; pt shot right after start",
+   "screenshot": "shots/overlap.png",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "ux",
+   "title": "The first Esc gives no hint that a second Esc quits",
+   "detail": "After one Esc the screen looked the same as before: no 'mouse freed / Esc again to quit (saves)' line. The quit itself saved correctly.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; pt key Escape; pt shot",
+   "screenshot": "shots/resume_quit.png",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "text",
+   "title": "The notebook page runs to the bottom edge with no page indicator",
+   "detail": "The Samhain page fills the panel to the bottom, with no page number or Left/Right hint visible, so the last line may be cut off.",
+   "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; pt key Tab",
+   "screenshot": "shots/notebook.png",
+   "tick": null
+  }
+ ],
+ "metrics": {
+  "objectivesCompleted": 5,
+  "deaths": 0,
+  "secondsToObjective": {
+   "Light Nana's window lantern": 44.0,
+   "First candy (Okafors)": 150.0
+  },
+  "progressLostOnQuitResume": 0,
+  "progressLostOnCrashResume": 0,
+  "candyAtEnd": 8,
+  "lanternsLit": 2,
+  "saveReloads": 3
+ },
+ "fun": 4,
+ "verdict": "Saves are safe. Quitting with Esc, Esc and restarting restored clock, candy, costume, lanterns, position and view exactly. A pt stop without quitting (like a crash) at 7:31 restored everything, Candy 8 included, and F9 correctly went back to the last save, though it gives no time and no confirmation. On the five fixes: Nana's porch lantern prompt and E: helped. Reach with glint, orange crosshair and 'come closer': helped. NEXT line moves on and is clear: helped. Wayfinding marker with distance, side arrow and door glow got me to each door: helped, though it often sits under the HUD. Dropped bag: partly helped (NEXT tells you to fetch it and E picks it up), but there is still no glint or label from a distance. Seconds are wall-clock (no probe)."
+}

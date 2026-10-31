@@ -1,0 +1,250 @@
+{"t": 1793414081239, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793414084037, "cmd": "shot", "args": ["s0"]}
+{"t": 1793414090434, "cmd": "note", "args": ["--shot", "overlap", "At start, the help list (WASD walk...) is drawn over the orange greeting text from Nana; both unreadable where they overlap"]}
+{"t": 1793414090531, "cmd": "key", "args": ["2"]}
+{"t": 1793414090970, "cmd": "key", "args": ["F1"]}
+{"t": 1793414091414, "cmd": "shot", "args": ["s1"]}
+{"t": 1793414097070, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414097183, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414097300, "cmd": "shot", "args": ["s2"]}
+{"t": 1793414102350, "cmd": "look", "args": ["100", "0"]}
+{"t": 1793414102423, "cmd": "look", "args": ["100", "0"]}
+{"t": 1793414102495, "cmd": "look", "args": ["100", "0"]}
+{"t": 1793414102554, "cmd": "look", "args": ["100", "0"]}
+{"t": 1793414102628, "cmd": "wait", "args": ["1"]}
+{"t": 1793414103676, "cmd": "shot", "args": ["s3"]}
+{"t": 1793414103796, "cmd": "status", "args": []}
+{"t": 1793414110222, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793414111292, "cmd": "wait", "args": ["1"]}
+{"t": 1793414112330, "cmd": "shot", "args": ["s4"]}
+{"t": 1793414117319, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793414118389, "cmd": "wait", "args": ["1"]}
+{"t": 1793414119431, "cmd": "shot", "args": ["s5"]}
+{"t": 1793414125559, "cmd": "note", "args": ["--shot", "porch_prompt", "Fix1/2: on Nana's porch facing window lantern, prompt reads 'E light Nana's window lantern, for Nana's mother, Ada'; one step back it read 'come closer to light it'. Good. Prompt line wraps and overlaps NEXT text block though."]}
+{"t": 1793414125659, "cmd": "key", "args": ["e"]}
+{"t": 1793414126102, "cmd": "wait", "args": ["1"]}
+{"t": 1793414127133, "cmd": "shot", "args": ["s6"]}
+{"t": 1793414133436, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414133526, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414133617, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414133706, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414135248, "cmd": "shot", "args": ["s7"]}
+{"t": 1793414140301, "cmd": "look", "args": ["90", "0"]}
+{"t": 1793414140370, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1793414143443, "cmd": "wait", "args": ["1"]}
+{"t": 1793414144480, "cmd": "shot", "args": ["s8"]}
+{"t": 1793414149800, "cmd": "hold", "args": ["d", "1"]}
+{"t": 1793414150871, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1793414150943, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1793414154009, "cmd": "wait", "args": ["1"]}
+{"t": 1793414155044, "cmd": "shot", "args": ["s9"]}
+{"t": 1793414160206, "cmd": "look", "args": ["220", "0"]}
+{"t": 1793414160291, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1793414163369, "cmd": "wait", "args": ["1"]}
+{"t": 1793414164413, "cmd": "shot", "args": ["s10"]}
+{"t": 1793414169563, "cmd": "look", "args": ["60", "0"]}
+{"t": 1793414169622, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414172192, "cmd": "wait", "args": ["1"]}
+{"t": 1793414173234, "cmd": "shot", "args": ["s11"]}
+{"t": 1793414178319, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1793414179890, "cmd": "wait", "args": ["1"]}
+{"t": 1793414180935, "cmd": "shot", "args": ["s12"]}
+{"t": 1793414186617, "cmd": "hold", "args": ["d", "1.5"]}
+{"t": 1793414188191, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793414190276, "cmd": "wait", "args": ["1"]}
+{"t": 1793414191321, "cmd": "shot", "args": ["s13"]}
+{"t": 1793414196645, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793414196733, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414198308, "cmd": "wait", "args": ["1"]}
+{"t": 1793414199341, "cmd": "shot", "args": ["s14"]}
+{"t": 1793414204751, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414204861, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414204976, "cmd": "wait", "args": ["1"]}
+{"t": 1793414206009, "cmd": "shot", "args": ["s15"]}
+{"t": 1793414211773, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414211852, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793414211935, "cmd": "wait", "args": ["1"]}
+{"t": 1793414212976, "cmd": "shot", "args": ["s16"]}
+{"t": 1793414219988, "cmd": "hold", "args": ["w", "0.4"]}
+{"t": 1793414220455, "cmd": "hold", "args": ["d", "0.8"]}
+{"t": 1793414221333, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414221439, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414221553, "cmd": "wait", "args": ["1"]}
+{"t": 1793414222590, "cmd": "shot", "args": ["s17"]}
+{"t": 1793414227400, "cmd": "key", "args": ["e"]}
+{"t": 1793414227846, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414229393, "cmd": "shot", "args": ["s18"]}
+{"t": 1793414234317, "cmd": "key", "args": ["t"]}
+{"t": 1793414234763, "cmd": "wait", "args": ["2"]}
+{"t": 1793414236796, "cmd": "shot", "args": ["s19"]}
+{"t": 1793414242565, "cmd": "key", "args": ["e"]}
+{"t": 1793414243012, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414244556, "cmd": "shot", "args": ["s20"]}
+{"t": 1793414250882, "cmd": "note", "args": ["--shot", "lantern2", "Grandpa Ike's lantern lit with E while crosshair was still on the Okafors' door (lantern not visible on screen); 2 of 4. NEXT moved on each time. Marker now '< 21 m' at left edge."]}
+{"t": 1793414251023, "cmd": "key", "args": ["q"]}
+{"t": 1793414251465, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414253014, "cmd": "shot", "args": ["s21"]}
+{"t": 1793414258520, "cmd": "look", "args": ["0", "150"]}
+{"t": 1793414258616, "cmd": "wait", "args": ["1"]}
+{"t": 1793414259659, "cmd": "shot", "args": ["s22"]}
+{"t": 1793414264941, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414265053, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414265161, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414265269, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414265389, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414266942, "cmd": "shot", "args": ["s23"]}
+{"t": 1793414274090, "cmd": "note", "args": ["--shot", "cat_nobag", "As the cat on the Okafors' porch, turned around 180 deg and looked down: no candy bag glint or label visible anywhere near where Wren stood"]}
+{"t": 1793414274225, "cmd": "key", "args": ["q"]}
+{"t": 1793414274663, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414276199, "cmd": "shot", "args": ["s24"]}
+{"t": 1793414283995, "cmd": "key", "args": ["q"]}
+{"t": 1793414284431, "cmd": "wait", "args": ["1"]}
+{"t": 1793414285476, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414287047, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414287154, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414287268, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414287379, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414287491, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414289033, "cmd": "shot", "args": ["s25"]}
+{"t": 1793414295918, "cmd": "note", "args": ["--shot", "cat_lookback", "Fix5: as cat, walked ~2 m off the Okafors' porch and turned back: porch and lit lantern visible but no glint or 'candy bag' label where the bag was set down. HUD says '(bag on the ground)' only."]}
+{"t": 1793414296037, "cmd": "key", "args": ["q"]}
+{"t": 1793414296480, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414298021, "cmd": "shot", "args": ["s26"]}
+{"t": 1793414303879, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793414304956, "cmd": "wait", "args": ["1"]}
+{"t": 1793414306001, "cmd": "shot", "args": ["s27"]}
+{"t": 1793414312024, "cmd": "look", "args": ["60", "60"]}
+{"t": 1793414312095, "cmd": "hold", "args": ["w", "0.7"]}
+{"t": 1793414312874, "cmd": "wait", "args": ["1"]}
+{"t": 1793414313910, "cmd": "shot", "args": ["s28"]}
+{"t": 1793414319932, "cmd": "key", "args": ["e"]}
+{"t": 1793414320372, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414321912, "cmd": "shot", "args": ["s29"]}
+{"t": 1793414330279, "cmd": "note", "args": ["--shot", "bag_picked", "Fix5: back as Wren, NEXT says 'Fetch your candy bag from where you changed (E)'; the bag is a red box on the porch with no glint and no label until the crosshair is on it, then 'E pick up your candy bag' and E works. Candy 3 kept. Also: Grandpa Ike's jar lantern beside the pumpkin looks unlit (dark jar) even though HUD says Lanterns 2 of 4."]}
+{"t": 1793414330422, "cmd": "key", "args": ["F5"]}
+{"t": 1793414330865, "cmd": "wait", "args": ["0.5"]}
+{"t": 1793414331405, "cmd": "shot", "args": ["f5"]}
+{"t": 1793414338385, "cmd": "key", "args": ["Escape"]}
+{"t": 1793414338824, "cmd": "wait", "args": ["1"]}
+{"t": 1793414339870, "cmd": "shot", "args": ["esc1"]}
+{"t": 1793414340001, "cmd": "key", "args": ["Escape"]}
+{"t": 1793414340440, "cmd": "wait", "args": ["3"]}
+{"t": 1793414343482, "cmd": "status", "args": []}
+{"t": 1793414347977, "cmd": "stop", "args": []}
+{"t": 1793414348111, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793414350917, "cmd": "wait", "args": ["1"]}
+{"t": 1793414351956, "cmd": "shot", "args": ["r1"]}
+{"t": 1793414359311, "cmd": "note", "args": ["--shot", "resume_quit", "Quit via Esc,Esc at ~6:44 then pt stop + identical pt start: 'Loaded your save.' Clock 6:45, Candy 3, Costume pumpkin, Lanterns 2 of 4, same spot and view direction on the Okafors' porch. Nothing lost. (First Esc showed no on-screen hint that a second Esc quits.)"]}
+{"t": 1793414359462, "cmd": "key", "args": ["F1"]}
+{"t": 1793414359902, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414360015, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414360130, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414360244, "cmd": "look", "args": ["0", "-60"]}
+{"t": 1793414360312, "cmd": "wait", "args": ["1.5"]}
+{"t": 1793414361854, "cmd": "shot", "args": ["r2"]}
+{"t": 1793414367628, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1793414367690, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414370798, "cmd": "wait", "args": ["1"]}
+{"t": 1793414371840, "cmd": "shot", "args": ["r3"]}
+{"t": 1793414378817, "cmd": "note", "args": ["--shot", "hud_occludes", "Marker '17 m' and the target house sit behind the left HUD block (Costume/You are lines), hard to read; walking straight at it, Wren is stopped by a low fence with no hint of a gate"]}
+{"t": 1793414378923, "cmd": "hold", "args": ["a", "1.5"]}
+{"t": 1793414380497, "cmd": "hold", "args": ["Shift_L+w", "2"]}
+{"t": 1793414382597, "cmd": "wait", "args": ["1"]}
+{"t": 1793414383642, "cmd": "shot", "args": ["r4"]}
+{"t": 1793414389308, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414391895, "cmd": "wait", "args": ["1"]}
+{"t": 1793414392940, "cmd": "shot", "args": ["r5"]}
+{"t": 1793414398462, "cmd": "look", "args": ["-80", "0"]}
+{"t": 1793414398533, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1793414402612, "cmd": "wait", "args": ["1"]}
+{"t": 1793414403658, "cmd": "shot", "args": ["r6"]}
+{"t": 1793414409515, "cmd": "hold", "args": ["a", "2"]}
+{"t": 1793414411584, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793414413650, "cmd": "wait", "args": ["1"]}
+{"t": 1793414414692, "cmd": "shot", "args": ["r7"]}
+{"t": 1793414420685, "cmd": "look", "args": ["-40", "-30"]}
+{"t": 1793414420764, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414422394, "cmd": "wait", "args": ["1"]}
+{"t": 1793414423459, "cmd": "shot", "args": ["r8"]}
+{"t": 1793414428958, "cmd": "key", "args": ["e"]}
+{"t": 1793414429446, "cmd": "wait", "args": ["2"]}
+{"t": 1793414431493, "cmd": "shot", "args": ["r9"]}
+{"t": 1793414437718, "cmd": "key", "args": ["F9"]}
+{"t": 1793414438164, "cmd": "wait", "args": ["1"]}
+{"t": 1793414439198, "cmd": "shot", "args": ["f9"]}
+{"t": 1793414453385, "cmd": "note", "args": ["--shot", "f9_rollback", "F9 at 7:10 (Candy 5 after the Garcias) loads the 6:41 F5/quit save: back to 6:44, Candy 3, Okafors' porch. Works as described, but no confirmation and the message 'Loaded your save.' does not say what time it went back to; no autosave had been written in the ~75 s of game time since loading."]}
+{"t": 1793414453546, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414453679, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414453793, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414453902, "cmd": "look", "args": ["0", "-60"]}
+{"t": 1793414453963, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1793414454019, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1793414457097, "cmd": "hold", "args": ["a", "1.5"]}
+{"t": 1793414458661, "cmd": "hold", "args": ["w", "4.5"]}
+{"t": 1793414463233, "cmd": "look", "args": ["-80", "0"]}
+{"t": 1793414463291, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1793414467365, "cmd": "hold", "args": ["a", "2"]}
+{"t": 1793414469434, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793414471507, "cmd": "wait", "args": ["1"]}
+{"t": 1793414472551, "cmd": "shot", "args": ["g1"]}
+{"t": 1793414478176, "cmd": "look", "args": ["250", "-20"]}
+{"t": 1793414478322, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414479924, "cmd": "wait", "args": ["1"]}
+{"t": 1793414480966, "cmd": "shot", "args": ["g2"]}
+{"t": 1793414487106, "cmd": "hold", "args": ["d", "1"]}
+{"t": 1793414488180, "cmd": "look", "args": ["-250", "20"]}
+{"t": 1793414488287, "cmd": "wait", "args": ["1"]}
+{"t": 1793414489332, "cmd": "shot", "args": ["g3"]}
+{"t": 1793414495387, "cmd": "look", "args": ["110", "0"]}
+{"t": 1793414495455, "cmd": "hold", "args": ["w", "0.7"]}
+{"t": 1793414496230, "cmd": "wait", "args": ["1"]}
+{"t": 1793414497267, "cmd": "shot", "args": ["g4"]}
+{"t": 1793414504072, "cmd": "note", "args": ["--shot", "reach_glint", "Fix2: at the Garcias' door, a step away and crosshair just off the door: glint on the door, orange crosshair, 'E knock: trick or treat!'. Earlier from ~4-7 m: 'come closer to knock'. Clear."]}
+{"t": 1793414504251, "cmd": "key", "args": ["e"]}
+{"t": 1793414504696, "cmd": "wait", "args": ["2"]}
+{"t": 1793414506734, "cmd": "shot", "args": ["g5"]}
+{"t": 1793414513150, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414513266, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414513379, "cmd": "wait", "args": ["1"]}
+{"t": 1793414514424, "cmd": "shot", "args": ["g6"]}
+{"t": 1793414522275, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793414522364, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1793414526436, "cmd": "wait", "args": ["1"]}
+{"t": 1793414527477, "cmd": "shot", "args": ["g7"]}
+{"t": 1793414533321, "cmd": "look", "args": ["-60", "-40"]}
+{"t": 1793414533378, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1793414537446, "cmd": "wait", "args": ["1"]}
+{"t": 1793414538491, "cmd": "shot", "args": ["g8"]}
+{"t": 1793414547503, "cmd": "hold", "args": ["a", "0.8"]}
+{"t": 1793414548376, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414549952, "cmd": "look", "args": ["0", "30"]}
+{"t": 1793414550023, "cmd": "wait", "args": ["1"]}
+{"t": 1793414551064, "cmd": "shot", "args": ["g9"]}
+{"t": 1793414556342, "cmd": "hold", "args": ["a", "0.6"]}
+{"t": 1793414557016, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414557118, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414557202, "cmd": "wait", "args": ["1"]}
+{"t": 1793414558235, "cmd": "shot", "args": ["g10"]}
+{"t": 1793414563745, "cmd": "look", "args": ["-110", "0"]}
+{"t": 1793414563811, "cmd": "hold", "args": ["w", "0.5"]}
+{"t": 1793414564386, "cmd": "wait", "args": ["1"]}
+{"t": 1793414565421, "cmd": "shot", "args": ["g11"]}
+{"t": 1793414571918, "cmd": "key", "args": ["e"]}
+{"t": 1793414572365, "cmd": "wait", "args": ["2"]}
+{"t": 1793414574406, "cmd": "shot", "args": ["g12"]}
+{"t": 1793414579355, "cmd": "key", "args": ["t"]}
+{"t": 1793414579793, "cmd": "wait", "args": ["2"]}
+{"t": 1793414581832, "cmd": "shot", "args": ["g13"]}
+{"t": 1793414591174, "cmd": "note", "args": ["--shot", "precrash", "Before crash test: 7:31 pm, Candy 8, pumpkin, Lanterns 2 of 4, on Ms. Bright's porch. Last autosave file written 20:42:37 (before the Ms. Bright knock). No on-screen 'saved' cue seen for the autosave."]}
+{"t": 1793414591307, "cmd": "stop", "args": []}
+{"t": 1793414591939, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1793414594739, "cmd": "wait", "args": ["1"]}
+{"t": 1793414595778, "cmd": "shot", "args": ["c1"]}
+{"t": 1793414603107, "cmd": "note", "args": ["--shot", "crash_resume", "pt stop with no quit at 7:31 (Candy 8), then identical pt start: 'Loaded your save.' 7:35 pm, Candy 8, 5 to go, pumpkin, Lanterns 2 of 4, same spot facing Ms. Bright's door. Nothing lost (clock even a few minutes later than when killed: the save was written during the pt note just before stop)."]}
+{"t": 1793414610220, "cmd": "key", "args": ["Tab"]}
+{"t": 1793414610656, "cmd": "wait", "args": ["1"]}
+{"t": 1793414611690, "cmd": "shot", "args": ["tab"]}
+{"t": 1793414618502, "cmd": "note", "args": ["--shot", "notebook", "Notebook (Tab) after two reloads still holds the Samhain page; text fills to the bottom edge with no visible page number or Left/Right hint, may be cut off"]}
+{"t": 1793414618602, "cmd": "key", "args": ["Tab"]}
+{"t": 1793414619036, "cmd": "stop", "args": []}
+{"t": 1793414640505, "cmd": "report", "args": []}

@@ -1,0 +1,94 @@
+{
+  "session": "s02",
+  "goal": "Follow the witchcraft and the cat: choose a costume and knock at a door or two, then follow the HUD's NEXT line and Wren's notebook (Tab) toward the Samhain thread: light the lanterns, become the cat (Q) to climb, squeeze through gaps and look for spirits, gather what the cider needs. Get as far along the night's main thread as you can, and note anywhere you could not tell what to do or where to go, and anything that seems stuck.",
+  "build": {"version": null, "commit": "4d61f43"},
+  "seed": 7,
+  "durationSec": 707,
+  "outcome": "partial",
+  "findings": [
+    {
+      "severity": "major",
+      "category": "ux",
+      "title": "Cat paw-print trail: wayfinding marker keeps pointing back at Nana's herb bed, NEXT never advances",
+      "detail": "As the cat, NEXT reads 'Smoke's paw prints glow for a cat: follow them from Nana's herb bed' and the marker points at the herb bed. Walking up to it, the marker vanishes at ~3-5 m but nothing on screen marks the herb bed, no message appears and NEXT does not change. The faint teal prints lead away (toward the church steeple); following them, the marker reappears pointing BACK to the herb bed (17, 33, 66 m), actively pulling the player off the trail. In the dark yard the prints fade after ~20 m and I lost them. Spent 7:16 to 9:12 pm in-game circling. Expected: on reaching the herb bed, a cue ('You catch Smoke's scent...') and the marker moving to the next print / trail end.",
+      "repro": "pt start ... --seed 7; key 4; light Nana's lantern; knock Okafors + Garcias; walk to Nana's porch; key q; follow the 'm' marker around the house; observe marker disappears near the bed and then points back once you follow the prints.",
+      "screenshot": "shots/trail_lost.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "bug",
+      "title": "Edge arrow near the goal does not respond to turning (stays '4 m >' / '< 5 m' after turning 40-90 degrees)",
+      "detail": "Close to the herb bed the side arrow kept saying '4 m >' after several right turns, and '< 5 m' after turning left; only strafing changed it, then it vanished. Looks like the edge arrow is wrong when the target is close/behind the camera.",
+      "repro": "As cat near Nana's back yard: pt look 300 0 (x2) while marker shows '4 m >'; shot.",
+      "screenshot": "shots/cat27.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "ux",
+      "title": "Paw prints and the herb bed are nearly invisible in the dark back yard",
+      "detail": "The yard behind Nana's house renders almost black; the glowing prints are tiny faint teal dots only visible at the horizon line at certain angles, and nothing at the herb bed glows. A player cannot tell where the trail starts.",
+      "repro": "As cat behind Nana's house around 7:40-8:20 pm; look around.",
+      "screenshot": "shots/cat16.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "ux",
+      "title": "No wayfinding marker for Grandpa Ike's lantern on the Okafors' porch",
+      "detail": "After the joke, NEXT says 'Light Grandpa Ike's lantern on the Okafors' porch' but no 'v' marker or edge arrow appears. The glowing jack-o'-lantern at the right end of the porch gives no prompt and E does nothing; the actual (dark) lantern is at the other end. Once aimed at, the prompt 'E light Grandpa Ike's lantern' and E work fine.",
+      "repro": "Knock at the Okafors, press T; look along the porch.",
+      "screenshot": "shots/ike_nomarker.png",
+      "tick": null
+    },
+    {
+      "severity": "minor",
+      "category": "text",
+      "title": "Help list overlaps Nana's opening greeting at start",
+      "detail": "At game start the controls help is drawn over the greeting text at the bottom, making both unreadable until F1.",
+      "repro": "pt start ...; pt shot",
+      "screenshot": "shots/overlap.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "text",
+      "title": "'Choose a costume: 1 ghost ...' line stays on screen after the costume is chosen",
+      "detail": "After pressing 4 (witch) and even after lighting Nana's lantern, the costume chooser line remains over the view and collides with the NEXT text and the marker, until you leave Nana's walk.",
+      "repro": "key 4; light Nana's lantern; shot",
+      "screenshot": "shots/lit.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "ux",
+      "title": "Wayfinding marker drawn over the HUD stat block / NEXT text",
+      "detail": "When the goal is up-left the 'v 6 m' marker overlaps Basket/Smoke lines; side arrows '< 16' overlap the prompt line. Also clips at the top edge when looking down.",
+      "repro": "Walk toward the Garcias' door from the street.",
+      "screenshot": "shots/marker_hud.png",
+      "tick": null
+    },
+    {
+      "severity": "polish",
+      "category": "text",
+      "title": "Notebook 'Samhain' page overflows; footer missing",
+      "detail": "Page 1 text runs to the bottom edge and the 'Page x of 4 / Left/Right turn / Tab close' footer seen on page 2 is not shown.",
+      "repro": "After lighting lanterns, key Tab; shot",
+      "screenshot": "shots/nb1.png",
+      "tick": null
+    }
+  ],
+  "metrics": {
+    "objectivesCompleted": 5,
+    "deaths": 0,
+    "secondsToObjective": {"Light Nana's window lantern": 46.0, "First knock (Okafors)": 100.0, "Light Grandpa Ike's lantern": 210.0, "Second knock (Garcias)": 290.0, "Pick candy bag back up": 320.0},
+    "lanternsLit": 2,
+    "candy": 5,
+    "doorsKnocked": 2,
+    "smokeFound": 0,
+    "gameClockAtStop": "9:12 pm"
+  },
+  "fun": 3,
+  "verdict": "Four of the five fixes work: Nana's lantern prompts and lights with E (helped); the in-range cue (orange crosshair, 'come closer to light/knock') is clear (helped); the NEXT line moves on promptly and reads well (helped); the dropped candy bag shows a 'Your candy bag' label, a glint, a 'Fetch your candy bag' NEXT and picks up with E (helped). The wayfinding marker helps for doors (followed it to the Okafors and Garcias) but is mixed overall (no marker for Ike's lantern) and it made the cat paw-print step worse: it points back at the herb bed while you follow the trail, vanishes near the bed with no cue, and in the dark yard I lost the trail and Smoke from 7:16 to 9:12 pm. secondsToObjective are wall-clock seconds from pt start (no probe)."
+}
