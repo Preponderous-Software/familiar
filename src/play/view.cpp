@@ -110,7 +110,8 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
         }
     }
     const Vec3 eye = eyePosition(w);
-    auto soft = [&](Vec3 p, float diameter, float r, float g, float b, float a) {
+    std::vector<StrataPoint>* into = &pts;
+    auto soft = [into](Vec3 p, float diameter, float r, float g, float b, float a) {
         StrataPoint q{};
         q.position[0] = p.x;
         q.position[1] = p.y;
@@ -122,8 +123,21 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
         q.color[2] = b;
         q.color[3] = a;
         q.flags = STRATA_POINT_SOFT;
-        pts.push_back(q);
+        into->push_back(q);
     };
+    // What E would use, in reach: a pulsing glint on the lantern jar, or by the door.
+    {
+        const float pulse = 0.55f + 0.3f * std::sin(t * 5.0f);
+        const int l = lanternHere(w);
+        if (l >= 0 && craftWord(w) == "Light") {
+            const Vec3 a = lantern(l).at;
+            soft({a.x, a.y + 0.2f, a.z}, 0.55f, 1.0f, 0.85f, 0.45f, pulse);
+        } else if (const int h = atDoor(w); h >= 0 && h != T::Nana && usePrompt(w).rfind("E  ", 0) == 0) {
+            const auto id = static_cast<T::HouseId>(h);
+            const Vec2 d = T::doorAt(id);
+            soft({d.x + 0.35f, T::kPorchHeight + 1.05f, d.z + (T::kHouses[h].north ? 0.12f : -0.12f)}, 0.3f, 1.0f, 0.85f, 0.45f, pulse);
+        }
+    }
     // Smoke's paw prints, from Nana's herb bed to the oak, glowing for a cat.
     if (w.form == Form::Cat && (w.smoke == SmokeState::Lost || w.smoke == SmokeState::Waiting)) {
         const auto& trail = smokeTrail();
@@ -329,9 +343,23 @@ std::vector<HudLine> hudLines(const World& w) {
 
 std::string prompt(const World& w) {
     if (std::string b = catPrompt(w); !b.empty()) return b;  // the bag, a latch (M3)
-    const std::string c = craftPrompt(w);
-    return c.empty() ? usePrompt(w) : c;
+    if (std::string c = craftPrompt(w); !c.empty()) return c;
+    // A door's own line, unless it only says something (Nana's door, which does
+    // nothing, or the costume line once one is chosen) and something usable is
+    // straight ahead, out of reach.
+    const std::string u = usePrompt(w);
+    const bool weak = canChooseCostume(w) ? w.costume != Costume::None : atDoor(w) == T::Nana;
+    if (!u.empty() && !weak) return u;
+    const std::string h = reachHint(w);
+    return h.empty() ? u : h;
 }
+
+namespace {
+
+// Whether E (or T) does something here: the prompt offers it.
+bool usable(const std::string& p) { return p.rfind("E  ", 0) == 0 || p.rfind("T  ", 0) == 0; }
+
+}  // namespace
 
 std::vector<std::string> wrapped(const std::string& text, size_t columns) {
     std::vector<std::string> out;
@@ -420,7 +448,10 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
         if (!covered) text(texts, keep, left, sy, name, fade);
     }
     const size_t labelsEnd = texts.size();
-    text(texts, keep, static_cast<float>(width) / 2 - gTextSize / 2, static_cast<float>(height) / 2 - gTextSize / 2, "+", ink);
+    const std::string here = prompt(w);
+    // The crosshair turns lantern-orange when E (or T) does something here.
+    text(texts, keep, static_cast<float>(width) / 2 - gTextSize / 2, static_cast<float>(height) / 2 - gTextSize / 2, "+",
+         usable(here) ? lamp : ink);
     const auto columns = static_cast<size_t>(std::max(16.0f, (static_cast<float>(width) - 2 * kMargin) / gTextSize));
     auto centred = [&](const std::string& s, float row, const float* colour) {
         for (const std::string& line : wrapped(s, columns)) {
@@ -430,7 +461,6 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
         return row;
     };
     float py = static_cast<float>(height) / 2 + 2 * gLine;
-    const std::string here = prompt(w);
     if (!here.empty()) py = centred(here, py, ink);
     if (!message.empty()) centred(message, std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine), lamp);
     if (help) {

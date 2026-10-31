@@ -111,6 +111,7 @@ std::string usePrompt(const World& w) {
     const auto id = static_cast<T::HouseId>(h);
     if (id == T::Nana) {
         if (canChooseCostume(w)) return "Choose a costume:  1 ghost   2 pumpkin   3 skeleton   4 witch";
+        if (!w.lit[NanaWindow]) return "Nana's door. Her window lantern is just to the left of it";
         return "Nana's door. The neighbours' porches are lit";
     }
     if (w.asking == h) return "T  tell a joke     E  just the treat";

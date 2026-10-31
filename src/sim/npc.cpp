@@ -69,7 +69,7 @@ constexpr float kNanaSpeed = 1.2f;         // metres per second of play
 // Nana's way to the stones: down her front walk, east along Elm Street, over
 // the bridge and up the hill path, to her place inside the circle.
 const Vec2 kNanaPath[] = {
-    {-67.2f, -9.2f}, {-66.0f, -7.0f}, {-66.0f, -2.6f}, {42.0f, -2.6f}, {45.0f, 0.0f},
+    {-64.8f, -9.2f}, {-66.0f, -7.0f}, {-66.0f, -2.6f}, {42.0f, -2.6f}, {45.0f, 0.0f},
     {59.5f, 0.0f},   {61.0f, -3.0f},  {76.0f, -57.0f}, {78.8f, -60.8f},
 };
 constexpr int kNanaPoints = sizeof kNanaPath / sizeof kNanaPath[0];
@@ -105,7 +105,8 @@ Walker nana(const World& w) {
     const float t = sinceLeaving(w);
     if (t <= 0) {
         const Vec2 d = T::doorstep(T::Nana);
-        n.at = {d.x - 1.2f, T::kPorchHeight, d.z + 0.6f};
+        // To the right of her door, so she is not in front of her window lantern (left of it).
+        n.at = {d.x + 1.2f, T::kPorchHeight, d.z + 0.6f};
         n.yaw = kPi;
         return n;
     }
