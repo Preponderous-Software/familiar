@@ -1,0 +1,435 @@
+{"t": 1793414079021, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "31"]}
+{"t": 1793414086001, "cmd": "shot", "args": ["start"]}
+{"t": 1793414092374, "cmd": "note", "args": ["--shot", "overlap_text", "Opening screen: the Nana greeting text (orange) and the help list (white) are drawn on top of each other in the bottom half, making both unreadable. Costume prompt line also wraps mid-word ('3 / skeleton')."]}
+{"t": 1793414092493, "cmd": "key", "args": ["3"]}
+{"t": 1793414092951, "cmd": "wait", "args": ["1"]}
+{"t": 1793414094013, "cmd": "shot", "args": ["costume"]}
+{"t": 1793414099190, "cmd": "key", "args": ["F1"]}
+{"t": 1793414099668, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414099779, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414099895, "cmd": "wait", "args": ["1"]}
+{"t": 1793414100967, "cmd": "shot", "args": ["turn1"]}
+{"t": 1793414104749, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414104882, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414105024, "cmd": "wait", "args": ["1"]}
+{"t": 1793414106079, "cmd": "shot", "args": ["turn2"]}
+{"t": 1793414110498, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793414111397, "cmd": "wait", "args": ["1"]}
+{"t": 1793414112459, "cmd": "shot", "args": ["near1"]}
+{"t": 1793414116488, "cmd": "look", "args": ["70", "10"]}
+{"t": 1793414116570, "cmd": "wait", "args": ["1"]}
+{"t": 1793414117629, "cmd": "shot", "args": ["aim1"]}
+{"t": 1793414121694, "cmd": "hold", "args": ["w", "1.2"]}
+{"t": 1793414122992, "cmd": "wait", "args": ["1"]}
+{"t": 1793414124047, "cmd": "shot", "args": ["near2"]}
+{"t": 1793414128930, "cmd": "note", "args": ["--shot", "lantern_prompt", "Fix 1/2: on Nana's porch facing the window lantern the prompt reads 'E light Nana's window lantern, for Nana's mother, Ada' and the crosshair turns orange. From ~2 steps back it said 'come closer to light it'. Good. But the NEXT block (4 lines, left side) overlaps the middle of the screen and the prompt line."]}
+{"t": 1793414129065, "cmd": "key", "args": ["e"]}
+{"t": 1793414129525, "cmd": "wait", "args": ["1"]}
+{"t": 1793414130592, "cmd": "shot", "args": ["lit"]}
+{"t": 1793414134605, "cmd": "hold", "args": ["s", "0.8"]}
+{"t": 1793414135496, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414135633, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414135762, "cmd": "wait", "args": ["1"]}
+{"t": 1793414136831, "cmd": "shot", "args": ["t3"]}
+{"t": 1793414140229, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414140359, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414140501, "cmd": "wait", "args": ["1"]}
+{"t": 1793414141568, "cmd": "shot", "args": ["t4"]}
+{"t": 1793414145260, "cmd": "look", "args": ["-170", "0"]}
+{"t": 1793414145361, "cmd": "wait", "args": ["1"]}
+{"t": 1793414146420, "cmd": "shot", "args": ["t5"]}
+{"t": 1793414150975, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1793414151063, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1793414154147, "cmd": "wait", "args": ["1"]}
+{"t": 1793414155217, "cmd": "shot", "args": ["w1"]}
+{"t": 1793414158793, "cmd": "look", "args": ["-30", "0"]}
+{"t": 1793414158880, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414161997, "cmd": "wait", "args": ["1"]}
+{"t": 1793414163063, "cmd": "shot", "args": ["w2"]}
+{"t": 1793414166503, "cmd": "look", "args": ["-20", "0"]}
+{"t": 1793414166599, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793414167697, "cmd": "wait", "args": ["1"]}
+{"t": 1793414168753, "cmd": "shot", "args": ["door1"]}
+{"t": 1793414174107, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414174205, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414174318, "cmd": "wait", "args": ["1"]}
+{"t": 1793414175368, "cmd": "shot", "args": ["door2"]}
+{"t": 1793414180559, "cmd": "hold", "args": ["d", "1.2"]}
+{"t": 1793414181867, "cmd": "wait", "args": ["1"]}
+{"t": 1793414182940, "cmd": "shot", "args": ["door3"]}
+{"t": 1793414187437, "cmd": "key", "args": ["e"]}
+{"t": 1793414187936, "cmd": "wait", "args": ["2"]}
+{"t": 1793414189996, "cmd": "shot", "args": ["knock1"]}
+{"t": 1793414193809, "cmd": "key", "args": ["t"]}
+{"t": 1793414194274, "cmd": "wait", "args": ["2"]}
+{"t": 1793414196347, "cmd": "shot", "args": ["joke1"]}
+{"t": 1793414201373, "cmd": "key", "args": ["e"]}
+{"t": 1793414201831, "cmd": "wait", "args": ["2"]}
+{"t": 1793414203897, "cmd": "shot", "args": ["ike"]}
+{"t": 1793414210427, "cmd": "note", "args": ["--shot", "reach_door", "Fix 2: the knock prompt and orange crosshair appeared while the crosshair sat on the wall just left of the Okafors' door, about a step back. Generous reach works. After the joke, 'E light Grandpa Ike's lantern' was offered right at the door and E lit it (2 of 4); NEXT moved on each time (Fix 3 helped)."]}
+{"t": 1793414210592, "cmd": "key", "args": ["q"]}
+{"t": 1793414211057, "cmd": "wait", "args": ["2"]}
+{"t": 1793414213128, "cmd": "shot", "args": ["cat1"]}
+{"t": 1793414218027, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414219126, "cmd": "look", "args": ["0", "60"]}
+{"t": 1793414219204, "cmd": "wait", "args": ["1"]}
+{"t": 1793414220272, "cmd": "shot", "args": ["cat2"]}
+{"t": 1793414225390, "cmd": "key", "args": ["q"]}
+{"t": 1793414225843, "cmd": "wait", "args": ["2"]}
+{"t": 1793414227915, "cmd": "shot", "args": ["wren2"]}
+{"t": 1793414233270, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793414234158, "cmd": "wait", "args": ["1"]}
+{"t": 1793414235213, "cmd": "shot", "args": ["bag1"]}
+{"t": 1793414239840, "cmd": "key", "args": ["e"]}
+{"t": 1793414240318, "cmd": "wait", "args": ["1"]}
+{"t": 1793414241387, "cmd": "shot", "args": ["bag2"]}
+{"t": 1793414248901, "cmd": "note", "args": ["--shot", "bag_pickup", "Fix 5: Q as cat set the bag down (HUD 'Candy 3 (bag on the ground)'); back as Wren NEXT said 'Fetch your candy bag from where you changed (E)' and the bag was visible on the porch as a red bag by a jack-o'-lantern (shots/wren2.png); walking up gave 'E pick up your candy bag' and E worked. No floating text label over the bag itself and no wayfinding marker to it, but it was close so it was fine."]}
+{"t": 1793414249105, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414249244, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414249376, "cmd": "wait", "args": ["1"]}
+{"t": 1793414250434, "cmd": "shot", "args": ["n1"]}
+{"t": 1793414254569, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414254707, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414254846, "cmd": "wait", "args": ["1"]}
+{"t": 1793414255927, "cmd": "shot", "args": ["n2"]}
+{"t": 1793414260422, "cmd": "look", "args": ["60", "0"]}
+{"t": 1793414260517, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1793414263651, "cmd": "wait", "args": ["1"]}
+{"t": 1793414264711, "cmd": "shot", "args": ["g1"]}
+{"t": 1793414269227, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414275351, "cmd": "wait", "args": ["1"]}
+{"t": 1793414276437, "cmd": "shot", "args": ["g2"]}
+{"t": 1793414281351, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1793414281448, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414287579, "cmd": "wait", "args": ["1"]}
+{"t": 1793414288651, "cmd": "shot", "args": ["g3"]}
+{"t": 1793414288858, "cmd": "status", "args": []}
+{"t": 1793414292867, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414295467, "cmd": "wait", "args": ["1"]}
+{"t": 1793414296538, "cmd": "shot", "args": ["g4"]}
+{"t": 1793414301259, "cmd": "hold", "args": ["a", "0.6"]}
+{"t": 1793414301962, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793414304055, "cmd": "wait", "args": ["1"]}
+{"t": 1793414305121, "cmd": "shot", "args": ["g5"]}
+{"t": 1793414310737, "cmd": "note", "args": ["--shot", "stuck_step", "Garcias' porch: walking straight at the door from the front path (hold w 2.5s at '5 m') did not move Wren at all; HUD stayed '5 m' / 'come closer to knock' (shots/g4.png). Strafing left 0.6s then w got onto the porch. Looks like the front step or a pumpkin blocks the straight approach."]}
+{"t": 1793414310927, "cmd": "key", "args": ["e"]}
+{"t": 1793414311402, "cmd": "wait", "args": ["2"]}
+{"t": 1793414313462, "cmd": "shot", "args": ["g6"]}
+{"t": 1793414317984, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414318116, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414318257, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414318414, "cmd": "wait", "args": ["1"]}
+{"t": 1793414319482, "cmd": "shot", "args": ["h1"]}
+{"t": 1793414325084, "cmd": "note", "args": ["--shot", "label_overlap", "Wayfinding marker distance ('18 m v') is drawn on top of the house name label ('Ms. Bri..ms'), making both hard to read. Also 'You have been here tonight' stays in the prompt line after turning away from the Garcias' door."]}
+{"t": 1793414325262, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414325400, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414331537, "cmd": "wait", "args": ["1"]}
+{"t": 1793414332589, "cmd": "shot", "args": ["h2"]}
+{"t": 1793414336782, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414336918, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414337025, "cmd": "wait", "args": ["1"]}
+{"t": 1793414338081, "cmd": "shot", "args": ["h3"]}
+{"t": 1793414342595, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414342733, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414342866, "cmd": "wait", "args": ["1"]}
+{"t": 1793414343922, "cmd": "shot", "args": ["h4"]}
+{"t": 1793414348746, "cmd": "hold", "args": ["a", "0.5"]}
+{"t": 1793414349359, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1793414349456, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414352065, "cmd": "wait", "args": ["1"]}
+{"t": 1793414353129, "cmd": "shot", "args": ["h5"]}
+{"t": 1793414357927, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414358068, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414358207, "cmd": "wait", "args": ["1"]}
+{"t": 1793414359271, "cmd": "shot", "args": ["h6"]}
+{"t": 1793414364030, "cmd": "look", "args": ["-280", "0"]}
+{"t": 1793414364166, "cmd": "wait", "args": ["1"]}
+{"t": 1793414365241, "cmd": "shot", "args": ["h7"]}
+{"t": 1793414370588, "cmd": "hold", "args": ["d", "0.6"]}
+{"t": 1793414371311, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414371456, "cmd": "wait", "args": ["1"]}
+{"t": 1793414372517, "cmd": "shot", "args": ["h8"]}
+{"t": 1793414376464, "cmd": "key", "args": ["e"]}
+{"t": 1793414376919, "cmd": "wait", "args": ["2"]}
+{"t": 1793414378980, "cmd": "shot", "args": ["b1"]}
+{"t": 1793414382885, "cmd": "key", "args": ["t"]}
+{"t": 1793414383359, "cmd": "wait", "args": ["2"]}
+{"t": 1793414385429, "cmd": "shot", "args": ["b2"]}
+{"t": 1793414391379, "cmd": "key", "args": ["Tab"]}
+{"t": 1793414391870, "cmd": "wait", "args": ["1"]}
+{"t": 1793414392938, "cmd": "shot", "args": ["nb1"]}
+{"t": 1793414393086, "cmd": "key", "args": ["Tab"]}
+{"t": 1793414399962, "cmd": "note", "args": ["--shot", "notebook", "Notebook (Tab) Samhain page: text fills to the very bottom edge with no page number or Left/Right hint visible, so a player cannot tell whether the page continues or how to turn pages. Citations like [S1] [S15] read oddly inside a game."]}
+{"t": 1793414400173, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414400322, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414400479, "cmd": "wait", "args": ["1"]}
+{"t": 1793414401538, "cmd": "shot", "args": ["k1"]}
+{"t": 1793414407029, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414407162, "cmd": "wait", "args": ["1"]}
+{"t": 1793414408238, "cmd": "shot", "args": ["k2"]}
+{"t": 1793414413718, "cmd": "look", "args": ["-50", "0"]}
+{"t": 1793414413801, "cmd": "hold", "args": ["Shift_L+w", "7"]}
+{"t": 1793414421008, "cmd": "wait", "args": ["1"]}
+{"t": 1793414422076, "cmd": "shot", "args": ["k3"]}
+{"t": 1793414428846, "cmd": "note", "args": ["--shot", "black_screen", "After walking toward the '16 m' marker (look -50, Shift+w 7s) the whole 3D view went black; only HUD and the marker '5 m v' (drawn over the HUD 'Basket' value) remain. Camera seems to be inside a hedge/wall/tree mesh - clipping."]}
+{"t": 1793414429006, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1793414430656, "cmd": "wait", "args": ["1"]}
+{"t": 1793414431730, "cmd": "shot", "args": ["k4"]}
+{"t": 1793414437717, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1793414439317, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414439437, "cmd": "wait", "args": ["1"]}
+{"t": 1793414440488, "cmd": "shot", "args": ["k5"]}
+{"t": 1793414446169, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1793414449270, "cmd": "look", "args": ["150", "0"]}
+{"t": 1793414449396, "cmd": "wait", "args": ["1"]}
+{"t": 1793414450474, "cmd": "shot", "args": ["k6"]}
+{"t": 1793414456126, "cmd": "hold", "args": ["a", "0.8"]}
+{"t": 1793414457024, "cmd": "look", "args": ["120", "0"]}
+{"t": 1793414457127, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1793414458738, "cmd": "wait", "args": ["1"]}
+{"t": 1793414459817, "cmd": "shot", "args": ["k7"]}
+{"t": 1793414465580, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793414466478, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414466616, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414466718, "cmd": "wait", "args": ["1"]}
+{"t": 1793414467776, "cmd": "shot", "args": ["k8"]}
+{"t": 1793414472829, "cmd": "key", "args": ["e"]}
+{"t": 1793414473292, "cmd": "wait", "args": ["2"]}
+{"t": 1793414475354, "cmd": "shot", "args": ["nv1"]}
+{"t": 1793414481119, "cmd": "hold", "args": ["s", "0.8"]}
+{"t": 1793414482021, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414482166, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414482292, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414482418, "cmd": "wait", "args": ["1"]}
+{"t": 1793414483473, "cmd": "shot", "args": ["m1"]}
+{"t": 1793414488613, "cmd": "look", "args": ["-120", "0"]}
+{"t": 1793414488699, "cmd": "hold", "args": ["Shift_L+w", "8"]}
+{"t": 1793414496816, "cmd": "wait", "args": ["1"]}
+{"t": 1793414497876, "cmd": "shot", "args": ["m2"]}
+{"t": 1793414502249, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414502378, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414502481, "cmd": "wait", "args": ["1"]}
+{"t": 1793414503551, "cmd": "shot", "args": ["m3"]}
+{"t": 1793414508369, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414508508, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414508639, "cmd": "wait", "args": ["1"]}
+{"t": 1793414509704, "cmd": "shot", "args": ["m4"]}
+{"t": 1793414516280, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414516392, "cmd": "hold", "args": ["a", "3"]}
+{"t": 1793414519478, "cmd": "wait", "args": ["1"]}
+{"t": 1793414520541, "cmd": "shot", "args": ["m5"]}
+{"t": 1793414525101, "cmd": "look", "args": ["120", "0"]}
+{"t": 1793414525197, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414527788, "cmd": "wait", "args": ["1"]}
+{"t": 1793414528860, "cmd": "shot", "args": ["m6"]}
+{"t": 1793414534078, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793414535181, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414535310, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414535414, "cmd": "wait", "args": ["1"]}
+{"t": 1793414536481, "cmd": "shot", "args": ["m7"]}
+{"t": 1793414540688, "cmd": "key", "args": ["e"]}
+{"t": 1793414541168, "cmd": "wait", "args": ["2"]}
+{"t": 1793414543220, "cmd": "shot", "args": ["l1"]}
+{"t": 1793414548393, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414549482, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414549611, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414549757, "cmd": "wait", "args": ["1"]}
+{"t": 1793414550821, "cmd": "shot", "args": ["p1"]}
+{"t": 1793414555171, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414555314, "cmd": "wait", "args": ["1"]}
+{"t": 1793414556382, "cmd": "shot", "args": ["p2"]}
+{"t": 1793414561321, "cmd": "look", "args": ["40", "0"]}
+{"t": 1793414561397, "cmd": "hold", "args": ["Shift_L+w", "10"]}
+{"t": 1793414571528, "cmd": "wait", "args": ["1"]}
+{"t": 1793414572594, "cmd": "shot", "args": ["p3"]}
+{"t": 1793414577315, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414577452, "cmd": "look", "args": ["250", "0"]}
+{"t": 1793414577575, "cmd": "wait", "args": ["1"]}
+{"t": 1793414578631, "cmd": "shot", "args": ["p4"]}
+{"t": 1793414583604, "cmd": "hold", "args": ["d", "1.2"]}
+{"t": 1793414584905, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1793414584984, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414587587, "cmd": "wait", "args": ["1"]}
+{"t": 1793414588644, "cmd": "shot", "args": ["p5"]}
+{"t": 1793414592983, "cmd": "key", "args": ["e"]}
+{"t": 1793414593438, "cmd": "wait", "args": ["2"]}
+{"t": 1793414595489, "cmd": "shot", "args": ["ab1"]}
+{"t": 1793414600961, "cmd": "key", "args": ["e"]}
+{"t": 1793414601434, "cmd": "wait", "args": ["1"]}
+{"t": 1793414602503, "cmd": "shot", "args": ["ab2"]}
+{"t": 1793414607980, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414609079, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414609203, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414609332, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414609432, "cmd": "wait", "args": ["1"]}
+{"t": 1793414610494, "cmd": "shot", "args": ["q1"]}
+{"t": 1793414615041, "cmd": "look", "args": ["90", "0"]}
+{"t": 1793414615131, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414621241, "cmd": "wait", "args": ["1"]}
+{"t": 1793414622293, "cmd": "shot", "args": ["q2"]}
+{"t": 1793414626579, "cmd": "look", "args": ["70", "0"]}
+{"t": 1793414626656, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414632767, "cmd": "wait", "args": ["1"]}
+{"t": 1793414633822, "cmd": "shot", "args": ["q3"]}
+{"t": 1793414638650, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414638770, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414638890, "cmd": "wait", "args": ["1"]}
+{"t": 1793414639952, "cmd": "shot", "args": ["q4"]}
+{"t": 1793414644477, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414644597, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414644724, "cmd": "wait", "args": ["1"]}
+{"t": 1793414645817, "cmd": "shot", "args": ["q5"]}
+{"t": 1793414650652, "cmd": "look", "args": ["30", "0"]}
+{"t": 1793414650730, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414656842, "cmd": "wait", "args": ["1"]}
+{"t": 1793414657890, "cmd": "shot", "args": ["q6"]}
+{"t": 1793414662764, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414662883, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793414662990, "cmd": "wait", "args": ["1"]}
+{"t": 1793414664042, "cmd": "shot", "args": ["q7"]}
+{"t": 1793414670268, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414670391, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414670514, "cmd": "wait", "args": ["1"]}
+{"t": 1793414671565, "cmd": "shot", "args": ["q8"]}
+{"t": 1793414677417, "cmd": "look", "args": ["-50", "0"]}
+{"t": 1793414677497, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1793414682623, "cmd": "wait", "args": ["1"]}
+{"t": 1793414683677, "cmd": "shot", "args": ["q9"]}
+{"t": 1793414688359, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414689442, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414689560, "cmd": "wait", "args": ["1"]}
+{"t": 1793414690619, "cmd": "shot", "args": ["q10"]}
+{"t": 1793414698187, "cmd": "note", "args": ["--shot", "whitfields_lost", "Following the marker to the Whitfields' (began '16 m' after Abbas's Market) took ~3 real minutes: twice walking at the marker ended with the screen filled black against an unlit house wall, and the marker flipped between '10 m >' and '< 12 m' as I passed. Here it says 'The Whitfields' door: come closer to knock' while a solid wall is between me and the door - the prompt shows through walls. The marker points at the door straight-line, not at the way onto the porch."]}
+{"t": 1793414698266, "cmd": "hold", "args": ["s", "2"]}
+{"t": 1793414700351, "cmd": "hold", "args": ["a", "2"]}
+{"t": 1793414702435, "cmd": "wait", "args": ["1"]}
+{"t": 1793414703492, "cmd": "shot", "args": ["q11"]}
+{"t": 1793414709624, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1793414709717, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1793414713851, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414713985, "cmd": "look", "args": ["200", "0"]}
+{"t": 1793414714090, "cmd": "wait", "args": ["1"]}
+{"t": 1793414715149, "cmd": "shot", "args": ["q12"]}
+{"t": 1793414719873, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414720003, "cmd": "look", "args": ["100", "0"]}
+{"t": 1793414720082, "cmd": "wait", "args": ["1"]}
+{"t": 1793414721140, "cmd": "shot", "args": ["q13"]}
+{"t": 1793414726094, "cmd": "hold", "args": ["d", "1.2"]}
+{"t": 1793414727386, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1793414727476, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1793414730061, "cmd": "wait", "args": ["1"]}
+{"t": 1793414731118, "cmd": "shot", "args": ["q14"]}
+{"t": 1793414735235, "cmd": "key", "args": ["e"]}
+{"t": 1793414735685, "cmd": "wait", "args": ["2"]}
+{"t": 1793414737735, "cmd": "shot", "args": ["wh1"]}
+{"t": 1793414743928, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1793414745018, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414745139, "cmd": "wait", "args": ["8"]}
+{"t": 1793414753190, "cmd": "shot", "args": ["nine"]}
+{"t": 1793414760570, "cmd": "note", "args": ["--shot", "nine_pm", "At 9:00 pm (7 of 8 porches knocked, 1 to go) the NEXT line moved on by itself to 'For Nana's cider: 2 apples (the orchard), rosemary (Nana's herb bed)' with a '< 28 m' marker. Clear handover; did not see an explicit 'porch lights are out' message, and lost the 8th house to time."]}
+{"t": 1793414760673, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414760796, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414760913, "cmd": "wait", "args": ["1"]}
+{"t": 1793414761967, "cmd": "shot", "args": ["or1"]}
+{"t": 1793414766405, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1793414766525, "cmd": "hold", "args": ["Shift_L+w", "10"]}
+{"t": 1793414776640, "cmd": "wait", "args": ["1"]}
+{"t": 1793414777694, "cmd": "shot", "args": ["or2"]}
+{"t": 1793414782328, "cmd": "look", "args": ["-30", "0"]}
+{"t": 1793414782422, "cmd": "hold", "args": ["Shift_L+w", "9"]}
+{"t": 1793414791530, "cmd": "wait", "args": ["1"]}
+{"t": 1793414792575, "cmd": "shot", "args": ["or3"]}
+{"t": 1793414797319, "cmd": "look", "args": ["0", "120"]}
+{"t": 1793414797392, "cmd": "wait", "args": ["1"]}
+{"t": 1793414798440, "cmd": "shot", "args": ["or4"]}
+{"t": 1793414804756, "cmd": "look", "args": ["0", "-120"]}
+{"t": 1793414804826, "cmd": "note", "args": ["--shot", "dark_block", "After 9 pm, heading for the orchard marker ('16 m v'), Shift+w for 9s moved Wren nowhere - the distance stayed 16 m. The scene is almost entirely black (sky line only), so the obstacle (fence/wall?) cannot be seen at all; a new player would think the controls broke."]}
+{"t": 1793414804928, "cmd": "hold", "args": ["a", "2"]}
+{"t": 1793414807007, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1793414811115, "cmd": "wait", "args": ["1"]}
+{"t": 1793414812159, "cmd": "shot", "args": ["or5"]}
+{"t": 1793414817171, "cmd": "key", "args": ["q"]}
+{"t": 1793414817617, "cmd": "wait", "args": ["1"]}
+{"t": 1793414818663, "cmd": "look", "args": ["40", "0"]}
+{"t": 1793414818732, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1793414822813, "cmd": "wait", "args": ["1"]}
+{"t": 1793414823857, "cmd": "shot", "args": ["or6"]}
+{"t": 1793414830149, "cmd": "key", "args": ["q"]}
+{"t": 1793414830595, "cmd": "wait", "args": ["1"]}
+{"t": 1793414831641, "cmd": "look", "args": ["0", "80"]}
+{"t": 1793414831712, "cmd": "wait", "args": ["1"]}
+{"t": 1793414832757, "cmd": "shot", "args": ["or7"]}
+{"t": 1793414837599, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414837713, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414837829, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414837945, "cmd": "wait", "args": ["1"]}
+{"t": 1793414838990, "cmd": "shot", "args": ["or8"]}
+{"t": 1793414843378, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414843492, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414843608, "cmd": "wait", "args": ["1"]}
+{"t": 1793414844652, "cmd": "shot", "args": ["or9"]}
+{"t": 1793414849451, "cmd": "look", "args": ["100", "60"]}
+{"t": 1793414849524, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1793414850601, "cmd": "wait", "args": ["1"]}
+{"t": 1793414851647, "cmd": "shot", "args": ["or10"]}
+{"t": 1793414856192, "cmd": "look", "args": ["0", "100"]}
+{"t": 1793414856265, "cmd": "wait", "args": ["1"]}
+{"t": 1793414857311, "cmd": "shot", "args": ["or11"]}
+{"t": 1793414862195, "cmd": "look", "args": ["0", "-100"]}
+{"t": 1793414862265, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414862382, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414862477, "cmd": "wait", "args": ["1"]}
+{"t": 1793414863522, "cmd": "shot", "args": ["or12"]}
+{"t": 1793414868241, "cmd": "look", "args": ["0", "-60"]}
+{"t": 1793414868312, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414868428, "cmd": "wait", "args": ["1"]}
+{"t": 1793414869472, "cmd": "shot", "args": ["or13"]}
+{"t": 1793414874966, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414875080, "cmd": "look", "args": ["0", "40"]}
+{"t": 1793414875151, "cmd": "wait", "args": ["1"]}
+{"t": 1793414876195, "cmd": "shot", "args": ["or14"]}
+{"t": 1793414880965, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414881081, "cmd": "wait", "args": ["1"]}
+{"t": 1793414882126, "cmd": "shot", "args": ["or15"]}
+{"t": 1793414889234, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1793414889350, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1793414889445, "cmd": "wait", "args": ["1"]}
+{"t": 1793414890490, "cmd": "shot", "args": ["or16"]}
+{"t": 1793414897601, "cmd": "note", "args": ["--shot", "bag_lost_dark", "Fix 5 (second try, after 9 pm in an unlit field): changed to cat and back after walking ~4s as cat. The bag showed once with a faint glow (shots/or9.png, lower right) but no text label; after one step toward it the bag left the view and I could not find it again in ~1.5 real minutes of turning. Unlike every other goal, 'Fetch your candy bag' gets no wayfinding marker/distance, so in the dark the bag is easy to lose."]}
+{"t": 1793414897720, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1793414899299, "cmd": "look", "args": ["0", "50"]}
+{"t": 1793414899367, "cmd": "wait", "args": ["1"]}
+{"t": 1793414900412, "cmd": "shot", "args": ["or17"]}
+{"t": 1793414905322, "cmd": "hold", "args": ["w", "0.8"]}
+{"t": 1793414906198, "cmd": "wait", "args": ["1"]}
+{"t": 1793414907242, "cmd": "shot", "args": ["or18"]}
+{"t": 1793414912402, "cmd": "look", "args": ["0", "70"]}
+{"t": 1793414912473, "cmd": "hold", "args": ["w", "0.6"]}
+{"t": 1793414913150, "cmd": "wait", "args": ["1"]}
+{"t": 1793414914197, "cmd": "shot", "args": ["or19"]}
+{"t": 1793414919967, "cmd": "hold", "args": ["w", "2"]}
+{"t": 1793414922046, "cmd": "wait", "args": ["1"]}
+{"t": 1793414923092, "cmd": "shot", "args": ["or20"]}
+{"t": 1793414927881, "cmd": "key", "args": ["e"]}
+{"t": 1793414928326, "cmd": "wait", "args": ["1"]}
+{"t": 1793414929372, "cmd": "look", "args": ["0", "-100"]}
+{"t": 1793414929440, "cmd": "wait", "args": ["1"]}
+{"t": 1793414930484, "cmd": "shot", "args": ["or21"]}
+{"t": 1793414937484, "cmd": "note", "args": ["--shot", "bag_found", "Bag recovered: walking back, a 'Your candy bag' label appeared over the glint at ~3 m (shots/or17.png), then 'E pick up your candy bag' and E worked; NEXT returned to the cider goal. So the label exists but only shows close up; the bag itself, in the dark, is a small glow."]}
+{"t": 1793414937598, "cmd": "look", "args": ["300", "0"]}
+{"t": 1793414937713, "cmd": "wait", "args": ["1"]}
+{"t": 1793414938758, "cmd": "shot", "args": ["or22"]}
+{"t": 1793414944271, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1793414944364, "cmd": "wait", "args": ["1"]}
+{"t": 1793414945410, "cmd": "shot", "args": ["or23"]}
+{"t": 1793414950994, "cmd": "look", "args": ["70", "-80"]}
+{"t": 1793414951065, "cmd": "wait", "args": ["1"]}
+{"t": 1793414952109, "cmd": "shot", "args": ["or24"]}
+{"t": 1793414958966, "cmd": "note", "args": ["--shot", "marker_pitch", "Wayfinding edge arrow: with the view tilted down, a target straight ahead but above the screen shows as '15 m >' or '< 15 m' and flips side with tiny turns (shots/or22.png, or23.png); only tilting up revealed the 'v' marker. No up/down arrow, so the side arrows send you turning in circles."]}
+{"t": 1793414959084, "cmd": "look", "args": ["40", "0"]}
+{"t": 1793414959153, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1793414965261, "cmd": "wait", "args": ["1"]}
+{"t": 1793414966305, "cmd": "shot", "args": ["or25"]}
+{"t": 1793414973102, "cmd": "note", "args": ["--shot", "creek_wall", "Second time blocked on the way to the orchard: Shift+w 6s toward '15 m v' does not move Wren at all, with nothing visible ahead (near-black ground). A 'The creek bridge' label was visible nearby earlier (shots/or10.png), so this is probably the creek edge: the marker points straight across instead of to the bridge, and the edge is invisible at night. Gave up on the orchard here (~10:13 pm)."]}
+{"t": 1793414973227, "cmd": "stop", "args": []}
+{"t": 1793415007922, "cmd": "report", "args": []}

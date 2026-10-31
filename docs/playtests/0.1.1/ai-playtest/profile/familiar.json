@@ -1,0 +1,25 @@
+{
+  "name": "familiar",
+  "title": "Familiar",
+  "description": "a small first-person open-world Halloween game on Strata: you are Wren, twelve, out on Halloween night in a New England hill town; trick-or-treat, turn into a cat, light lanterns, brew Nana's cider and bring her old cat's spirit home by midnight.",
+  "repository": "Preponderous-Software/familiar",
+  "build": {"command": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --target familiar -j4", "requires": ["cmake", "c++"]},
+  "launch": {
+    "command": ["{game_dir}/build/familiar"],
+    "args": ["--width", "{width}", "--height", "{height}", "--slot", "{data_dir}"],
+    "cwd": "{session_dir}",
+    "seed_args": ["--seed", "{seed}"],
+    "start_timeout_sec": 60,
+    "settle_sec": 2,
+    "lp_threads": 4
+  },
+  "window": {"title_regex": "^Familiar$", "width": 640, "height": 360},
+  "crash_patterns": ["familiar: .*(error|failed|damaged).*", "Segmentation fault", "terminate called"],
+  "process_name": "build/familiar",
+  "agent_notes": "familiar.md",
+  "cheats": "Do not use `--autopilot`, `--tour` or `--fresh` unless your goal says so.",
+  "goals": [
+    {"goal": "Play the opening of the night as a brand-new player who has never seen the game: work out what to do from the screen, choose a costume, trick-or-treat, and follow whatever the game points you to next; note every moment of confusion.", "budget_min": 25, "seed": 31}
+  ],
+  "evidence_dir": "docs/playtests"
+}

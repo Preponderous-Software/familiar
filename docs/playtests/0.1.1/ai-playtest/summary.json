@@ -1,0 +1,524 @@
+{
+  "runDir": "<run-dir>",
+  "generated": "2026-10-30 20:50",
+  "sessions": [
+    {
+      "session": "s01",
+      "profile": "familiar",
+      "goal": "Play the opening of the night as a brand-new player who has never seen the game: work out what to do from the screen, choose a costume, trick-or-treat, and follow whatever the game points you to next; note every moment of confusion.",
+      "outcome": "partial",
+      "fun": 3,
+      "durationSec": 892,
+      "seed": 31,
+      "build": {
+        "version": null,
+        "commit": "4d61f43"
+      },
+      "verdict": "The five fixes mostly help. The lantern prompt and E on Nana's porch (1), reach with 'come closer' and the orange crosshair (2), and the NEXT line (3) all work well. The marker (4) helps but points in a straight line, which is its weakness: it leads into the side walls of houses and, after 9 pm, into an invisible obstacle (likely the creek), and its edge arrow cannot show up or down. The bag (5) works close up but has no marker and is hard to find in the dark. I knocked 7 of 8 porches by 9 pm but lost the 8th to time spent working around houses, and never reached the orchard. secondsToObjective values are wall-clock seconds from pt start (the game has no probe).",
+      "reportValid": true,
+      "reported": {
+        "objectivesCompleted": 5,
+        "deaths": 0,
+        "secondsToObjective": {
+          "Choose a costume": 12.0,
+          "Light Nana's window lantern": 47.0,
+          "First candy (Okafors')": 115.0,
+          "Light Grandpa Ike's lantern": 125.0,
+          "Pick up dropped bag (first time)": 165.0,
+          "Buy cinnamon stick": 520.0,
+          "7th porch knocked (Whitfields')": 656.0
+        },
+        "porchesKnocked": 7,
+        "porchesTotal": 8,
+        "candyEnd": 14,
+        "lanternsLit": 2,
+        "timesStuckOnGeometry": 5
+      },
+      "derived": {
+        "objectivesCompleted": 0,
+        "objectives": [],
+        "progressReached": null,
+        "deaths": 0,
+        "saves": 0,
+        "loads": 0,
+        "eventCounts": {},
+        "lastTick": 0
+      },
+      "ticksPerSecond": null,
+      "notes": 15,
+      "crash": null
+    },
+    {
+      "session": "s02",
+      "profile": "familiar",
+      "goal": "Follow the witchcraft and the cat: choose a costume and knock at a door or two, then follow the HUD's NEXT line and Wren's notebook (Tab) toward the Samhain thread: light the lanterns, become the cat (Q) to climb, squeeze through gaps and look for spirits, gather what the cider needs. Get as far along the night's main thread as you can, and note anywhere you could not tell what to do or where to go, and anything that seems stuck.",
+      "outcome": "partial",
+      "fun": 3,
+      "durationSec": 707,
+      "seed": 7,
+      "build": {
+        "version": null,
+        "commit": "4d61f43"
+      },
+      "verdict": "Four of the five fixes work: Nana's lantern prompts and lights with E (helped); the in-range cue (orange crosshair, 'come closer to light/knock') is clear (helped); the NEXT line moves on promptly and reads well (helped); the dropped candy bag shows a 'Your candy bag' label, a glint, a 'Fetch your candy bag' NEXT and picks up with E (helped). The wayfinding marker helps for doors (followed it to the Okafors and Garcias) but is mixed overall (no marker for Ike's lantern) and it made the cat paw-print step worse: it points back at the herb bed while you follow the trail, vanishes near the bed with no cue, and in the dark yard I lost the trail and Smoke from 7:16 to 9:12 pm. secondsToObjective are wall-clock seconds from pt start (no probe).",
+      "reportValid": true,
+      "reported": {
+        "objectivesCompleted": 5,
+        "deaths": 0,
+        "secondsToObjective": {
+          "Light Nana's window lantern": 46.0,
+          "First knock (Okafors)": 100.0,
+          "Light Grandpa Ike's lantern": 210.0,
+          "Second knock (Garcias)": 290.0,
+          "Pick candy bag back up": 320.0
+        },
+        "lanternsLit": 2,
+        "candy": 5,
+        "doorsKnocked": 2,
+        "smokeFound": 0,
+        "gameClockAtStop": "9:12 pm"
+      },
+      "derived": {
+        "objectivesCompleted": 0,
+        "objectives": [],
+        "progressReached": null,
+        "deaths": 0,
+        "saves": 0,
+        "loads": 0,
+        "eventCounts": {},
+        "lastTick": 0
+      },
+      "ticksPerSecond": null,
+      "notes": 11,
+      "crash": null
+    },
+    {
+      "session": "s03",
+      "profile": "familiar",
+      "goal": "Test that the night is kept safely: play a few minutes (choose a costume, knock for candy, light a lantern if you find one, turn into the cat and back), noting the clock, candy and lanterns on the HUD. Press F5 and check what it says. Then quit the way a player would (Esc, then Esc again) and run pt stop, and start the game again with exactly the same pt start command: check that the night continues where you left it (clock, candy, costume, lanterns, where you stand). Also try F9 after playing on a little, and a pt stop WITHOUT quitting (like a crash) followed by pt start, and say what was kept. Any lost or wrong progress is a blocker.",
+      "outcome": "achieved",
+      "fun": 4,
+      "durationSec": 538,
+      "seed": 13,
+      "build": {
+        "version": null,
+        "commit": "4d61f43"
+      },
+      "verdict": "Saves are safe. Quitting with Esc, Esc and restarting restored clock, candy, costume, lanterns, position and view exactly. A pt stop without quitting (like a crash) at 7:31 restored everything, Candy 8 included, and F9 correctly went back to the last save, though it gives no time and no confirmation. On the five fixes: Nana's porch lantern prompt and E: helped. Reach with glint, orange crosshair and 'come closer': helped. NEXT line moves on and is clear: helped. Wayfinding marker with distance, side arrow and door glow got me to each door: helped, though it often sits under the HUD. Dropped bag: partly helped (NEXT tells you to fetch it and E picks it up), but there is still no glint or label from a distance. Seconds are wall-clock (no probe).",
+      "reportValid": true,
+      "reported": {
+        "objectivesCompleted": 5,
+        "deaths": 0,
+        "secondsToObjective": {
+          "Light Nana's window lantern": 44.0,
+          "First candy (Okafors)": 150.0
+        },
+        "progressLostOnQuitResume": 0,
+        "progressLostOnCrashResume": 0,
+        "candyAtEnd": 8,
+        "lanternsLit": 2,
+        "saveReloads": 3
+      },
+      "derived": {
+        "objectivesCompleted": 0,
+        "objectives": [],
+        "progressReached": null,
+        "deaths": 0,
+        "saves": 0,
+        "loads": 0,
+        "eventCounts": {},
+        "lastTick": 0
+      },
+      "ticksPerSecond": null,
+      "notes": 13,
+      "crash": null
+    }
+  ],
+  "severityCounts": {
+    "blocker": 0,
+    "major": 2,
+    "minor": 14,
+    "polish": 10
+  },
+  "findingReports": 26,
+  "findings": [
+    {
+      "title": "After 9 pm the marker leads straight into an invisible obstacle on the way to the orchard (likely the creek)",
+      "severity": "major",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "Following the cider NEXT goal ('2 apples (the orchard)') with the marker at '16 m v' and later '15 m v', Shift+w for 6-9 s moved Wren nowhere twice; the distance did not change. The scene after 9 pm is nearly black, so nothing shows what blocks the way. A 'The creek bridge' label was visible nearby, so the marker probably points straight across the creek rather than to the bridge. A new player would think the controls broke. Expected: the marker routes via the bridge, or the creek edge is visible at night.",
+      "repro": "pt start --seed 31; trick-or-treat until 9 pm near the Whitfields'/Abbas's Market; follow the '< 28 m' orchard marker; hold Shift_L+w toward the 'v' marker",
+      "screenshots": [
+        "s01/shots/creek_wall.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Cat paw-print trail: wayfinding marker keeps pointing back at Nana's herb bed, NEXT never advances",
+      "severity": "major",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s02"
+      ],
+      "reports": 2,
+      "detail": "As the cat, NEXT reads 'Smoke's paw prints glow for a cat: follow them from Nana's herb bed' and the marker points at the herb bed. Walking up to it, the marker vanishes at ~3-5 m but nothing on screen marks the herb bed, no message appears and NEXT does not change. The faint teal prints lead away (toward the church steeple); following them, the marker reappears pointing BACK to the herb bed (17, 33, 66 m), actively pulling the player off the trail. In the dark yard the prints fade after ~20 m and I lost them. Spent 7:16 to 9:12 pm in-game circling. Expected: on reaching the herb bed, a cue ('You catch Smoke's scent...') and the marker moving to the next print / trail end.",
+      "repro": "pt start ... --seed 7; key 4; light Nana's lantern; knock Okafors + Garcias; walk to Nana's porch; key q; follow the 'm' marker around the house; observe marker disappears near the bed and then points back once you follow the prints.",
+      "screenshots": [
+        "s02/shots/trail_lost.png",
+        "s02/shots/cat16.png"
+      ],
+      "alsoTitled": [
+        "Paw prints and the herb bed are nearly invisible in the dark back yard"
+      ]
+    },
+    {
+      "title": "Opening screen: Nana's greeting and the help list are drawn on top of each other",
+      "severity": "minor",
+      "categories": [
+        "text"
+      ],
+      "sessions": [
+        "s01",
+        "s02",
+        "s03"
+      ],
+      "reports": 3,
+      "detail": "At start the orange greeting ('Halloween in Hollowell. Nana waves...') and the white control help overlap in the bottom half, so neither can be read. The costume line also wraps as '3 / skeleton'.",
+      "repro": "pt start --seed 31; pt shot start",
+      "screenshots": [
+        "s01/shots/overlap_text.png",
+        "s02/shots/overlap.png",
+        "s03/shots/overlap.png"
+      ],
+      "alsoTitled": [
+        "At start the help list is drawn over Nana's greeting",
+        "Help list overlaps Nana's opening greeting at start"
+      ]
+    },
+    {
+      "title": "Dropped candy bag has no wayfinding marker; in the dark it is easy to lose",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "Fix 5 check. On the Okafors' porch it worked well: the bag was visible, NEXT said 'Fetch your candy bag from where you changed (E)', and E picked it up. In a dark field after 9 pm the bag showed only as a small glow, the 'Your candy bag' label appeared only within ~3 m, and after one step it left the view; it took ~1.5 real minutes to find it again. Every other goal gets a distance marker, but the bag does not.",
+      "repro": "after 9 pm in the field: pt key q; pt hold w 4; pt key q; look for the bag",
+      "screenshots": [
+        "s01/shots/bag_lost_dark.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Edge arrow near the goal does not respond to turning (stays '4 m >' / '< 5 m' after turning 40-90 degrees)",
+      "severity": "minor",
+      "categories": [
+        "bug"
+      ],
+      "sessions": [
+        "s02"
+      ],
+      "reports": 1,
+      "detail": "Close to the herb bed the side arrow kept saying '4 m >' after several right turns, and '< 5 m' after turning left; only strafing changed it, then it vanished. Looks like the edge arrow is wrong when the target is close/behind the camera.",
+      "repro": "As cat near Nana's back yard: pt look 300 0 (x2) while marker shows '4 m >'; shot.",
+      "screenshots": [
+        "s02/shots/cat27.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Edge arrow only shows < or >, never up, so a target above a tilted-down view sends you turning in circles",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "With the view tilted down, a target straight ahead showed as '15 m >' and then '< 15 m' after a small turn; only tilting up showed the 'v' marker. Expected: an up arrow, or the marker clamped to the top edge.",
+      "repro": "look 0 120 (tilt down), then pt look +-150 0 near a goal",
+      "screenshots": [
+        "s01/shots/marker_pitch.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "F5 'Saved.', F9 'Loaded your save.' and autosave tell the player nothing about when the save is from",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s03"
+      ],
+      "reports": 1,
+      "detail": "Saving and loading worked every time, but F9 at 7:10 pm (Candy 5) silently rolled back to the 6:44 save (Candy 3). It asked for no confirmation, and 'Loaded your save.' did not say what time it went back to. The two-minute autosave showed no cue I could see. Expected something like 'Saved at 6:41 pm' and 'Loaded the 6:41 pm save', or a confirm on F9.",
+      "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; play; F5 at ~6:41; play on to the Garcias (Candy 5); F9",
+      "screenshots": [
+        "s03/shots/f9_rollback.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Garcias' front step blocks walking straight at the door",
+      "severity": "minor",
+      "categories": [
+        "bug"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "At '5 m' from the Garcias' door, holding w for 2.5 s did not move Wren (still 'come closer to knock'). Strafing left first, then w, got onto the porch. The same thing happened at Abbas's Market (I came at it from the side).",
+      "repro": "approach the Garcias' door head-on from the path; pt hold w 2.5",
+      "screenshots": [
+        "s01/shots/stuck_step.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Grandpa Ike's jar lantern still looks unlit after it is lit",
+      "severity": "minor",
+      "categories": [
+        "bug"
+      ],
+      "sessions": [
+        "s03"
+      ],
+      "reports": 1,
+      "detail": "E lit the Okafors' lantern (HUD went from Lanterns 1 to 2 of 4, with message text), but the jar beside the pumpkin on the porch stayed dark with no flame or glow. It was also lit by E while the crosshair was on the door, with the lantern off screen.",
+      "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; knock at the Okafors' (T); pt key e; look down at the end of the porch",
+      "screenshots": [
+        "s03/shots/bag_picked.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "No wayfinding marker for Grandpa Ike's lantern on the Okafors' porch",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s02"
+      ],
+      "reports": 1,
+      "detail": "After the joke, NEXT says 'Light Grandpa Ike's lantern on the Okafors' porch' but no 'v' marker or edge arrow appears. The glowing jack-o'-lantern at the right end of the porch gives no prompt and E does nothing; the actual (dark) lantern is at the other end. Once aimed at, the prompt 'E light Grandpa Ike's lantern' and E work fine.",
+      "repro": "Knock at the Okafors, press T; look along the porch.",
+      "screenshots": [
+        "s02/shots/ike_nomarker.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "The dropped candy bag has no glint or label until the crosshair is right on it",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s03"
+      ],
+      "reports": 1,
+      "detail": "As the cat I walked ~2 m off the Okafors' porch and turned back. The porch was in view, but nothing marked the bag (a small red box), and the HUD said only '(bag on the ground)'. Back as Wren, NEXT said 'Fetch your candy bag from where you changed (E)', which helped. With the crosshair on the box, 'E pick up your candy bag' appeared and E worked (Candy 3 kept). No glint or label was visible from a distance, and no wayfinding marker pointed at the bag.",
+      "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; on a porch: pt key q; pt hold w 1.5; turn 180; pt key q; look for the bag",
+      "screenshots": [
+        "s03/shots/cat_lookback.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "The wayfinding marker and its target hide behind the left HUD block",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s03"
+      ],
+      "reports": 1,
+      "detail": "Heading from the Okafors' to the Garcias and then to Ms. Bright, the 'v 17 m' marker sat over the Costume/You are lines of the HUD, so both were hard to read. The direct line to the house was also cut by low fences with no gate hint, and I had to strafe along them. The marker still got me to each door.",
+      "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; load at the Okafors' porch; turn left ~100 deg; follow the marker",
+      "screenshots": [
+        "s03/shots/hud_occludes.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Wayfinding marker points straight-line at the door, so you hit house side walls and the screen goes black",
+      "severity": "minor",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "At the Novaks' and the Whitfields', walking at the marker ended with Wren pressed against an unlit side wall and the whole view black (only HUD visible). At the Whitfields' it took about 3 real minutes to find the front porch; the marker also flipped between '10 m >' and '< 12 m' when passing a neighbour's porch. The door prompt 'The Whitfields' door: come closer to knock' showed through the wall. Expected: the marker leads to the porch steps / front path, and no prompt shows through walls.",
+      "repro": "pt start --seed 31; after Abbas's Market follow the '16 m' marker to the Whitfields' with Shift_L+w",
+      "screenshots": [
+        "s01/shots/whitfields_lost.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Costume chooser line keeps showing after a costume is chosen",
+      "severity": "polish",
+      "categories": [
+        "text",
+        "ux"
+      ],
+      "sessions": [
+        "s01",
+        "s02"
+      ],
+      "reports": 2,
+      "detail": "After pressing 3 (skeleton) the line 'Choose a costume: 1 ghost 2 pumpkin 3 skeleton 4 witch' kept reappearing on Nana's walk until the first knock, so it looked as if the choice had not taken.",
+      "repro": "pt key 3; walk around Nana's porch",
+      "screenshots": [
+        "s01/shots/lit.png",
+        "s02/shots/lit.png"
+      ],
+      "alsoTitled": [
+        "'Choose a costume: 1 ghost ...' line stays on screen after the costume is chosen"
+      ]
+    },
+    {
+      "title": "Notebook page has no page indicator or turn hint and runs to the bottom edge",
+      "severity": "polish",
+      "categories": [
+        "text"
+      ],
+      "sessions": [
+        "s01",
+        "s03"
+      ],
+      "reports": 2,
+      "detail": "The Samhain page fills to the bottom edge. Nothing shows whether it continues or that Left/Right turn pages. Source tags like [S1] [S15] read oddly in a game.",
+      "repro": "pt key Tab",
+      "screenshots": [
+        "s01/shots/notebook.png",
+        "s03/shots/notebook.png"
+      ],
+      "alsoTitled": [
+        "The notebook page runs to the bottom edge with no page indicator"
+      ]
+    },
+    {
+      "title": "Fix 1+2 check: Nana's lantern prompt and reach work (positive)",
+      "severity": "polish",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "From about two steps back the prompt said 'Nana's window lantern: come closer to light it'. At the porch it read 'E light Nana's window lantern, for Nana's mother, Ada', the crosshair turned orange, and E lit it (Lanterns 1 of 4). Doors gave 'E knock' with the orange crosshair from about a step away, even when aiming slightly off the door. Grandpa Ike's lantern could be lit from the Okafors' door.",
+      "repro": "pt key 3; turn ~130 deg right; walk to the lit window; pt key e",
+      "screenshots": [
+        "s01/shots/lantern_prompt.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Fix 3 check: the NEXT line moves on after every step (positive)",
+      "severity": "polish",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "NEXT moved costume -> light Nana's lantern -> knock (8 to go) -> light Grandpa Ike's lantern -> knock (7..1 to go) -> fetch bag (as Wren) / follow Smoke's paw prints (as cat) -> at 9 pm the cider ingredients. Each one is clear and actionable. There was no explicit 'porch lights are out' line at 9 pm.",
+      "repro": "play the opening",
+      "screenshots": [
+        "s01/shots/nine_pm.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Marker distance and house-name labels overlap each other and the HUD",
+      "severity": "polish",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s01"
+      ],
+      "reports": 1,
+      "detail": "'18 m v' drawn over 'Ms. Bright's'; '16 m'/'5 m' markers drawn over the HUD 'Smoke'/'Basket' values; the 4-line NEXT block sits across the middle-left of the view and overlaps the lantern on Nana's porch. 'You have been here tonight' stays in the prompt line after you turn away from a visited door.",
+      "repro": "turn toward a far house so its label and the marker line up",
+      "screenshots": [
+        "s01/shots/label_overlap.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Notebook 'Samhain' page overflows; footer missing",
+      "severity": "polish",
+      "categories": [
+        "text"
+      ],
+      "sessions": [
+        "s02"
+      ],
+      "reports": 1,
+      "detail": "Page 1 text runs to the bottom edge and the 'Page x of 4 / Left/Right turn / Tab close' footer seen on page 2 is not shown.",
+      "repro": "After lighting lanterns, key Tab; shot",
+      "screenshots": [
+        "s02/shots/nb1.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "The first Esc gives no hint that a second Esc quits",
+      "severity": "polish",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s03"
+      ],
+      "reports": 1,
+      "detail": "After one Esc the screen looked the same as before: no 'mouse freed / Esc again to quit (saves)' line. The quit itself saved correctly.",
+      "repro": "pt start --profile <profile> --game-dir <game-dir> --seed 13; pt key Escape; pt shot",
+      "screenshots": [
+        "s03/shots/resume_quit.png"
+      ],
+      "alsoTitled": []
+    },
+    {
+      "title": "Wayfinding marker drawn over the HUD stat block / NEXT text",
+      "severity": "polish",
+      "categories": [
+        "ux"
+      ],
+      "sessions": [
+        "s02"
+      ],
+      "reports": 1,
+      "detail": "When the goal is up-left the 'v 6 m' marker overlaps Basket/Smoke lines; side arrows '< 16' overlap the prompt line. Also clips at the top edge when looking down.",
+      "repro": "Walk toward the Garcias' door from the street.",
+      "screenshots": [
+        "s02/shots/marker_hud.png"
+      ],
+      "alsoTitled": []
+    }
+  ],
+  "objectiveTimings": [],
+  "problems": []
+}
