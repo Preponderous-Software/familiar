@@ -366,6 +366,43 @@ int main(int, char**) {
         CHECK(tonightAlso(w).empty());
     }
 
+    // ---- 0.1.0 playtest (#14, #15): the NEXT line says where it points, for the marker: Nana's
+    // window, the nearest door still to knock at, the dropped bag, the hill; nowhere to wait.
+    {
+        World w = newWorld(1);
+        CHECK(!tonightStep(w).goal);  // choosing a costume, on Nana's walk
+        w.costume = Costume::Ghost;
+        NextStep n = tonightStep(w);
+        CHECK(n.goal && n.text == tonightNext(w));
+        CHECK(n.at.x == lantern(NanaWindow).at.x && n.at.z == lantern(NanaWindow).at.z);
+        w.knocked[T::Garcia] = true;
+        standAt(w, {-30.0f, 0.0f});  // in front of Mr. Hale's (dark) and Ms. Bright's (knocked: no)
+        n = tonightStep(w);
+        CHECK(n.goal && n.text.find("Knock") == 0);
+        CHECK(n.at.x == T::doorAt(T::Bright).x && n.at.z > 0);  // the nearest lit, unknocked door
+        // Turned into the cat here and back: the bag is the place.
+        press(w, false, false, true);
+        standAt(w, {-20.0f, 0.0f});
+        press(w, false, false, true);
+        CHECK(w.form == Form::Girl && w.bagDown);
+        n = tonightStep(w);
+        CHECK(n.goal && n.text.find("candy bag") != std::string::npos);
+        CHECK(n.at.x == w.bag.x && n.at.z == w.bag.z);
+        // Leading Smoke: the hill; waiting for midnight: nowhere.
+        World c = newWorld(1);
+        press(c, false, false, true);
+        c.smoke = SmokeState::Following;
+        n = tonightStep(c);
+        CHECK(n.goal && n.at.x == T::kHill.x && n.at.z == T::kHill.z);
+        World m = newWorld(1);
+        m.costume = Costume::Ghost;
+        m.tick = tickAt(23 * 60 + 40);
+        m.lit = {true, true, true, true};
+        m.cider = m.offered = true;
+        m.smoke = SmokeState::AtCircle;
+        CHECK(!tonightStep(m).goal && tonightNext(m).find("Wait") == 0);
+    }
+
     // ---- The NEXT line walks through the night.
     {
         World w = newWorld(1);

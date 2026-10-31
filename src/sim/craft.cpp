@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <utility>
 
 #include "sim/doors.h"
 #include "sim/npc.h"
@@ -320,45 +321,108 @@ bool knockedAnywhere(const World& w) {
 
 }  // namespace
 
-std::string tonightNext(const World& w) {
+namespace {
+
+Vec3 ground(Vec2 p, float up) { return {p.x, T::groundHeight(p.x, p.z) + up, p.z}; }
+Vec3 doorGoal(T::HouseId h) {
+    const Vec2 d = T::doorAt(h);
+    return {d.x, T::kPorchHeight + 1.2f, d.z + (T::kHouses[h].north ? 0.1f : -0.1f)};
+}
+Vec3 lanternGoal(int i) { return kLanterns[i].at; }
+
+// The doors' nextStep, with where it points: the bag, or the nearest door still to knock at.
+NextStep doorsStep(const World& w) {
+    NextStep n{nextStep(w)};
+    if (w.form == Form::Girl && w.bagDown) {
+        n.goal = true;
+        n.at = {w.bag.x, w.bag.y + 0.3f, w.bag.z};
+        return n;
+    }
+    if (w.form != Form::Girl || housesLeft(w) == 0 || (canChooseCostume(w) && w.costume == Costume::None)) return n;
+    float best = 1e9f;
+    for (int i = 0; i < T::HouseCount; ++i) {
+        const auto id = static_cast<T::HouseId>(i);
+        if (id == T::Nana || w.knocked[i] || neighbour(id).candy <= 0 || !porchLightOn(w, id)) continue;
+        const Vec2 d = T::doorstep(id);
+        const float d2 = dist2(w.player.x, w.player.z, d.x, d.z);
+        if (d2 < best) {
+            best = d2;
+            n.goal = true;
+            n.at = doorGoal(id);
+        }
+    }
+    return n;
+}
+
+NextStep to(std::string text, Vec3 at) { return {std::move(text), true, at}; }
+
+// The nearest of the cider's missing ingredients.
+Vec3 nearestMissing(const World& w) {
+    Vec3 out = ground(T::kHerbBed, 0.3f);
+    float best = 1e9f;
+    auto consider = [&](Vec3 p) {
+        const float d2 = dist2(w.player.x, w.player.z, p.x, p.z);
+        if (d2 < best) {
+            best = d2;
+            out = p;
+        }
+    };
+    if (w.apples < kApplesWanted)
+        for (const T::Tree& t : T::trees())
+            if (t.apple) consider(ground(t.at, 1.8f));
+    if (!w.rosemary) consider(ground(T::kHerbBed, 0.3f));
+    if (!w.cinnamon) consider(doorGoal(T::Market));
+    return out;
+}
+
+}  // namespace
+
+NextStep tonightStep(const World& w) {
     const int minute = static_cast<int>(gameMinutes(w));
+    const Vec3 hill = ground(T::kHill, 1.0f);
     if (w.form == Form::Cat) {
         switch (w.smoke) {
-            case SmokeState::Lost: return "Smoke's paw prints glow for a cat: follow them from Nana's herb bed";
-            case SmokeState::Waiting: return "Smoke is waiting where you left her: go back for her";
-            case SmokeState::Following: return "Lead Smoke up Lantern Hill, into the ring of stones";
+            case SmokeState::Lost: return to("Smoke's paw prints glow for a cat: follow them from Nana's herb bed", ground(T::kHerbBed, 0.3f));
+            case SmokeState::Waiting: return to("Smoke is waiting where you left her: go back for her", ground({w.smokeX, w.smokeZ}, 0.3f));
+            case SmokeState::Following: return to("Lead Smoke up Lantern Hill, into the ring of stones", hill);
             default: break;
         }
-        return nextStep(w);
+        return doorsStep(w);
     }
-    if (w.bagDown || (canChooseCostume(w) && w.costume == Costume::None)) return nextStep(w);  // fetch the bag first (M3)
+    if (w.bagDown || (canChooseCostume(w) && w.costume == Costume::None)) return doorsStep(w);  // fetch the bag first (M3)
     const bool knocking = housesLeft(w) > 0 && minute < kPorchLightsOff;
-    if (!w.lit[NanaWindow] && !(knocking && knockedAnywhere(w))) return kNanaLanternNext;
+    if (!w.lit[NanaWindow] && !(knocking && knockedAnywhere(w))) return to(kNanaLanternNext, lanternGoal(NanaWindow));
     if (knocking) {
-        if (w.knocked[T::Okafor] && !w.lit[OkaforPorch]) return "Light Grandpa Ike's lantern on the Okafors' porch";
-        return nextStep(w);
+        if (w.knocked[T::Okafor] && !w.lit[OkaforPorch]) return to("Light Grandpa Ike's lantern on the Okafors' porch", lanternGoal(OkaforPorch));
+        return doorsStep(w);
     }
     for (int i = 0; i < kLanternCount; ++i)
         if (!w.lit[static_cast<size_t>(i)] && lanternReady(w, i))
-            return std::string("Light ") + kLanterns[i].name + ", " + kLanterns[i].forWhom;
+            return to(std::string("Light ") + kLanterns[i].name + ", " + kLanterns[i].forWhom, lanternGoal(i));
     if (!w.cider) {
-        if (w.stirs > 0 || (w.apples >= kApplesWanted && w.rosemary && w.cinnamon)) return "Brew Nana's cider at the iron pot behind her house";
-        return "For Nana's cider: " + missing(w);
+        if (w.stirs > 0 || (w.apples >= kApplesWanted && w.rosemary && w.cinnamon))
+            return to("Brew Nana's cider at the iron pot behind her house", ground(T::kFirePit, 0.6f));
+        return to("For Nana's cider: " + missing(w), nearestMissing(w));
     }
-    if (w.smoke == SmokeState::Lost) return "Find Smoke, Nana's old cat: only a cat can see her trail (Q)";
-    if (w.smoke == SmokeState::Waiting) return "Smoke waits where you left her: be a cat to lead her";
-    if (!w.lit[HaleStep]) return "June Hale's lantern: Mr. Hale's back gate is latched from inside. A cat could open it";
-    if (!w.lit[LychLantern]) return "The lychgate is bolted from inside. A cat could find a way into the churchyard";
+    if (w.smoke == SmokeState::Lost) return to("Find Smoke, Nana's old cat: only a cat can see her trail (Q)", ground(T::kHerbBed, 0.3f));
+    if (w.smoke == SmokeState::Waiting) return to("Smoke waits where you left her: be a cat to lead her", ground({w.smokeX, w.smokeZ}, 0.3f));
+    if (!w.lit[HaleStep])
+        return to("June Hale's lantern: Mr. Hale's back gate is latched from inside. A cat could open it",
+                  ground({T::kHaleYard.x0, T::kHaleGateZ}, 1.0f));
+    if (!w.lit[LychLantern])
+        return to("The lychgate is bolted from inside. A cat could find a way into the churchyard", lanternGoal(LychLantern));
     // Only before 9 pm, with the Okafors' porch still lit (after it, the lantern is ready and the loop above names it).
-    if (!w.lit[OkaforPorch]) return "Knock at the Okafors' before 9 pm: Grandpa Ike's lantern is theirs to ask";
+    if (!w.lit[OkaforPorch]) return to("Knock at the Okafors' before 9 pm: Grandpa Ike's lantern is theirs to ask", doorGoal(T::Okafor));
     if (!w.offered) {
-        if (!nanaArrived(w)) return "Meet Nana at the stones on Lantern Hill (about " + minuteText(nanaArrives()) + " pm)";
-        return "Make the offering with Nana in the middle of the stones";
+        if (!nanaArrived(w)) return to("Meet Nana at the stones on Lantern Hill (about " + minuteText(nanaArrives()) + " pm)", hill);
+        return to("Make the offering with Nana in the middle of the stones", hill);
     }
-    if (w.smoke == SmokeState::AtCircle) return "Wait with Nana and Smoke for midnight";
-    if (w.smoke == SmokeState::Home) return "Smoke is home. The night carries on: walk home when you like";
-    return nextStep(w);
+    if (w.smoke == SmokeState::AtCircle) return {"Wait with Nana and Smoke for midnight"};
+    if (w.smoke == SmokeState::Home) return {"Smoke is home. The night carries on: walk home when you like"};
+    return doorsStep(w);
 }
+
+std::string tonightNext(const World& w) { return tonightStep(w).text; }
 
 std::string tonightAlso(const World& w) {
     if (w.form != Form::Girl || w.bagDown || (canChooseCostume(w) && w.costume == Costume::None)) return "";
