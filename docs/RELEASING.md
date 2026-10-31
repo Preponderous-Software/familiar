@@ -45,6 +45,12 @@ to `main` (`browser.yml`).
    If the workflow fails, fix the cause and re-run it (`gh run rerun <id>`); uploads replace assets
    of the same name.
 
+4. **itch.io updates itself.** The workflow's `Push to itch.io` job sends the same web package to
+   <https://danthetechman.itch.io/familiar> (channel `html5`, version = the tag) with butler. It
+   needs the repository secret `BUTLER_API_KEY` (an itch.io API key, set by the owner:
+   `gh secret set BUTLER_API_KEY -R Preponderous-Software/familiar`); without it the job skips
+   with a notice. The page's text, cover and visibility are edited on itch.io, not here.
+
 Pushing a version tag without creating a release also works: the workflow builds the tag and
 creates a pre-release for it with generated notes.
 
