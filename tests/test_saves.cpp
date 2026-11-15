@@ -333,11 +333,19 @@ int main(int argc, char** argv) {
         CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v3-bright-asking.save"), askingNow, &why));
         CHECK(decodeSave(readAll(FAMILIAR_FIXTURES "/v3-home.save"), endNow, &why));
     }
-    for (const char* v : {"v1", "v2", "v3"}) {
+    // Each fixture is named in full, so a reader (and the release gate) can
+    // see which files this test loads.
+    struct Moments {
+        const char* asking;
+        const char* home;
+    };
+    for (const Moments& f : {Moments{"v1-bright-asking.save", "v1-home.save"},
+                             Moments{"v2-bright-asking.save", "v2-home.save"},
+                             Moments{"v3-bright-asking.save", "v3-home.save"}}) {
         const std::string dirName = FAMILIAR_FIXTURES "/";
         World asking;
         std::string why;
-        CHECK(decodeSave(readAll(dirName + v + "-bright-asking.save"), asking, &why));
+        CHECK(decodeSave(readAll(dirName + f.asking), asking, &why));
         CHECK(asking.asking == T::Bright && asking.costume == Costume::Ghost);
         // Formats 1 and 2 knew nothing of the bag, the spirits or the
         // witchcraft: each loads with them as a new night has them.
@@ -349,7 +357,7 @@ int main(int argc, char** argv) {
         CHECK(playthroughDone(asking) && lanternsLit(asking) == kLanternCount && asking.offered);
 
         World end;
-        CHECK(decodeSave(readAll(dirName + v + "-home.save"), end, &why));
+        CHECK(decodeSave(readAll(dirName + f.home), end, &why));
         // Home on Nana's doorstep with 18 candy, every lit porch visited.
         CHECK(end.candy == 18 && autopilotTarget(end) < 0 && atDoor(end) == T::Nana && !playthroughDone(end));
         CHECK(fingerprint(end) == fingerprint(endNow));
