@@ -577,8 +577,8 @@
           "wait": 1200
         },
         {
-          "until": "__docs.st().z > -0.5",
-          "max": 40,
+          "until": "__docs.st().z > -3",
+          "max": 15,
           "steps": [
             {
               "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 400)); familiar.stick(0, 0)"
@@ -684,8 +684,8 @@
           "wait": 1200
         },
         {
-          "until": "__docs.st().z > -0.5",
-          "max": 40,
+          "until": "__docs.st().z > -3",
+          "max": 15,
           "steps": [
             {
               "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 400)); familiar.stick(0, 0)"
@@ -699,13 +699,13 @@
           "wait": 1500
         },
         {
-          "repeat": 16,
+          "repeat": 12,
           "steps": [
             {
-              "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 450)); familiar.stick(0, 0)"
+              "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 2500)); familiar.stick(0, 0)"
             },
             {
-              "wait": 300
+              "wait": 500
             },
             {
               "capture": true
@@ -761,6 +761,9 @@
         },
         {
           "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
         },
         {
           "waitFor": "/refused/.test(__docs.st().message)",
@@ -973,7 +976,7 @@
       "session": "phone-landscape",
       "steps": [
         {
-          "js": "familiar.toDoorstep(5); __docs.pose(Math.PI / 2 + 0.3, 0)"
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI - 0.35, 0.05)"
         },
         {
           "wait": 3000
@@ -986,25 +989,34 @@
       "url": "https://github.com/Preponderous-Software/familiar/releases/tag/0.1.1",
       "device": {
         "width": 1100,
-        "height": 900
+        "height": 420
       },
-      "ready": "document.querySelector('[data-test-selector=\"release-card\"], .Box')",
+      "ready": "document.readyState === 'complete'",
       "initScript": [],
       "css": "",
       "caption": "The 0.1.1 release's downloads.",
       "alt": "The Familiar 0.1.1 release page on GitHub listing its download assets",
       "steps": [
         {
+          "js": "window.scrollTo(0, document.body.scrollHeight)"
+        },
+        {
+          "wait": 1500
+        },
+        {
           "waitFor": "[...document.querySelectorAll('a')].some(a => /web\\.zip$/.test(a.textContent.trim()))",
           "timeout": 60000
         },
         {
-          "js": "[...document.querySelectorAll('a')].find(a => /web\\.zip$/.test(a.textContent.trim())).scrollIntoView({block:'center'})"
+          "js": "const h = [...document.querySelectorAll('summary, h2, span')].find(e => e.textContent.trim().startsWith('Assets')); window.scrollTo(0, h.getBoundingClientRect().top + scrollY - 16)"
         },
         {
           "wait": 800
         }
-      ]
+      ],
+      "context": {
+        "bypassCSP": true
+      }
     },
     {
       "name": "night-timeline",
