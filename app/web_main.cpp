@@ -87,7 +87,7 @@ EMSCRIPTEN_KEEPALIVE void familiar_captured(int on) {
     if (g) g->session->setCaptured(on != 0);
 }
 // Saves now (the page calls this on its Save button and when it is hidden); 1 on success.
-EMSCRIPTEN_KEEPALIVE int familiar_save() { return g && g->session->save("Saved.") ? 1 : 0; }
+EMSCRIPTEN_KEEPALIVE int familiar_save() { return g && g->session->save(true) ? 1 : 0; }
 EMSCRIPTEN_KEEPALIVE void familiar_restart() {
     if (g) g->session->restart();
 }
@@ -181,6 +181,8 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_status() {
     jsonString(o, word.empty() ? useLabel(w) : word);
     o += ",\"message\":";
     jsonString(o, s.message());
+    o += ",\"cue\":";
+    jsonString(o, s.cue());
     o += ",\"prompt\":";
     jsonString(o, play::prompt(w));
     o += ",\"hud\":[";

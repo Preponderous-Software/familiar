@@ -45,10 +45,13 @@ public:
     void frame(double dt);
     bool running() const { return running_; }
     void restart();
-    // Writes the save now; `note` is shown on success. False with no slot or on failure.
-    bool save(const char* note);
-    // Loads the slot's save (or its previous save), if it can.
-    bool load();
+    // Writes the save now. On success it says "Saved at 6:41 pm." when
+    // `announce`, or shows a small "Saved 6:41 pm" note (the autosave, a quit).
+    // False with no slot or on failure.
+    bool save(bool announce);
+    // Loads the slot's save (or its previous save), if it can, and says which
+    // (by the night's clock); `resuming` is the game starting up on it.
+    bool load(bool resuming = false);
     // Stand on a house's doorstep, facing the door: for the browser smoke test,
     // whose software-rendered frames are too slow to steer there.
     void toDoorstep(int house);
@@ -78,6 +81,7 @@ public:
     bool captured() const { return captured_; }
     bool help() const { return help_; }
     const std::string& message() const { return message_; }
+    const std::string& cue() const { return cue_; }
 
 private:
     void adopt(const World& w);
@@ -102,6 +106,8 @@ private:
     float eyeY_ = 0;
     std::string message_;
     double messageUntil_ = 0;
+    std::string cue_;  // a save just written, shown small at the top right
+    double cueUntil_ = 0;
     int64_t answerSeen_ = -1;
     Form formSeen_ = Form::Girl;
     Costume costumeSeen_ = Costume::None;

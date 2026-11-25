@@ -45,7 +45,7 @@ Session::Session(strata::Engine& engine, const SessionOptions& options)
             if (key == "sound") sound_.setMuted(value == 0);
     }
     restart();
-    if (!options_.slot.empty() && !options_.fresh && hasSave(options_.slot)) load();
+    if (!options_.slot.empty() && !options_.fresh && hasSave(options_.slot)) load(true);
     if (!options_.browser) capture(true);
 }
 
@@ -75,7 +75,7 @@ void Session::restart() {
     say(kGreeting, 10);
 }
 
-bool Session::save(const char* note) {
+bool Session::save(bool announce) {
     if (options_.slot.empty()) return false;
     std::string why;
     lastSave_ = clock_;
@@ -83,18 +83,33 @@ bool Session::save(const char* note) {
         say("Could not save: " + why, 6);
         return false;
     }
-    if (note && *note) say(note, 2);
+    // When the save is from, in the night's own time (#30): said for F5 and
+    // the Save button, a small note for the autosave.
+    if (announce) say("Saved at " + clockText(w_) + ".", 3);
+    else {
+        cue_ = "Saved " + clockText(w_);
+        cueUntil_ = clock_ + 3;
+    }
     if (options_.afterSave) options_.afterSave();
     return true;
 }
 
-bool Session::load() {
+bool Session::load(bool resuming) {
     if (options_.slot.empty()) return false;
     World loaded;
     const LoadResult r = loadSave(options_.slot, loaded);
-    if (r.ok) adopt(loaded);
-    say(r.message, r.ok && !r.fromPrevious ? 4 : 10);
-    return r.ok;
+    if (!r.ok) {
+        say(r.message, 10);
+        return false;
+    }
+    adopt(loaded);
+    // Say which save it was, by the night's clock (#30), and that a night
+    // carried on from a quit goes on (#19).
+    const std::string when = clockText(loaded);
+    if (r.fromPrevious) say(r.message + " It is from " + when + ".", 10);
+    else if (resuming) say("Loaded your save from " + when + ". The night goes on.", 5);
+    else say("Loaded your save from " + when + ".", 4);
+    return true;
 }
 
 void Session::toPlace(int spot) {
@@ -188,8 +203,10 @@ void Session::press(int scancode) { onKeyDown(scancode, false); }
 void Session::onKeyDown(int scancode, bool repeat) {
     if (scancode == kEscape) {
         if (options_.browser) return;
-        if (captured_) capture(false);
-        else running_ = false;
+        if (captured_) {
+            capture(false);
+            say("The mouse is free. Esc again saves and quits; click to play on.", 5);  // #19, #30
+        } else running_ = false;
         return;
     }
     if (scancode == kF1) {
@@ -197,7 +214,7 @@ void Session::onKeyDown(int scancode, bool repeat) {
         return;
     }
     if (scancode == kF5) {
-        if (!repeat && !save("Saved.") && options_.slot.empty()) say("Saving is off here.", 3);
+        if (!repeat && !save(true) && options_.slot.empty()) say("Saving is off here.", 3);
         return;
     }
     if (scancode == kF9) {
@@ -284,13 +301,14 @@ void Session::step() {
 void Session::frame(double dt) {
     clock_ += dt;
     if (!message_.empty() && clock_ > messageUntil_) message_.clear();
+    if (!cue_.empty() && clock_ > cueUntil_) cue_.clear();
     pending_ += dt;
     if (pending_ > 0.25) pending_ = 0.25;
     while (pending_ >= 1.0 / kTickRate) {
         pending_ -= 1.0 / kTickRate;
         step();
     }
-    if (!options_.slot.empty() && clock_ - lastSave_ >= kAutosaveSeconds) save("");
+    if (!options_.slot.empty() && clock_ - lastSave_ >= kAutosaveSeconds) save(false);
     // What happened this frame, said together so one line never hides another.
     std::string said;
     double seconds = 0;
@@ -350,7 +368,7 @@ void Session::frame(double dt) {
     const float k = static_cast<float>(1.0 - std::exp(-dt * 12.0));
     eyeY_ += (target - eyeY_) * k;
     scene_.update(w_);
-    render(engine_, w_, help_ && !compact_ && notebook_ < 0, eyeY_, compact_, message_, cover_, notebook_);
+    render(engine_, w_, help_ && !compact_ && notebook_ < 0, eyeY_, compact_, message_, cover_, notebook_, cue_);
 }
 
 }  // namespace familiar::play
