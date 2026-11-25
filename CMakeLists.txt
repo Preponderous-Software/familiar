@@ -78,7 +78,7 @@ familiar_warnings(familiar_audio)
 
 if(FAMILIAR_BUILD_TESTS)
   enable_testing()
-  foreach(t movement town doors cat craft autopilot saves audio)
+  foreach(t movement town doors cat craft autopilot saves audio ways)
     add_executable(test_${t} tests/test_${t}.cpp)
     target_link_libraries(test_${t} PRIVATE familiar_sim familiar_save familiar_audio)
     target_compile_definitions(test_${t} PRIVATE FAMILIAR_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")

@@ -75,4 +75,16 @@ Routes routesTo(const World& w, int goal);
 // The place nearest a spot.
 int nearestPlace(Vec2 s);
 
+// Where the NEXT marker points on the way to a goal (#25): the goal itself
+// when the World's body can walk straight to `stand` (where to stand for it),
+// else the furthest place along the shortest way there that it can walk
+// straight to now (a gate, the end of a front walk, the bridge), so the
+// marker never leads into a house's side wall, a fence or the creek.
+struct Wayfinding {
+    Vec3 aim;      // where to draw the marker
+    float left;    // metres still to walk, by the ways
+    bool direct;   // aiming at the goal itself
+};
+Wayfinding wayfind(const World& w, Vec2 stand, Vec3 goal);
+
 }  // namespace familiar::ways
