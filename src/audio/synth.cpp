@@ -337,6 +337,17 @@ std::vector<float> step(Rng& r, Ground g, bool cat) {
     return out;
 }
 
+// Wrappers in the dropped candy bag stirring: a small bright crinkle, and now
+// and then the faintest tick of foil, quieter than candy going in.
+std::vector<float> wrappers(Rng& r, bool foil) {
+    std::vector<float> out = rustle(r, r.between(0.14f, 0.24f), 2500, 8000, 0.9f);
+    if (foil) {
+        out.resize(static_cast<size_t>(samples(0.5f)), 0.0f);
+        mix(out, chime({2093}, 0.0f, 0.08f, 0.4f, 0.05f), 0.05f, 1.0f);
+    }
+    return out;
+}
+
 // A gust in the leaves overhead.
 std::vector<float> gust(Rng& r) { return rustle(r, r.between(1.2f, 2.4f), 1200, 6000, 0.8f); }
 
@@ -389,6 +400,7 @@ Synth::Synth() {
         pads_.push_back(step(r, Ground::Leaves, true));
     }
     for (int i = 0; i < 4; ++i) gusts_.push_back(gust(r));
+    for (int i = 0; i < 4; ++i) wrappers_.push_back(wrappers(r, i == 3));
 }
 
 void Synth::play(Cue c) {
@@ -427,6 +439,7 @@ float Synth::next() {
     glide(now_.creek, target_.creek);
     glide(now_.owl, target_.owl);
     glide(now_.purr, target_.purr);
+    glide(now_.bag, target_.bag);
     time_ += static_cast<double>(kDt);
     const double td = std::fmod(time_, 1000.0);  // for tones
     const float t = static_cast<float>(td);        // for slow swells and rhythms
@@ -462,6 +475,9 @@ float Synth::next() {
         pulse *= pulse;
         s += now_.purr * 0.12f * (0.6f + 0.4f * std::sin(kTwoPi * 0.45f * t)) * pulse * (5.0f * purrLow_ + 0.3f * tone(48.0, td));
     }
+
+    // The dropped bag's wrappers: more often, and louder, the nearer it is.
+    if (now_.bag > 0.001f) every(wrapperClock_, 0.5f + 1.0f * now_.bag, wrappers_, 0.12f + 0.33f * now_.bag);
 
     // Footsteps, as fast as the body walks.
     if (target_.steps > 0) {

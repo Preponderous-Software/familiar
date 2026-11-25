@@ -60,7 +60,7 @@ int main(int, char**) {
     {
         Synth synth;
         Ambience a;
-        a.wind = a.leaves = a.creek = a.owl = a.purr = 1;
+        a.wind = a.leaves = a.creek = a.owl = a.purr = a.bag = 1;
         a.steps = 3;
         synth.setAmbience(a);
         for (int c = 0; c < static_cast<int>(Cue::Count); ++c) synth.play(static_cast<Cue>(c));
@@ -128,6 +128,32 @@ int main(int, char**) {
         cat.smokeZ = cat.player.z;
         const Ambience a = ambience(cat, eyePosition(cat), 2);
         CHECK(a.purr > 0.9f && a.cat && a.steps == 2);
+
+        // The dropped bag's wrappers (#28): heard beside it, fainter a few
+        // steps off, not at all across town, and not by the cat.
+        CHECK(street.bag == 0);  // the bag in hand
+        World bag = w;
+        bag.bagDown = true;
+        bag.bag = {bag.player.x + 1.0f, 0.0f, bag.player.z};
+        const float beside = ambience(bag, eyePosition(bag), 0).bag;
+        bag.bag.x = bag.player.x + 6.0f;
+        const float steps = ambience(bag, eyePosition(bag), 0).bag;
+        bag.bag.x = bag.player.x + 30.0f;
+        const float across = ambience(bag, eyePosition(bag), 0).bag;
+        CHECK(beside > 0.9f && steps > 0.3f && steps < beside && across == 0);
+        bag.bag.x = bag.player.x + 1.0f;
+        bag.form = Form::Cat;
+        CHECK(ambience(bag, eyePosition(bag), 0).bag == 0);
+
+        // And the synth makes them: a few crinkles a second, gently.
+        Synth synth;
+        Ambience quiet;
+        quiet.bag = 1;
+        synth.setAmbience(quiet);
+        std::vector<float> out(static_cast<size_t>(kRate) * 4);
+        synth.render(out.data(), static_cast<int>(out.size()));
+        CHECK(finiteAndWithin(out, 1.0f));
+        CHECK(peak(out) > 0.01f && peak(out) < 0.5f);
     }
 
     // ---- The cues for what happens, and none for a jump.

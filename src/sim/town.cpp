@@ -231,7 +231,7 @@ const std::array<House, HouseCount> kHouses = {{
 }};
 
 const std::array<Vec2, kStreetlampCount> kStreetlamps = {{
-    {-78.0f, -5.0f}, {-58.0f, 5.0f}, {-40.0f, -5.0f}, {-22.0f, 5.0f}, {-2.0f, -5.0f}, {14.0f, 5.0f}, {28.0f, -5.0f},
+    {-78.0f, -4.6f}, {-58.0f, 4.6f}, {-40.0f, -4.6f}, {-22.0f, 4.6f}, {-2.0f, -4.6f}, {14.0f, 4.6f}, {28.0f, -4.6f},
 }};
 
 float creekX(float z) { return 52.0f + 2.5f * detSin(z * 0.035f) + 1.5f * detSin(z * 0.011f + 1.0f) - 1.5f * detSin(1.0f); }

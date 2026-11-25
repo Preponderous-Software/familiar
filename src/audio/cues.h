@@ -1,6 +1,7 @@
 // What Hollowell sounds like on Halloween night, worked out from the world:
 // the steady sounds (the wind and the dry leaves, the creek, an owl after
-// dark, footsteps, a purr while Smoke is close) and the one-off sounds of
+// dark, footsteps, a purr while Smoke is close, the wrappers in a dropped
+// candy bag stirring in the breeze) and the one-off sounds of
 // things happening (a knock and the door opening, candy in the bag, a meow,
 // a latch, a lantern lit, the cider stirred, the church bell on the hour,
 // Smoke going home at midnight). No device and no engine: the synth
@@ -25,6 +26,7 @@ struct Ambience {
     float creek = 0;   // near the water
     float owl = 0;     // after dark, more toward the woods
     float purr = 0;    // Smoke close by
+    float bag = 0;     // the dropped candy bag's wrappers, louder as Wren nears it
     float steps = 0;   // footsteps per second
     Ground ground = Ground::Leaves;
     bool cat = false;  // a cat's soft pads, not a girl's shoes

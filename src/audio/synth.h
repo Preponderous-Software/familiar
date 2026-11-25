@@ -47,14 +47,14 @@ private:
     uint32_t seed_ = 0x2545F491u;
     Ambience target_, now_;
     std::array<std::vector<float>, static_cast<size_t>(Cue::Count)> cues_;
-    std::vector<std::vector<float>> owls_, leafSteps_, roadSteps_, woodSteps_, pads_, gusts_;
+    std::vector<std::vector<float>> owls_, leafSteps_, roadSteps_, woodSteps_, pads_, gusts_, wrappers_;
     std::vector<Playing> playing_;
     int64_t clock_ = 0;      // samples rendered
     int64_t nextBell_ = 0;   // when the next stroke of the bell may start
     // The steady sounds' state.
     float windLow_ = 0, leafHigh_ = 0, leafLow_ = 0, creekLow_ = 0, creekHigh_ = 0, creekHigh2_ = 0, purrLow_ = 0;
     double time_ = 0;
-    float owlClock_ = 0, gustClock_ = 0, stepClock_ = 0;
+    float owlClock_ = 0, gustClock_ = 0, stepClock_ = 0, wrapperClock_ = 0;
 };
 
 }  // namespace familiar::audio

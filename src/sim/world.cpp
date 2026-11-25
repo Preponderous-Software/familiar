@@ -19,22 +19,84 @@ constexpr float kMaxPitch = 1.45f;  // just short of straight up or down
 constexpr Body kGirl{0.3f, 0.5f, 1.45f, 1.5f, 3.6f};
 constexpr Body kCat{0.15f, 1.6f, 0.28f, 2.2f, 5.5f};
 
+// How far to either side a blocked walk looks for a way past: enough to round
+// a lamp post or the end of a picket fence at a front gate, not enough to
+// find a way through a wall.
+constexpr float kAssistReach = 0.5f;
+constexpr int kAssistProbes = 5;
+// A slide along one axis is worth taking when it keeps at least this much of the step.
+constexpr float kSlideAtLeast = 0.25f;
+
+// Walking straight into the end of something narrow (a lamp post, the fence
+// beside a gate) stops dead, since neither axis on its own gets past it. If a
+// short sidestep, clear all the way, would let the walk go on, take one step
+// that way: the nearer side, and the left on a tie. move() asks first for the
+// side she is bearing toward, and only if nothing else moves her for either. Into a wall, nothing
+// within reach frees the way, so Wren stays put rather than drifting along it.
+bool sidestep(World& w, float dx, float dz, bool eitherSide) {
+    Player& p = w.player;
+    const float len = std::sqrt(dx * dx + dz * dz);
+    if (len <= 0) return false;
+    const float ux = -dz / len, uz = dx / len;  // to the left of the way she walks
+    // The lesser part of the way she walks, across the main axis of it.
+    const float mx = std::fabs(dx) < std::fabs(dz) ? dx : 0.0f, mz = std::fabs(dx) < std::fabs(dz) ? 0.0f : dz;
+    for (int k = 1; k <= kAssistProbes; ++k) {
+        const float off = kAssistReach * static_cast<float>(k) / kAssistProbes;
+        for (float side : {1.0f, -1.0f}) {
+            // First only toward the side she is already bearing (either, walking
+            // dead along an axis): stepping away would undo a slide past a rail's end.
+            if (!eitherSide && side * (ux * mx + uz * mz) < 0) continue;
+            // Clear the whole way across to the offset, then onward from it.
+            float feet = p.feet, f = 0;
+            bool clear = true;
+            for (int j = 1; j <= k && clear; ++j) {
+                const float o = side * kAssistReach * static_cast<float>(j) / kAssistProbes;
+                clear = standAt(w, w.form, p.x + ux * o, p.z + uz * o, feet, f);
+                feet = f;
+            }
+            if (!clear || !standAt(w, w.form, p.x + side * ux * off + dx, p.z + side * uz * off + dz, feet, f)) continue;
+            // One step's worth toward that side, no further than the offset itself.
+            const float s = std::fmin(len, off) * side;
+            if (!standAt(w, w.form, p.x + ux * s, p.z + uz * s, p.feet, f)) continue;
+            p.x += ux * s;
+            p.z += uz * s;
+            p.feet = f;
+            return true;
+        }
+    }
+    return false;
+}
+
 // Moves the player by (dx, dz), sliding along whatever blocks the way: each
 // axis is tried on its own, so walking into a fence at an angle follows it.
+// Walking nearly straight into something, where a slide would barely move
+// her, a sidestep round the end of it comes first.
 void move(World& w, float dx, float dz) {
     Player& p = w.player;
     float feet = 0;
     if (standAt(w, w.form, p.x + dx, p.z + dz, p.feet, feet)) {
         p.x += dx;
         p.z += dz;
-    } else if (standAt(w, w.form, p.x + dx, p.z, p.feet, feet)) {
-        p.x += dx;
-    } else if (standAt(w, w.form, p.x, p.z + dz, p.feet, feet)) {
-        p.z += dz;
-    } else {
+        p.feet = feet;
         return;
     }
-    p.feet = feet;
+    const float len = std::sqrt(dx * dx + dz * dz);
+    const bool slideX = std::fabs(dx) >= kSlideAtLeast * len, slideZ = std::fabs(dz) >= kSlideAtLeast * len;
+    for (int pass = 0; pass < 2; ++pass) {
+        // First the slides worth taking and a sidestep the way she bears; then
+        // any slide at all, and last a sidestep either way.
+        if ((pass || slideX) && dx != 0 && standAt(w, w.form, p.x + dx, p.z, p.feet, feet)) {
+            p.x += dx;
+            p.feet = feet;
+            return;
+        }
+        if ((pass || slideZ) && dz != 0 && standAt(w, w.form, p.x, p.z + dz, p.feet, feet)) {
+            p.z += dz;
+            p.feet = feet;
+            return;
+        }
+        if (sidestep(w, dx, dz, pass == 1)) return;
+    }
 }
 
 struct Fnv {
