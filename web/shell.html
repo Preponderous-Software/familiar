@@ -507,11 +507,13 @@
       call.restart();
       refresh();
     });
-    // Leaving the page (or hiding it, as a phone does before closing a tab) saves.
+    // Leaving the page (or hiding it, as a phone does before closing a tab)
+    // saves, and stores the sound choice first: M changes it inside the game,
+    // and the page only notices on its next refresh, up to 250 ms later.
     document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'hidden') call.save();
+      if (document.visibilityState === 'hidden') { refresh(); call.save(); }
     });
-    window.addEventListener('pagehide', function () { call.save(); });
+    window.addEventListener('pagehide', function () { refresh(); call.save(); });
     $('helpBtn').addEventListener('click', function () {
       if (document.pointerLockElement) document.exitPointerLock();
       $('help').style.display = 'block';
