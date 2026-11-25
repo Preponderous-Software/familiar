@@ -379,12 +379,18 @@ function colourCount(png) {
   }
   // Saves. Save now (and wait until IndexedDB has it), reload, and the night
   // is where and when it was.
+  // Frees the mouse and waits until the page says it is free. While the
+  // canvas holds pointer lock (after How to play or the notebook closes on a
+  // desktop), Chromium sends every mouse event to the canvas, so a real click
+  // on a top-bar button never lands; Playwright retries it until its timeout.
+  const freeMouse = async () => {
+    await page.evaluate(() => { if (document.pointerLockElement) document.exitPointerLock(); });
+    if (!(await page.waitForFunction(() => !document.pointerLockElement, null, { timeout: 10000 }).catch(() => false)))
+      await fail('the page kept pointer lock after exitPointerLock');
+  };
   const saveNow = async (why) => {
-    await page.evaluate(() => {
-      document.getElementById('saveNote').textContent = '';
-      if (document.pointerLockElement) document.exitPointerLock();
-    });
-    await page.waitForTimeout(300);
+    await page.evaluate(() => { document.getElementById('saveNote').textContent = ''; });
+    await freeMouse();
     // A real click on the Save button; if headless Chromium will not deliver
     // one (it has reported the top bar as intercepting it after pointer
     // lock), say what is under the button and fire the button's click.
@@ -406,15 +412,29 @@ function colourCount(png) {
     a.jokes === b.jokes && a.knocked === b.knocked && a.cat === b.cat && a.bagDown === b.bagDown && a.spiritsSeen === b.spiritsSeen &&
     a.haleGate === b.haleGate && a.lychgate === b.lychgate;
   // The Sound button turns the sound off, says so, and the page remembers it.
+  // The button toggles, so it must be pressed exactly once (issue #21): free
+  // the mouse first, so the real click lands, and fire the button's click
+  // only if the real one failed and the sound is still on. (Clicked under
+  // pointer lock, the real click timed out, the fallback turned the sound
+  // off, and a retried real click could still arrive once the Save step
+  // freed the mouse, turning it back on: the reload then rightly kept it on.)
   if ((await status()).muted) await fail('the sound starts off');
-  await page.locator('#soundBtn').click({ timeout: 10000 }).catch(() => page.locator('#soundBtn').dispatchEvent('click'));
+  await freeMouse();
+  await page.locator('#soundBtn').click({ timeout: 10000 }).catch(async (e) => {
+    console.log('(the Sound button did not take a real click: ' + String(e.message || e).split('\n')[0] + ')');
+    if (!(await status()).muted) await page.locator('#soundBtn').dispatchEvent('click');
+  });
   const quiet = await until((st) => st.muted, 5000);
   if (!quiet.muted) await fail('the Sound button did not turn the sound off');
   if ((await page.locator('#soundBtn').getAttribute('aria-pressed')) !== 'false') await fail('the Sound button does not show the sound is off');
   if (!/Sound off/.test(quiet.message)) await fail('turning the sound off was not said: ' + quiet.message);
+  // The page has stored the choice: the explicit signal the reload depends on.
+  if (!(await page.waitForFunction(() => localStorage.getItem('familiar-sound') === 'off', null, { timeout: 5000 }).catch(() => false)))
+    await fail('the page did not store the sound choice: ' + (await page.evaluate(() => localStorage.getItem('familiar-sound'))));
   const before = await status();  // the save's tick is between this and the next
   await saveNow('saving');
   const saved = await status();
+  if (!saved.muted) await fail('the sound came back on before the reload: ' + saved.message);
   await open(true);
   let back = await until((st) => /Loaded your save/.test(st.message), 10000);
   console.log(`after a reload: at (${back.x}, ${back.z}) at ${back.clock}, candy ${back.candy}, costume ${back.costume}; "${back.message}"`);
@@ -423,7 +443,8 @@ function colourCount(png) {
   if (back.tick < before.tick || back.tick - saved.tick > 30 * 10)
     await fail(`the time of night did not survive a reload (saved between ${before.tick} and ${saved.tick}; back at ${back.tick})`);
   if (!/Loaded your save/.test(back.message)) await fail('no "Loaded your save" message after a reload: ' + back.message);
-  if (!back.muted) await fail('the sound came back on after a reload');
+  if (!back.muted)
+    await fail('the sound came back on after a reload (stored: ' + (await page.evaluate(() => localStorage.getItem('familiar-sound'))) + ')');
   if (await page.locator('#help').isVisible()) await fail('How to play came back after it was closed once');
   await page.screenshot({ path: path.join(outDir, 'familiar-reloaded.png'), timeout: 180000 });
 
