@@ -197,7 +197,7 @@ Year, the Rede, why lanterns go in windows, guising, why a turnip came before th
 black cat in folklore, and the secrets. The pages about real belief and history cite their sources
 and say where the game invents.
 
-![Wren's notebook open on its Samhain and Guising pages, with source keys like [S1]](docs/images/notebook.jpg)
+![Wren's notebook open on its Samhain and Guising pages, each ending with its sources in RESEARCH.md](docs/images/notebook.jpg)
 
 *The notebook's Samhain page: history, today's practice, and where the game invents, with sources.*
 
