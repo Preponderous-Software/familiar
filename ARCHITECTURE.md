@@ -48,6 +48,35 @@ cat's way over Mr. Hale's fence and through the hedge gap, the bridge and the hi
 for a point a little along the stretch of the shortest way that leaves the least to walk and that
 it can walk straight onto. The tests check that every stretch can be walked by the body it is for.
 
+## Wayfinding
+
+The HUD's NEXT line and its marker come from `tonightStep()` (`src/sim/craft.cpp`): the line's
+text, the place it names (`at`, where the marker is drawn) and where to stand for it (`stand`: a
+door's doorstep, a lantern's spot). For the cat looking for Smoke, the place is a few metres on
+along her paw prints from the nearest of them, so the marker leads along the trail and never back
+to the herb bed. `wayfind()` (`src/sim/ways.*`) then decides where the marker points: at the place
+itself when Wren (or the cat) can walk straight to `stand`; otherwise at the furthest place on the
+shortest way there that she can walk straight to now, over the same graph of the town's ways the
+autopilot walks (the street, the front walks, the side passages, open gates, the bridge, the hill
+path). So the marker goes round a house's side wall, a fence without a gate, and the creek, and
+its distance is the distance by the ways. The view (`src/play/view.cpp`) draws it: a "v" over the
+place, a "^" or "v" at the top or bottom edge when it is ahead but out of view, or an arrow at the
+side by its bearing, kept clear of the HUD. `tests/test_ways.cpp` follows the marker step by step
+and checks that it gets there.
+
+```mermaid
+flowchart LR
+    W[World] --> TS["tonightStep()<br/>text, at, stand"]
+    TS --> HUD[NEXT line]
+    W --> WF
+    TS --> WF["wayfind()<br/>straight walk to stand?"]
+    G["town's ways<br/>(sim/ways.cpp graph)"] --> WF
+    WF -- yes --> AT[aim at the place]
+    WF -- no --> WP["aim at the furthest waypoint<br/>in a straight walk: gate, walk, bridge"]
+    AT --> M["marker: v over it,<br/>^ / v at the edge, or < >"]
+    WP --> M
+```
+
 ## The town and climbing
 
 `src/sim/town.*` holds one fixed layout. Every solid thing is a `Solid`: a box or an upright

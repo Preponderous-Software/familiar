@@ -142,6 +142,13 @@ if(FAMILIAR_WITH_STRATA)
   target_link_libraries(familiar PRIVATE familiar_play)
   target_compile_definitions(familiar PRIVATE FAMILIAR_VERSION="${PROJECT_VERSION}")
   familiar_warnings(familiar)
+  # Screenshots of the NEXT marker for docs/screenshots/wayfinding (a developer's tool).
+  option(FAMILIAR_SHOTS "Build tools/wayfinding_shots" OFF)
+  if(FAMILIAR_SHOTS)
+    add_executable(wayfinding_shots tools/wayfinding_shots.cpp)
+    target_link_libraries(wayfinding_shots PRIVATE familiar_play)
+    familiar_warnings(wayfinding_shots)
+  endif()
 endif()
 
 # emcmake cmake -S . -B build-web -DFAMILIAR_WITH_STRATA=OFF -DFAMILIAR_WEB=ON:
