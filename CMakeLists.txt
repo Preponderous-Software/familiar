@@ -53,6 +53,7 @@ add_library(familiar_sim STATIC
   src/sim/notebook.cpp
   src/sim/npc.cpp
   src/sim/town.cpp
+  src/sim/ways.cpp
   src/sim/world.cpp)
 target_include_directories(familiar_sim PUBLIC src)
 familiar_warnings(familiar_sim)
