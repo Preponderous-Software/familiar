@@ -1,6 +1,7 @@
 #include "play/view.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdio>
 
@@ -10,6 +11,7 @@
 #include "sim/doors.h"
 #include "sim/notebook.h"
 #include "sim/town.h"
+#include "sim/ways.h"
 
 namespace familiar::play {
 
@@ -27,7 +29,8 @@ constexpr bridge::Rgb kStreetColor{1.0f, 0.82f, 0.55f};
 constexpr bridge::Rgb kLanternColor{1.0f, 0.62f, 0.25f};
 constexpr float kLabelRange = 22.0f;
 constexpr float kLabelNear = 3.0f;
-constexpr float kGoalNear = 3.5f;  // the NEXT marker hides this close to its place
+constexpr float kGoalNear = 3.5f;  // the NEXT marker hides this close to its place, once E does something
+constexpr float kGoalGone = 1.0f;  // and this close, whatever E does
 
 StrataCamera lookFrom(Vec3 eye, float yaw, float pitch, float aspect, float nearPlane) {
     const Vec3 d = lookDirection(yaw, pitch);
@@ -52,7 +55,7 @@ void text(std::vector<StrataText>& out, std::vector<std::string>& keep, float x,
 float nightness(float sunElevation) { return clampf(-sunElevation / 6.0f, 0.0f, 1.0f); }
 
 // The jack-o'-lanterns' candle flames, and the streetlamps' glow, as soft points.
-void drawFlames(strata::Engine& engine, const World& w, float night) {
+void drawFlames(strata::Engine& engine, const World& w, float night, const NextStep& next) {
     std::vector<StrataPoint> pts;
     const float t = static_cast<float>(w.tick) / kTickRate;
     for (int i = 0; i < T::HouseCount; ++i) {
@@ -98,7 +101,7 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
         for (int k = 0; k < 2; ++k) {
             StrataPoint q{};
             q.position[0] = a.x;
-            q.position[1] = a.y + (k ? 0.18f : 0.3f);
+            q.position[1] = a.y + (k ? 0.3f : 0.32f);  // over the rim: inside the jar, the glass would hide it
             q.position[2] = a.z;
             q.size_pixels = 3.0f;
             q.world_diameter = k ? 0.75f : 0.16f;
@@ -133,10 +136,12 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
         soft({w.bag.x, w.bag.y + 0.35f, w.bag.z}, 0.45f, 1.0f, 0.9f, 0.55f, glint);
         soft({w.bag.x, w.bag.y + 0.35f, w.bag.z}, 1.4f, 1.0f, 0.75f, 0.35f, 0.25f * glint);
     }
-    if (const NextStep n = tonightStep(w); n.goal) {
-        const float dx = n.at.x - eye.x, dz = n.at.z - eye.z;
-        if (dx * dx + dz * dz > kGoalNear * kGoalNear)
-            soft(n.at, 0.9f, 0.75f, 0.85f, 1.0f, 0.35f + 0.15f * std::sin(t * 3.0f));
+    // It glows near, too, where the marker hides: on the Okafors' porch, the
+    // jar beside the pumpkin is the place, not the jack-o'-lantern (#29).
+    if (next.goal) {
+        const float dx = next.at.x - eye.x, dz = next.at.z - eye.z;
+        const bool near = dx * dx + dz * dz <= kGoalNear * kGoalNear;
+        soft(next.at, near ? 0.6f : 0.9f, 0.75f, 0.85f, 1.0f, (near ? 0.5f : 0.35f) + 0.15f * std::sin(t * 3.0f));
     }
     // What E would use, in reach: a pulsing glint on the lantern jar, or by the door.
     {
@@ -163,7 +168,7 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
                 const float side = k % 2 ? 0.07f : -0.07f;
                 const float x = a.x + dx * s / len + nx * side, z = a.z + dz * s / len + nz * side;
                 const float ex = x - eye.x, ez = z - eye.z;
-                if (ex * ex + ez * ez > 28.0f * 28.0f) continue;
+                if (ex * ex + ez * ez > 40.0f * 40.0f) continue;
                 const float y = T::kBridge.contains(x, z) ? T::kBridgeDeck : T::groundHeight(x, z);
                 soft({x, y + 0.03f, z}, 0.13f, 0.55f, 0.85f, 1.0f, 0.75f);
             }
@@ -259,6 +264,98 @@ bool toScreen(const StrataCamera& cam, Vec3 p, int32_t width, int32_t height, fl
     x = (c[0] / c[3] * 0.5f + 0.5f) * static_cast<float>(width);
     y = (0.5f - c[1] / c[3] * 0.5f) * static_cast<float>(height);
     return x > 0 && x < static_cast<float>(width) && y > 0 && y < static_cast<float>(height);
+}
+
+// The marker's way (sim/ways.h), worked out again only when Wren has moved
+// a little, changed form, a gate has opened or NEXT names another place: a
+// few milliseconds of straight-walk checks are too many for every frame.
+ways::Wayfinding markerWay(const World& w, const NextStep& next) {
+    struct Cache {
+        bool valid = false;
+        float x = 0, z = 0, feet = 0;
+        Form form = Form::Girl;
+        std::array<bool, T::GateCount> gates{};
+        Vec2 stand{};
+        Vec3 at{};
+        ways::Wayfinding way{};
+    };
+    static Cache c;
+    const float dx = w.player.x - c.x, dz = w.player.z - c.z;
+    if (!c.valid || dx * dx + dz * dz > 0.25f * 0.25f || w.player.feet != c.feet || w.form != c.form || w.gateOpen != c.gates ||
+        next.stand.x != c.stand.x || next.stand.z != c.stand.z || next.at.x != c.at.x || next.at.y != c.at.y || next.at.z != c.at.z) {
+        c = {true, w.player.x, w.player.z, w.player.feet, w.form, w.gateOpen, next.stand, next.at, ways::wayfind(w, next.stand, next.at)};
+    }
+    ways::Wayfinding out = c.way;
+    if (out.direct) out.aim = next.at;
+    return out;
+}
+
+struct MarkText {
+    float x, y;
+    std::string s;
+};
+
+// The NEXT marker's text (#27): a "v" over `aim` with the distance, when it
+// is on screen and clear of the HUD (else a "^" under it); a "^" or "v" at
+// the top or bottom edge when it is ahead but above or below the view; else
+// an arrow at the side to turn toward it, by its bearing against the yaw (not
+// its projection, which flips for a place close by or behind the eye).
+template <typename OnHud>
+std::vector<MarkText> marker(const StrataCamera& camera, Vec3 eye, float yaw, float pitch, Vec3 aim, float metres, int32_t width,
+                             int32_t height, float aspect, OnHud onHud) {
+    std::vector<MarkText> out;
+    const std::string far = std::to_string(static_cast<int>(metres + 0.5f)) + " m";
+    const float W = static_cast<float>(width), H = static_cast<float>(height);
+    const float glyph = gTextSize * 0.8f;
+    const float farWide = glyph * static_cast<float>(far.size());
+    const float dx = aim.x - eye.x, dz = aim.z - eye.z, dy = aim.y - eye.y;
+    float turn = std::atan2(dx, -dz) - yaw;
+    while (turn > kPi) turn -= 2 * kPi;
+    while (turn < -kPi) turn += 2 * kPi;
+    const float halfX = std::atan(std::tan(kFovY * kPi / 360) * aspect);
+    // Below the HUD lines at x (and the page's cover), from y down.
+    auto clear = [&](float x0, float x1, float y, float tall) {
+        for (int k = 0; k < 40 && onHud(x0, y, x1, y + tall); ++k) y += gLine / 2;
+        return y;
+    };
+    float sx = 0, sy = 0;
+    if (toScreen(camera, aim, width, height, sx, sy)) {
+        const float x0 = std::min(sx - glyph / 2, sx - farWide / 2), x1 = std::max(sx + glyph / 2, sx + farWide / 2);
+        if (!onHud(x0, sy - gTextSize * 2.8f, x1, sy)) {
+            out.push_back({sx - glyph / 2, sy - gTextSize * 1.6f, "v"});
+            out.push_back({sx - farWide / 2, sy - gTextSize * 2.8f, far});
+        } else {  // the place is under the HUD: point up at it from below
+            const float y = clear(x0, x1, sy + gTextSize * 0.4f, gTextSize * 2.4f);
+            out.push_back({sx - glyph / 2, y, "^"});
+            out.push_back({sx - farWide / 2, y + gTextSize * 1.2f, far});
+        }
+        return out;
+    }
+    if (std::fabs(turn) < halfX) {  // ahead, but above or below the view
+        const float x = clampf(W / 2 + std::tan(turn) / std::tan(halfX) * W / 2, kMargin + farWide / 2, W - kMargin - farWide / 2);
+        const float up = std::atan2(dy, std::sqrt(dx * dx + dz * dz));
+        if (up > pitch) {
+            const float y = clear(x - farWide / 2, x + farWide / 2, kMargin, gTextSize * 2.4f);
+            out.push_back({x - glyph / 2, y, "^"});
+            out.push_back({x - farWide / 2, y + gTextSize * 1.2f, far});
+        } else {
+            const float y = std::round(H * 0.8f);
+            out.push_back({x - farWide / 2, y, far});
+            out.push_back({x - glyph / 2, y + gTextSize * 1.2f, "v"});
+        }
+        return out;
+    }
+    float ay = std::round(H * 0.58f);
+    if (turn < 0) {
+        ay = clear(kMargin, kMargin + gTextSize * 1.5f + farWide, ay, gTextSize);
+        out.push_back({kMargin, ay, "<"});
+        out.push_back({kMargin + gTextSize * 1.5f, ay, far});
+    } else {
+        const float right = W - kMargin - gTextSize;
+        out.push_back({right, ay, ">"});
+        out.push_back({right - gTextSize * 0.5f - farWide, ay, far});
+    }
+    return out;
 }
 
 }  // namespace
@@ -418,7 +515,8 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     fd.clear_flags = STRATA_CLEAR_COLOR | STRATA_CLEAR_DEPTH | STRATA_CLEAR_SKY;
     engine.beginFrame(fd);
     const float night = nightness(elevation);
-    drawFlames(engine, w, night);
+    const NextStep next = tonightStep(w);
+    drawFlames(engine, w, night, next);
     drawMoon(engine, w, eye);
 
     std::vector<StrataText> texts;
@@ -444,6 +542,38 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
         y += gLine;
     }
     const size_t hudTexts = texts.size();
+    // Whether a text box would sit on the HUD: its lines, as drawn, or the
+    // page's own HUD over the canvas (cover) on a phone.
+    auto onHud = [&](float x0, float y0, float x1, float y1) {
+        for (size_t i = 0; i < hudRight.size(); ++i) {
+            const float top = kMargin + gLine * static_cast<float>(i);
+            if (hudRight[i] > kMargin && y1 > top && y0 < top + gTextSize && x1 > kMargin && x0 < hudRight[i] + gTextSize) return true;
+        }
+        return x0 < cover.right && y0 < cover.bottom;
+    };
+    // Where the NEXT line points (#14): a "v" over the place, with how far it
+    // is; along the ways round walls, fences and the creek (#25); an arrow at
+    // the edge of the screen to turn or look toward it (#27).
+    std::vector<MarkText> mark;
+    float mx0 = 0, my0 = 0, mx1 = 0, my1 = 0;
+    if (next.goal) {
+        const ways::Wayfinding way = markerWay(w, next);
+        const float gx = next.at.x - eye.x, gz = next.at.z - eye.z;
+        // Close by, it gives way to the orange crosshair once E does something
+        // there; until then it stays, so a place hidden behind a porch post or a
+        // pumpkin is still marked (#29).
+        const float g2 = gx * gx + gz * gz;
+        if (!way.direct || (g2 > kGoalNear * kGoalNear || (g2 > kGoalGone * kGoalGone && !usable(prompt(w)))))
+            mark = marker(camera, eye, w.player.yaw, w.player.pitch, way.aim, way.direct ? std::sqrt(gx * gx + gz * gz) : way.left,
+                          width, height, aspect, onHud);
+        for (size_t i = 0; i < mark.size(); ++i) {
+            const float x0 = mark[i].x, y0 = mark[i].y, x1 = x0 + gTextSize * 0.8f * static_cast<float>(mark[i].s.size());
+            mx0 = i ? std::min(mx0, x0) : x0;
+            my0 = i ? std::min(my0, y0) : y0;
+            mx1 = i ? std::max(mx1, x1) : x1;
+            my1 = i ? std::max(my1, y0 + gTextSize) : y0 + gTextSize;
+        }
+    }
     // The names of places nearby, fading with distance.
     for (const Place& place : places(w)) {
         const float dx = place.at.x - eye.x, dz = place.at.z - eye.z;
@@ -460,37 +590,11 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
             if (sy + gTextSize > top && sy < top + gTextSize && hudRight[i] + gTextSize > left) covered = true;
         }
         if (left < cover.right && sy < cover.bottom) covered = true;
+        if (!mark.empty() && left < mx1 && left + wide > mx0 && sy < my1 && sy + gTextSize > my0) covered = true;  // not under the marker
         if (!covered) text(texts, keep, left, sy, name, fade);
     }
-    // Where the NEXT line points (#14): a "v" over the place, with how far it is,
-    // or an arrow at the side of the screen to turn toward it.
-    if (const NextStep n = tonightStep(w); n.goal) {
-        const float dx = n.at.x - eye.x, dz = n.at.z - eye.z;
-        const float d = std::sqrt(dx * dx + dz * dz);
-        if (d > kGoalNear) {
-            const float goal[4] = {0.75f, 0.85f, 1.0f, 0.95f};
-            const std::string far = std::to_string(static_cast<int>(d + 0.5f)) + " m";
-            float sx = 0, sy = 0;
-            if (toScreen(camera, n.at, width, height, sx, sy)) {
-                text(texts, keep, sx - gTextSize / 2, sy - gTextSize * 1.6f, "v", goal);
-                text(texts, keep, sx - gTextSize * 0.5f * static_cast<float>(far.size()), sy - gTextSize * 2.8f, far, goal);
-            } else {
-                // Which way to turn: the bearing to the place, against the way she faces.
-                float turn = std::atan2(dx, -dz) - w.player.yaw;
-                while (turn > kPi) turn -= 2 * kPi;
-                while (turn < -kPi) turn += 2 * kPi;
-                const float ay = std::round(static_cast<float>(height) * 0.58f);
-                if (turn < 0) {
-                    text(texts, keep, kMargin, ay, "<", goal);
-                    text(texts, keep, kMargin + gTextSize * 1.5f, ay, far, goal);
-                } else {
-                    const float right = static_cast<float>(width) - kMargin - gTextSize;
-                    text(texts, keep, right, ay, ">", goal);
-                    text(texts, keep, right - gTextSize * (0.5f + static_cast<float>(far.size())), ay, far, goal);
-                }
-            }
-        }
-    }
+    const float goalInk[4] = {0.75f, 0.85f, 1.0f, 0.95f};
+    for (const auto& m : mark) text(texts, keep, m.x, m.y, m.s, goalInk);
     const size_t labelsEnd = texts.size();
     const std::string here = prompt(w);
     // The crosshair turns lantern-orange when E (or T) does something here.
