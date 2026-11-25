@@ -1,0 +1,119 @@
+{
+ "session": "s02",
+ "goal": "Follow the witchcraft and the cat: choose a costume and knock at a door or two, then follow the HUD's NEXT line and Wren's notebook (Tab) toward the Samhain thread: light the lanterns, become the cat (Q) to climb, squeeze through gaps and look for spirits, gather what the cider needs. On the cat's step, follow Smoke's paw-print trail with the NEXT marker and say how well it leads you. Get as far along the night's main thread as you can, and note anywhere you could not tell what to do or where to go, and anything that seems stuck.",
+ "build": {
+  "version": null,
+  "commit": "234260b"
+ },
+ "seed": 7,
+ "durationSec": 1064,
+ "outcome": "partial",
+ "findings": [
+  {
+   "severity": "major",
+   "category": "ux",
+   "title": "Cat/Samhain thread is never pointed to by NEXT until the player presses Q unprompted",
+   "detail": "From 5:26 to 6:13 pm NEXT only said 'Knock (E) where a porch light is on: N to go'. The paw-print goal ('Smoke's paw prints glow for a cat: follow them from Nana's herb bed') appeared only after I pressed Q on my own initiative. A player who follows NEXT alone would knock doors until 9 pm and might never learn the main thread exists. Expected NEXT (or Nana's greeting) to say 'try Q' / 'become the cat at the herb bed' once a door or two is done.",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; light Nana's lantern (E), knock 3 doors; watch NEXT; then pt key q",
+   "screenshot": "shots/catnext.jpg",
+   "tick": null
+  },
+  {
+   "severity": "major",
+   "category": "bug",
+   "title": "Paw-print step regresses near the creek bridge; marker leads off the bridge into a dark gully",
+   "detail": "Twice, right after NEXT changed to 'Over the creek, Smoke's paw prints lead to the old oak' (marker 6-13 m ahead), following the marker/prints for 4-6 s dropped me into the pitch-black creek gully or back onto the near bank, and NEXT reverted to 'Smoke's scent goes off toward the creek: follow her paw prints east' or 'find her trail, then follow it east' (marker jumped to 24 m). Only slow 3 s steps that kept to the bridge deck got me across. Expected the marker to stay on the bridge and the step not to go backwards once over the creek.",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; pt key q at the Garcias'; follow NEXT marker from Nana's herb bed east to the creek bridge; hold Shift_L+w 4-6 s toward the marker after 'Over the creek' appears",
+   "screenshot": "shots/regress.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Paw-print trail is easy to lose: NEXT flips to 'find her trail' after a few seconds of hurrying",
+   "detail": "The marker is a carrot ~8 m ahead on the trail and does follow Smoke's prints (good), but the trail winds and in the dark it is easy to overshoot; NEXT flipped to 'find her trail, then follow it east' twice. There is no indication of how long the trail is or progress along it. The trail step took ~30 game minutes (6:18-7:47).",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; pt key q; follow NEXT from the herb bed with pt hold Shift_L+w 6-7",
+   "screenshot": "shots/losttrail.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Ike's lantern on the Okafors' porch has no visible marker and does not visibly light",
+   "detail": "After the joke, the 'E light Grandpa Ike's lantern' prompt was already active at the door, so I lit it without ever seeing it. Stepping back along the porch, I could not tell which object was Ike's lantern or see anything newly lit (the wall lantern above the door still looked dark).",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; walk to the Okafors' door, pt key e, pt key t, pt key e, pt hold s 1.5, look along the porch",
+   "screenshot": "shots/ike2b.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Edge-arrow marker draws over the interaction prompt line",
+   "detail": "Right after lighting Nana's lantern the edge arrow '20 m >' was drawn on top of the prompt 'Nana's door. The neighbours' porches are lit', producing 'li20 m>'. In other places the '3 m' marker sat on the 'come closer to light it' prompt.",
+   "repro": "pt start ...; pt key 4; turn right ~90 deg; walk to Nana's window lantern; pt key e",
+   "screenshot": "shots/overlap1.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "ux",
+   "title": "House-name labels overlap the NEXT card",
+   "detail": "'Mr. Hale's' label drawn inside the NEXT text ('follow her paw Mr. Hale's'); 'The creek bridge' label likewise drawn across the top HUD card. Labels are not kept clear of the HUD.",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; as the cat on the paw-print trail near Mr. Hale's",
+   "screenshot": "shots/labelov.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "balance",
+   "title": "After leading Smoke to the stones, NEXT sends Wren 239 m back for the candy bag",
+   "detail": "Turning back into Wren on Lantern Hill gives 'Fetch your candy bag from where you changed (E)', marker 239 m. With the clock past 8 pm, that is a long backtrack (and at this harness's walking speed, minutes of real time). The previous NEXT as the cat at the stones ('Climb, slip through gaps, meet spirits. Q to be Wren') also had no marker. Expected either a hint before changing that the bag stays behind (it was said once in the cat toast) or a nearer pickup.",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; reach the stones with Smoke, pt key q",
+   "screenshot": "shots/f9.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "text",
+   "title": "Notebook shows developer-facing 'Sources in RESEARCH.md: S1, S2...' line",
+   "detail": "Samhain page 2 of 2 ends with 'Sources in RESEARCH.md: S1, S2, S3, S4, S5, S15', which means nothing to a player. Pages otherwise fit and have a clear 'Page N of M' indicator.",
+   "repro": "pt start ...; light Nana's lantern; pt key Tab; pt key Right",
+   "screenshot": "shots/nb2b.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "perf",
+   "title": "Very slow movement and dropped mouse-look on the shared software renderer",
+   "detail": "Holding Shift+W for 10 s moved Wren ~12 m (marker 239->227 m); some 150-250 px look nudges turned only ~10 degrees. Likely the harness (llvmpipe, several sessions), but it made the cat trail and the bag backtrack much slower.",
+   "repro": "pt start --profile .../prof/familiar.json --game-dir .../gamedir --seed 7; pt key 4; pt hold Shift_L+w 10 and compare marker distance",
+   "screenshot": "shots/slow.jpg",
+   "tick": null
+  }
+ ],
+ "metrics": {
+  "objectivesCompleted": 6,
+  "deaths": 0,
+  "secondsToObjective": {
+   "Light Nana's window lantern": 72.0,
+   "First candy (Okafors)": 190.0,
+   "Light Grandpa Ike's lantern": 205.0,
+   "Become the cat / paw-print step shown": 386.0,
+   "Find Smoke at the old oak": 931.0,
+   "Lead Smoke to the ring of stones": 980.0
+  },
+  "candy": 8,
+  "lanternsLit": 2,
+  "doorsKnocked": 3,
+  "trailLostResets": 4,
+  "gameClockAtStop": "8:07 pm",
+  "fixes.marker": "mixed",
+  "fixes.bag": "not seen",
+  "fixes.ikeLantern": "did not help",
+  "fixes.doors": "helped",
+  "fixes.hudText": "mixed",
+  "fixes.saveTimes": "helped"
+ },
+ "fun": 3,
+ "verdict": "Got Wren (witch) through Nana's lantern, three doors (8 candy, Ike's lantern) and, as the cat, along Smoke's paw prints to the old oak and up Lantern Hill to the ring of stones by 7:57 pm; stopped at 8:07 with NEXT asking for the candy bag 239 m away, so cider and the remaining lanterns were not reached (time budget, partly harness perf). The biggest problem is discoverability and the creek: NEXT never points to the cat thread until you press Q yourself, and near the creek bridge the marker led me off the deck into a black gully and the step went backwards twice. Fix verdicts: marker MIXED (routes via streets, edge arrows incl. up, and follows the trail well on open ground, but overlaps prompts/labels and fails at the bridge); bag NOT SEEN (never got back to it); Ike's lantern DID NOT HELP (no marker, could not see it lit); doors HELPED (walked straight up to the Okafors', Ms. Bright's and the Garcias'); HUD/text MIXED (clean opening screen and notebook with page indicator, but overlaps and awkward wraps); save times HELPED (autosave 'Saved 5:33 pm', F5 'Saved at 8:01 pm', F9 'Loaded your save from 8:01 pm', first Esc explains the second). secondsToObjective are wall-clock seconds (no probe)."
+}

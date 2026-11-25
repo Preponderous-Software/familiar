@@ -1,0 +1,101 @@
+{
+ "session": "s03",
+ "goal": "Test that the night is kept safely: play a few minutes (choose a costume, knock for candy, light a lantern if you find one, turn into the cat and back), noting the clock, candy and lanterns on the HUD. Press F5 and check what it says. Then quit the way a player would (Esc, then Esc again; note what the first Esc says) and run pt stop, and start the game again with exactly the same pt start command: check that the night continues where you left it (clock, candy, costume, lanterns, where you stand) and what the game says about it. Also try F9 after playing on a little, and a pt stop WITHOUT quitting (like a crash) followed by pt start, and say what was kept. Judge whether each save and load message tells you when the save is from, and watch for the autosave. Any lost or wrong progress is a blocker.",
+ "build": {
+  "version": null,
+  "commit": "234260b"
+ },
+ "seed": 13,
+ "durationSec": 736,
+ "outcome": "achieved",
+ "findings": [
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Costume disappears from the HUD after leaving Nana's walk, so a restored costume cannot be checked",
+   "detail": "The HUD showed 'Costume pumpkin' after pressing 2, but the line was gone a few seconds later on the street (before any knock) and never came back; the notebook's first page did not show it either. After every restart I could confirm clock, candy, lanterns and position but had no on-screen way to tell whether the pumpkin costume was kept. Expected the costume to stay on the HUD or be shown in the notebook / load message.",
+   "repro": "pt start ...; pt key 2; walk toward the Garcias' (pt hold Shift_L+w 5); pt shot; Esc Esc; pt stop; pt start ...; pt shot",
+   "screenshot": "shots/restart_quit.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "The dropped candy bag is hard to find as the cat at dusk; no marker for it until you turn back into Wren",
+   "detail": "Turned into the cat on Ms. Bright's front walk (6:30 pm), walked back a couple of steps, turned around and looked down: the bag was not visible anywhere (the ground is very dark and the cat's camera is low, close to the jack-o-lanterns). The HUD says '(bag on the ground)' but there is no marker for it while you are the cat. Once back as Wren, NEXT says 'Fetch your candy bag from where you changed (E)' with a 2 m marker, which works, though the marker sat on a jack-o-lantern and I had to walk into it about 3 s before E picked up the bag.",
+   "repro": "pt start ...; at Ms. Bright's walk: pt hold s 1.5; pt key q; pt hold s 1.5; turn around (pt look 300 0 x4) and pt look 0 80; pt shot",
+   "screenshot": "shots/nobag.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "F9 loads at once with no confirmation, silently undoing play since the last save",
+   "detail": "After the restart I played on to Ms. Bright's (candy 2 to 5, 5:59 to 6:15) and pressed F9: it immediately jumped back to 5:59 with candy 2 at the Garcias' door. The message 'Loaded your save from 5:59 pm.' is clear about when the save is from, but there is no 'are you sure' and no undo; a stray F9 costs a real chunk of a 20-minute night.",
+   "repro": "pt start ...; knock at Ms. Bright's (E, T); pt key F9; pt shot",
+   "screenshot": "shots/f9.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Autosave toast is easy to miss; only one of at least two autosaves was seen",
+   "detail": "The first autosave showed 'Saved 5:33 pm' in the top right about two minutes in (good: it names the time). A later autosave did happen (the crash test lost nothing), but screenshots every 5-6 s for two and a half minutes never caught a toast. Expected the autosave toast to stay up a few seconds so a player can notice it.",
+   "repro": "pt start ...; play ~2 min; take pt shot every 5 s",
+   "screenshot": "shots/autosave1.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "text",
+   "title": "NEXT edge arrow overlaps the prompt line after lighting Nana's lantern",
+   "detail": "Right after lighting Nana's window lantern, the '20 m >' edge arrow is drawn on top of the end of 'Nana's door. The neighbours' porches are lit', overwriting 'lit'.",
+   "repro": "pt start ...; pt key 2; light Nana's window lantern (E); pt shot",
+   "screenshot": "shots/overlap.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "ux",
+   "title": "Off-screen 'up' marker arrow sits against the HUD NEXT card",
+   "detail": "As the cat facing away from the goal, the '^ 69 m' marker was drawn hard against the right edge of the NEXT card text ('then ^'), almost touching it.",
+   "repro": "pt start ...; pt key q; face away from the paw-print goal; pt shot",
+   "screenshot": "shots/markerhud.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "ux",
+   "title": "Save/load behaviour is solid: every message names the game time (positive)",
+   "detail": "F5 'Saved at 5:56 pm.'; first Esc 'The mouse is free. Esc again saves and quits; click to play on.'; restart after Esc Esc 'Loaded your save from 5:59 pm. The night goes on.' with candy 2, lanterns 1/4, same spot and view; pt stop without quitting then restart 'Loaded your save from 6:27 pm. The night goes on.' with candy 5 and the same spot; saving as the cat restores the cat with the bag still on the ground. No progress lost in any check.",
+   "repro": "see notes in findings.jsonl",
+   "screenshot": "shots/crash_kept.jpg",
+   "tick": null
+  }
+ ],
+ "metrics": {
+  "objectivesCompleted": 5,
+  "deaths": 0,
+  "secondsToObjective": {
+   "Light Nana's window lantern": 105.0,
+   "First knock (Garcias')": 230.0,
+   "Cat and back": 250.0,
+   "F5 save": 255.0
+  },
+  "candyAtEnd": 5,
+  "lanternsAtEnd": 1,
+  "progressLost": 0,
+  "saveChecks.quitRestart": "all kept (costume not verifiable)",
+  "saveChecks.f9": "reverted to 5:59 save as expected",
+  "saveChecks.crashRestart": "all kept",
+  "saveChecks.catSaveRestart": "all kept",
+  "fixes.marker": "mixed",
+  "fixes.bag": "mixed",
+  "fixes.ikeLantern": "not seen",
+  "fixes.doors": "helped",
+  "fixes.hudText": "mixed",
+  "fixes.saveTimes": "helped"
+ },
+ "fun": 3,
+ "verdict": "The night is kept safely: quitting with Esc Esc, a pt stop without quitting (crash) and a save as the cat all restored clock, candy, lanterns, form and exact position, and every save/load message names the game time ('Saved at 5:56 pm.', 'Loaded your save from 6:27 pm. The night goes on.'); the only gaps are that the costume vanishes from the HUD so its restore cannot be checked, F9 has no confirmation, and the autosave toast is easy to miss. Fix verdicts: marker mixed (edge arrows work and the marker routed along streets, but it overlapped a prompt and sat against the HUD), bag mixed (good 'fetch your bag' marker as Wren, but the bag is invisible to the cat at dusk), Ike's lantern not seen, doors helped (walked straight up to the Garcias' and Ms. Bright's doors), HUD/text mixed (notebook fits with 'Page 1 of 5', opening screen is clear, minor overlaps), save times helped. secondsToObjective are wall-clock seconds (no probe)."
+}

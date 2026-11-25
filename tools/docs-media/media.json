@@ -340,7 +340,7 @@
       "kind": "still",
       "session": "night",
       "caption": "Wren's notebook (Tab): pages on Samhain and the night's customs, with sources.",
-      "alt": "Wren's notebook open on a page about Samhain, with source keys",
+      "alt": "Wren's notebook open on a page about Samhain, each page ending with its sources",
       "steps": [
         {
           "js": "if (getComputedStyle(document.getElementById('notebook')).display === 'none') document.getElementById('bookBtn').click()"
@@ -492,7 +492,7 @@
       "name": "hud",
       "kind": "still",
       "session": "night",
-      "caption": "The HUD: the time, candy, costume, form, lanterns, basket and Smoke, then NEXT.",
+      "caption": "The HUD shows only what matters now, then NEXT.",
       "alt": "The top-left HUD lines and the NEXT guidance",
       "steps": [
         {

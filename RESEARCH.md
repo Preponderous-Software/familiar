@@ -364,7 +364,7 @@ the rules above (and for the practitioner reviewer).
 
 | | |
 |---|---|
-| ![The How to play dialog, with its line that the cat and the spirits are the game's fairy tale, not something Wiccans believe or do](docs/images/how-to-play.jpg) | ![Wren's notebook open on its Samhain and Guising pages, with source keys](docs/images/notebook.jpg) |
+| ![The How to play dialog, with its line that the cat and the spirits are the game's fairy tale, not something Wiccans believe or do](docs/images/how-to-play.jpg) | ![Wren's notebook open on its Samhain and Guising pages, each ending with its sources in RESEARCH.md](docs/images/notebook.jpg) |
 | *Do 5: How to play labels the cat and the spirits as the game's fairy tale before the night starts.* | *Do 6 and Don't 3: the notebook's Samhain page separates history, today's practice and the game's invention, with sources; Guising is credited to Scotland and Ireland.* |
 | ![Nana's window lantern lit, her thanks in the message line](docs/images/lantern.jpg) | ![Night at the stone circle on Lantern Hill, Nana's words for the offering in the message line](docs/images/tour-offering.jpg) |
 | *Do 7: a family lantern lit for Nana's mother, Ada; Nana's thanks, no comic payoff.* | *Do 2 and Don't 4: the offering in Nana's own (original) words, "Harm none": apple, cider and a candle.* |
