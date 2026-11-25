@@ -76,6 +76,52 @@ int main(int, char**) {
         CHECK(v.player.z > -T::kFenceZ + 0.2f);
     }
 
+    // Every door can be walked straight up to from the street: through the
+    // front gate, past the lamp posts and up the step, wherever on the far
+    // sidewalk she sets off from (#31: the fence beside the Garcias' gate and
+    // the lamp post by it stopped her dead).
+    for (int i = 0; i < T::HouseCount; ++i) {
+        const auto h = static_cast<T::HouseId>(i);
+        const Vec2 d = T::doorstep(h);
+        const float sidewalk = T::kHouses[i].north ? -3.0f : 3.0f;
+        for (float off = -8.0f; off <= 8.01f; off += 0.5f) {
+            World w = at(Form::Girl, d.x + off, sidewalk);
+            const bool there = walkTo(w, d.x, d.z, 20);
+            if (!there) std::fprintf(stderr, "  stuck short of %s from %+.1f m: at (%.2f, %.2f)\n", T::kHouses[i].name, off, w.player.x, w.player.z);
+            CHECK(there);
+            CHECK(w.player.feet == T::kPorchHeight);
+        }
+        // Holding straight ahead (no steering) from a little off the middle of the path.
+        for (float off : {-0.6f, -0.3f, 0.0f, 0.3f, 0.6f}) {
+            World w = at(Form::Girl, d.x + off, sidewalk);
+            Input in;
+            in.forward = 1;
+            in.yaw = T::kHouses[i].north ? 0.0f : kPi;
+            for (int t = 0; t < 8 * kTickRate; ++t) tick(w, in);
+            CHECK(std::fabs(w.player.z - d.z) < 1.5f);  // on the porch, at the door
+            CHECK(w.player.feet == T::kPorchHeight);
+        }
+    }
+
+    // Walking at the bridge nearly along its rail, she slides round the rail's
+    // end onto the deck rather than stepping away from it (the tour's way).
+    {
+        World w = at(Form::Girl, 20.0f, -6.0f);
+        CHECK(walkTo(w, 56.0f, 0.0f, 40));
+    }
+
+    // Straight into the flat of a wall, the sidestep finds nothing and she stays put.
+    {
+        const Box2 f = T::footprint(T::Garcia);
+        World w = at(Form::Girl, f.x0 - 2.0f, (f.z0 + f.z1) / 2);
+        Input in;
+        in.forward = 1;
+        in.yaw = kPi / 2;  // east, into the Garcias' west wall
+        for (int i = 0; i < 4 * kTickRate; ++i) tick(w, in);
+        CHECK(w.player.x < f.x0 && w.player.x > f.x0 - 0.35f);
+        CHECK(std::fabs(w.player.z - (f.z0 + f.z1) / 2) < 0.001f);
+    }
+
     // Into a wall at an angle, she slides along it.
     {
         World w = at(Form::Girl, -40.0f, -8.0f);
