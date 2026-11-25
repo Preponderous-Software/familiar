@@ -1,0 +1,8 @@
+{"t": 1795572827572, "text": "Edge arrow '20 m >' drawn over the prompt line 'Nana's door. The neighbours' porches are lit' (the word 'lit' is overwritten) right after lighting Nana's lantern"}
+{"t": 1795572848942, "text": "Autosave toast top-right 'Saved 5:33 pm' about 2 real minutes in; it gives the game time of the save (good)"}
+{"t": 1795572982140, "text": "F5 shows 'Saved at 5:56 pm.' (game time) mid-screen; candy 2, lanterns 1 of 4, standing at the Garcias' door"}
+{"t": 1795573011281, "text": "After Esc,Esc quit + pt stop + same pt start: 'Loaded your save from 5:59 pm. The night goes on.' Candy 2, lanterns 1 of 4, same spot and view at the Garcias' door all kept"}
+{"t": 1795573117333, "text": "F9 after playing on (Ms. Bright gave 3, candy 5 at 6:15): instantly 'Loaded your save from 5:59 pm.', back at Garcias' door with candy 2, clock 5:59. Says when the save is from; no confirmation or undo for losing 16 game minutes"}
+{"t": 1795573341358, "text": "pt stop WITHOUT quitting at 6:25 (candy 5 after Ms. Bright) then same pt start: 'Loaded your save from 6:27 pm. The night goes on.' Candy 5, lanterns 1/4, same spot at Ms. Bright's door; nothing lost"}
+{"t": 1795573388319, "text": "As the cat a few steps from where Wren dropped the bag (Ms. Bright's walk, 6:34 pm) I could not spot the bag after turning around and looking down; HUD says '(bag on the ground)' but there is no marker or glow showing where"}
+{"t": 1795573415328, "text": "Save as the cat (F5 'Saved at 6:35 pm.'), Esc Esc, restart: 'Loaded your save from 6:36 pm.' still the black cat, candy 5 '(bag on the ground)', same spot", "screenshot": "shots/catload.jpg"}

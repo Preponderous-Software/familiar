@@ -1,0 +1,126 @@
+{
+ "session": "s01",
+ "goal": "Play the opening of the night as a brand-new player who has never seen the game: work out what to do from the screen, choose a costume, trick-or-treat, and follow whatever the game points you to next; note every moment of confusion.",
+ "build": {
+  "version": null,
+  "commit": "234260b"
+ },
+ "seed": 31,
+ "durationSec": 990,
+ "outcome": "partial",
+ "findings": [
+  {
+   "severity": "major",
+   "category": "bug",
+   "title": "Candy bag dropped at a door cannot be picked up again: the door steals E",
+   "detail": "I turned into the cat (Q) right at Ms. Bright's door after knocking. Coming back as Wren at 7:20 pm, the marker sat on the bag at 2-3 m, but I could not get any closer and the prompt was the door's 'You've had your treat here'. Every E gave 'You need your candy bag to trick-or-treat. It's where you became a cat.', which tells you to go where you already are. Approaching from the other side and from the front steps, and again after F9, gave the same result. I expected an 'E pick up your candy bag' prompt within reach. Because players naturally press Q where they stand, a door is a very likely place to drop the bag.",
+   "repro": "pt start ... --seed 31; key 4; light Nana's lantern; knock Okafors, Garcias, Ms. Bright's (T for jokes); at Ms. Bright's door press q; walk away a little; press q; walk back to the bag on her porch; key e",
+   "screenshot": "shots/r21.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Following the cat-trail marker takes you off the paw prints and NEXT flips back to 'find her trail'",
+   "detail": "On the paw-print step the prints show as a dotted glowing line and the marker sits on the trail, which is good. Twice, though, running straight at the marker ('^ 49 m') made NEXT revert to 'Smoke's paw prints glow for a cat: find her trail, then follow it east' and moved the marker to an edge arrow. The marker seems to aim at a far point on the trail instead of leading along the prints, and the step text changes without saying why.",
+   "repro": "As the cat at Ms. Bright's: follow the marker to Nana's herb bed, then hold Shift_L+w toward the marker for ~6 s",
+   "screenshot": "shots/c15.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "NEXT marker and edge arrow are drawn over the HUD card and the prompt line",
+   "detail": "The marker label often lands on the text: '3 m' inside 'Nana's window lantern:3come closer'; the '20 m >' edge arrow on top of the end of 'The neighbours' porches are lit'; '10 m'/'^ 8 m' over the NEXT card text; the '>' arrow over 'Knock first' at the Okafors. House labels ('Ms. Bright's', 'Nana's house', 'Your candy bag') also overlap the HUD card's bottom lines. I expected the marker and labels to keep clear of the HUD and the prompt.",
+   "repro": "key 4; look right ~400 px; hold w 3 toward Nana's window lantern; then light it and look at the right edge",
+   "screenshot": "shots/mk_overlap.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Marker directions conflict with the 'Your candy bag' label when walking back for the bag",
+   "detail": "At 7:03 pm the 'Your candy bag' label was straight ahead across the street, but the marker showed '< 35 m' at the left edge. While I followed it, it flipped between left and right edge arrows, and the distance once grew from 35 to 42 m. Walking straight toward the label, I was stopped by something unseen at the street edge for ~10 s of holding W. When I came at it from another angle, the marker did lead to the porch. It may be routing around the creek, but nothing on screen shows why.",
+   "repro": "After the cat trail, press q at ~6:50 pm and follow NEXT 'Fetch your candy bag'",
+   "screenshot": "shots/r8.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Reach for lanterns and doors is unclear: 'come closer' persists at '3 m' while W seems to stop",
+   "detail": "At Nana's window lantern, and again at the Garcias' and Ms. Bright's doors, the prompt stayed on 'come closer to ...' with the marker at 3 m while holding W, with the crosshair on the target. It flipped to 'E ...' only after strafing or turning. The step itself did not block me at the Garcias' (#31 looks fixed), but the reach distance feels inconsistent.",
+   "repro": "key 4; turn right to the window lantern; hold w 1.2, then hold w 2; read the prompt",
+   "screenshot": "shots/mk_overlap.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "text",
+   "title": "Stacked message box after the Okafors' joke runs off the bottom edge",
+   "detail": "Telling a joke stacks 6 lines (the joke, the reply, two 'new notebook page' lines) and the last line sits flush on the bottom edge with its box cut off. It also pushes the prompt up into the middle of the screen.",
+   "repro": "Knock at the Okafors (E), then press t",
+   "screenshot": "shots/msg_clip.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "text",
+   "title": "Cat HUD card wraps mid-phrase and grows to 8 lines",
+   "detail": "As the cat, the card reads 'Candy 8 (bag on the / ground)' and 'You are a black cat (Q: / Wren)', so it covers the top-left third of the screen. Shorter wording ('bag dropped', 'Q: back to Wren' on its own line) would fit.",
+   "repro": "Press q anywhere",
+   "screenshot": "shots/cat2.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "text",
+   "title": "Notebook page cites 'Sources in RESEARCH.md'",
+   "detail": "The Samhain page ends 'Sources in RESEARCH.md: S1, S2, S3, S4, S5, S15', which points the player at a repository file they cannot see. The page itself fits well, and the 'Page 2 of 5 / Secrets 0 of 8' indicator is clear.",
+   "repro": "After lighting Nana's lantern press Tab, then Right",
+   "screenshot": "shots/nb2.jpg",
+   "tick": null
+  },
+  {
+   "severity": "polish",
+   "category": "ux",
+   "title": "Hard to confirm Grandpa Ike's lantern is lit from the door; no separate marker",
+   "detail": "Ike's lantern lights straight from the Okafors' door prompt ('E light Grandpa Ike's lantern') with no walk and no marker. Looking down the porch right after, I could not pick it out. Later, from the street, a lit lantern at the porch end was visible. The success message is clear ('Mrs. Okafor ... puts her hand to the glass').",
+   "repro": "Knock at the Okafors, t, e; look down the porch",
+   "screenshot": "shots/ike_lit.jpg",
+   "tick": null
+  },
+  {
+   "severity": "minor",
+   "category": "ux",
+   "title": "Marker jumps from 8 m to 25 m near Ms. Bright's without any goal change",
+   "detail": "Heading to Ms. Bright's ('8 m'), a few steps around the blue house made the marker jump to '25 m' pointing past the house. The NEXT text did not change, so a player cannot tell whether the goal or the route changed.",
+   "repro": "After the Garcias, follow the marker to Ms. Bright's around the blue house",
+   "screenshot": "shots/mk_jump.jpg",
+   "tick": null
+  }
+ ],
+ "metrics": {
+  "objectivesCompleted": 6,
+  "deaths": 0,
+  "candy": 8,
+  "doorsKnocked": 3,
+  "lanternsLit": 2,
+  "secondsToObjective": {
+   "Choose a costume": 30.0,
+   "Light Nana's window lantern": 105.0,
+   "First knock (Okafors)": 224.0,
+   "Light Grandpa Ike's lantern": 232.0,
+   "Knock Garcias": 375.0,
+   "Knock Ms. Bright's": 500.0
+  },
+  "fixes.marker": "mixed",
+  "fixes.bag": "mixed",
+  "fixes.ikeLantern": "helped",
+  "fixes.doors": "helped",
+  "fixes.hudText": "mixed",
+  "fixes.saveTimes": "helped"
+ },
+ "fun": 3,
+ "verdict": "The opening reads well: the costume line, Nana's greeting, NEXT text and jokes at the door make it clear what to do, and 3 doors, 2 lanterns and 8 candy came quickly. The run stalled on a bug: after turning into the cat at Ms. Bright's door, the dropped bag could not be picked up again because the door's 'You need your candy bag' prompt takes E even from 2 m away. That ended trick-or-treating at 7:20 pm, well before porch lights go off at 9, so time was not the cause. Fix verdicts: marker MIXED (follows streets and porches and shows edge arrows, but often draws over the HUD and prompt text, and on the paw-print step following it drops you off the trail); bag MIXED (the bag and its 'Your candy bag' label are easy to see at night, but it cannot be picked up when dropped by a door); Ike's lantern HELPED (lit from the door, visible from the street later, no marker needed); doors HELPED (walked straight up to the Garcias' door); HUD/text MIXED (opening screen and notebook paging are good, but there are marker/label overlaps, a clipped stacked message box and an ugly cat card wrap); save times HELPED (the autosave, F5 and F9 all show the time; the Esc quit flow and restart were not tested). secondsToObjective is wall-clock seconds, as there is no probe."
+}

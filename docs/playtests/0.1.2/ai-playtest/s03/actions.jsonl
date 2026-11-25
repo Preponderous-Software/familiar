@@ -1,0 +1,201 @@
+{"t": 1795572720333, "cmd": "status", "args": []}
+{"t": 1795572720418, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1795572729479, "cmd": "shot", "args": ["open"]}
+{"t": 1795572734209, "cmd": "key", "args": ["2"]}
+{"t": 1795572735792, "cmd": "shot", "args": ["cost"]}
+{"t": 1795572740709, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572740983, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572741727, "cmd": "shot", "args": ["t1"]}
+{"t": 1795572746606, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572746968, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572747398, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572748124, "cmd": "shot", "args": ["t2"]}
+{"t": 1795572753931, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795572754215, "cmd": "hold", "args": ["w", "1.2"]}
+{"t": 1795572756762, "cmd": "key", "args": ["e"]}
+{"t": 1795572758043, "cmd": "shot", "args": ["lan1"]}
+{"t": 1795572763275, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795572763547, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795572764194, "cmd": "shot", "args": ["lan2"]}
+{"t": 1795572772271, "cmd": "status", "args": []}
+{"t": 1795572776865, "cmd": "shot", "args": ["lan3"]}
+{"t": 1795572782842, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1795572786229, "cmd": "hold", "args": ["w", "1.0"]}
+{"t": 1795572788937, "cmd": "shot", "args": ["lan4"]}
+{"t": 1795572794634, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1795572798893, "cmd": "shot", "args": ["lan5"]}
+{"t": 1795572804712, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795572809970, "cmd": "key", "args": ["e"]}
+{"t": 1795572812060, "cmd": "shot", "args": ["lan6"]}
+{"t": 1795572827572, "cmd": "note", "args": ["Edge arrow '20 m >' drawn over the prompt line 'Nana's door. The neighbours' porches are lit' (the word 'lit' is overwritten) right after lighting Nana's lantern"]}
+{"t": 1795572827834, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572828103, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572829851, "cmd": "shot", "args": ["g1"]}
+{"t": 1795572835009, "cmd": "look", "args": ["220", "0"]}
+{"t": 1795572836134, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795572842424, "cmd": "shot", "args": ["g2"]}
+{"t": 1795572848942, "cmd": "note", "args": ["Autosave toast top-right 'Saved 5:33 pm' about 2 real minutes in; it gives the game time of the save (good)"]}
+{"t": 1795572849152, "cmd": "look", "args": ["60", "0"]}
+{"t": 1795572849455, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795572855794, "cmd": "shot", "args": ["g3"]}
+{"t": 1795572861252, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795572862936, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572863226, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572864491, "cmd": "shot", "args": ["g4"]}
+{"t": 1795572870722, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795572878076, "cmd": "shot", "args": ["g5"]}
+{"t": 1795572884810, "cmd": "look", "args": ["90", "0"]}
+{"t": 1795572885492, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795572892878, "cmd": "shot", "args": ["g6"]}
+{"t": 1795572898138, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572898387, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795572899743, "cmd": "shot", "args": ["g7"]}
+{"t": 1795572907343, "cmd": "look", "args": ["-100", "0"]}
+{"t": 1795572908118, "cmd": "hold", "args": ["w", "5"]}
+{"t": 1795572914395, "cmd": "shot", "args": ["g8"]}
+{"t": 1795572921475, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1795572922269, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795572927475, "cmd": "shot", "args": ["g9"]}
+{"t": 1795572933417, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795572937170, "cmd": "key", "args": ["e"]}
+{"t": 1795572939836, "cmd": "shot", "args": ["k1"]}
+{"t": 1795572944971, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795572946710, "cmd": "key", "args": ["q"]}
+{"t": 1795572949360, "cmd": "shot", "args": ["cat1"]}
+{"t": 1795572956326, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795572957989, "cmd": "look", "args": ["0", "80"]}
+{"t": 1795572959186, "cmd": "shot", "args": ["bag1"]}
+{"t": 1795572965253, "cmd": "look", "args": ["0", "-80"]}
+{"t": 1795572965408, "cmd": "hold", "args": ["w", "1.2"]}
+{"t": 1795572966821, "cmd": "key", "args": ["q"]}
+{"t": 1795572969547, "cmd": "shot", "args": ["wren1"]}
+{"t": 1795572974557, "cmd": "key", "args": ["F5"]}
+{"t": 1795572976182, "cmd": "shot", "args": ["f5"]}
+{"t": 1795572982140, "cmd": "note", "args": ["F5 shows 'Saved at 5:56 pm.' (game time) mid-screen; candy 2, lanterns 1 of 4, standing at the Garcias' door"]}
+{"t": 1795572982271, "cmd": "key", "args": ["Escape"]}
+{"t": 1795572983853, "cmd": "shot", "args": ["esc1"]}
+{"t": 1795572990795, "cmd": "key", "args": ["Escape"]}
+{"t": 1795572993406, "cmd": "status", "args": []}
+{"t": 1795572993498, "cmd": "log", "args": []}
+{"t": 1795572993622, "cmd": "stop", "args": []}
+{"t": 1795572997576, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1795573003702, "cmd": "shot", "args": ["r1"]}
+{"t": 1795573011281, "cmd": "note", "args": ["After Esc,Esc quit + pt stop + same pt start: 'Loaded your save from 5:59 pm. The night goes on.' Candy 2, lanterns 1 of 4, same spot and view at the Garcias' door all kept"]}
+{"t": 1795573011534, "cmd": "key", "args": ["Tab"]}
+{"t": 1795573013698, "cmd": "shot", "args": ["nb1"]}
+{"t": 1795573021457, "cmd": "key", "args": ["Tab"]}
+{"t": 1795573022095, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573022376, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573023667, "cmd": "shot", "args": ["n1"]}
+{"t": 1795573029627, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573030478, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573037832, "cmd": "shot", "args": ["n2"]}
+{"t": 1795573043409, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1795573044676, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573044906, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573046152, "cmd": "shot", "args": ["n3"]}
+{"t": 1795573053257, "cmd": "look", "args": ["120", "0"]}
+{"t": 1795573053926, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573061721, "cmd": "shot", "args": ["n4"]}
+{"t": 1795573066767, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573067081, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795573068243, "cmd": "shot", "args": ["n5"]}
+{"t": 1795573072706, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573073014, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573074269, "cmd": "shot", "args": ["n6"]}
+{"t": 1795573078725, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795573083432, "cmd": "key", "args": ["e"]}
+{"t": 1795573086017, "cmd": "shot", "args": ["k2"]}
+{"t": 1795573091299, "cmd": "key", "args": ["t"]}
+{"t": 1795573098033, "cmd": "shot", "args": ["k3"]}
+{"t": 1795573105367, "cmd": "key", "args": ["F9"]}
+{"t": 1795573107517, "cmd": "shot", "args": ["f9"]}
+{"t": 1795573117333, "cmd": "note", "args": ["F9 after playing on (Ms. Bright gave 3, candy 5 at 6:15): instantly 'Loaded your save from 5:59 pm.', back at Garcias' door with candy 2, clock 5:59. Says when the save is from; no confirmation or undo for losing 16 game minutes"]}
+{"t": 1795573117589, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573117940, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573118211, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573119110, "cmd": "hold", "args": ["Shift_L+w", "3"]}
+{"t": 1795573125743, "cmd": "look", "args": ["80", "0"]}
+{"t": 1795573126428, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573131763, "cmd": "shot", "args": ["m1"]}
+{"t": 1795573136834, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1795573138137, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573138482, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573139913, "cmd": "shot", "args": ["m2"]}
+{"t": 1795573145271, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573152790, "cmd": "shot", "args": ["m3"]}
+{"t": 1795573158892, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573159191, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573159499, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573159850, "cmd": "look", "args": ["50", "0"]}
+{"t": 1795573161133, "cmd": "shot", "args": ["m4"]}
+{"t": 1795573167235, "cmd": "look", "args": ["-90", "0"]}
+{"t": 1795573167974, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795573172765, "cmd": "key", "args": ["e"]}
+{"t": 1795573175411, "cmd": "key", "args": ["t"]}
+{"t": 1795573178066, "cmd": "shot", "args": ["k4"]}
+{"t": 1795573191772, "cmd": "shot", "args": ["w1"]}
+{"t": 1795573198366, "cmd": "shot", "args": ["w2"]}
+{"t": 1795573204909, "cmd": "shot", "args": ["w3"]}
+{"t": 1795573211369, "cmd": "shot", "args": ["w4"]}
+{"t": 1795573217879, "cmd": "shot", "args": ["w5"]}
+{"t": 1795573224299, "cmd": "shot", "args": ["w6"]}
+{"t": 1795573230923, "cmd": "shot", "args": ["w7"]}
+{"t": 1795573237539, "cmd": "shot", "args": ["w8"]}
+{"t": 1795573255359, "cmd": "shot", "args": ["w9"]}
+{"t": 1795573260784, "cmd": "shot", "args": ["w10"]}
+{"t": 1795573266427, "cmd": "shot", "args": ["w11"]}
+{"t": 1795573272112, "cmd": "shot", "args": ["w12"]}
+{"t": 1795573277487, "cmd": "shot", "args": ["w13"]}
+{"t": 1795573282910, "cmd": "shot", "args": ["w14"]}
+{"t": 1795573288420, "cmd": "shot", "args": ["w15"]}
+{"t": 1795573293945, "cmd": "shot", "args": ["w16"]}
+{"t": 1795573299341, "cmd": "shot", "args": ["w17"]}
+{"t": 1795573304902, "cmd": "shot", "args": ["w18"]}
+{"t": 1795573318296, "cmd": "shot", "args": ["precrash"]}
+{"t": 1795573318957, "cmd": "stop", "args": []}
+{"t": 1795573320652, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1795573326784, "cmd": "shot", "args": ["crash1"]}
+{"t": 1795573341358, "cmd": "note", "args": ["pt stop WITHOUT quitting at 6:25 (candy 5 after Ms. Bright) then same pt start: 'Loaded your save from 6:27 pm. The night goes on.' Candy 5, lanterns 1/4, same spot at Ms. Bright's door; nothing lost"]}
+{"t": 1795573341556, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795573343378, "cmd": "key", "args": ["q"]}
+{"t": 1795573345636, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795573347407, "cmd": "look", "args": ["0", "60"]}
+{"t": 1795573348751, "cmd": "shot", "args": ["cat2"]}
+{"t": 1795573355510, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573355860, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573356181, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573356497, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573356763, "cmd": "look", "args": ["60", "0"]}
+{"t": 1795573358491, "cmd": "shot", "args": ["bag2"]}
+{"t": 1795573367333, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573367711, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573367946, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573368213, "cmd": "look", "args": ["-300", "0"]}
+{"t": 1795573368456, "cmd": "look", "args": ["-60", "40"]}
+{"t": 1795573370237, "cmd": "shot", "args": ["bag3"]}
+{"t": 1795573376388, "cmd": "hold", "args": ["s", "1"]}
+{"t": 1795573377670, "cmd": "look", "args": ["0", "80"]}
+{"t": 1795573379441, "cmd": "shot", "args": ["bag4"]}
+{"t": 1795573388319, "cmd": "note", "args": ["As the cat a few steps from where Wren dropped the bag (Ms. Bright's walk, 6:34 pm) I could not spot the bag after turning around and looking down; HUD says '(bag on the ground)' but there is no marker or glow showing where"]}
+{"t": 1795573388472, "cmd": "key", "args": ["F5"]}
+{"t": 1795573390145, "cmd": "shot", "args": ["f5cat"]}
+{"t": 1795573390718, "cmd": "key", "args": ["Escape"]}
+{"t": 1795573391843, "cmd": "key", "args": ["Escape"]}
+{"t": 1795573394540, "cmd": "status", "args": []}
+{"t": 1795573399220, "cmd": "stop", "args": []}
+{"t": 1795573399614, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "13"]}
+{"t": 1795573405766, "cmd": "shot", "args": ["r3"]}
+{"t": 1795573415076, "cmd": "note", "args": ["--shot", "catload", "Save as the cat (F5 'Saved at 6:35 pm.'), Esc Esc, restart: 'Loaded your save from 6:36 pm.' still the black cat, candy 5 '(bag on the ground)', same spot"]}
+{"t": 1795573415508, "cmd": "key", "args": ["q"]}
+{"t": 1795573418236, "cmd": "shot", "args": ["wren3"]}
+{"t": 1795573425264, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1795573426527, "cmd": "key", "args": ["e"]}
+{"t": 1795573428701, "cmd": "shot", "args": ["bagget"]}
+{"t": 1795573440472, "cmd": "hold", "args": ["w", "2.5"]}
+{"t": 1795573443870, "cmd": "key", "args": ["e"]}
+{"t": 1795573446091, "cmd": "shot", "args": ["bagget2"]}
+{"t": 1795573454831, "cmd": "stop", "args": []}
+{"t": 1795573484755, "cmd": "report", "args": []}
+{"t": 1795573491349, "cmd": "report", "args": []}
+{"t": 1795573491682, "cmd": "status", "args": []}

@@ -1,0 +1,367 @@
+{"t": 1795572720349, "cmd": "start", "args": ["--profile", "<profile>", "--game-dir", "<game-dir>", "--seed", "7"]}
+{"t": 1795572726202, "cmd": "wait", "args": ["3"]}
+{"t": 1795572729281, "cmd": "shot", "args": ["open"]}
+{"t": 1795572734304, "cmd": "key", "args": ["4"]}
+{"t": 1795572734899, "cmd": "wait", "args": ["1"]}
+{"t": 1795572736016, "cmd": "shot", "args": ["witch"]}
+{"t": 1795572741461, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572741755, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795572741983, "cmd": "shot", "args": ["t1"]}
+{"t": 1795572747436, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795572747726, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795572747989, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795572748177, "cmd": "wait", "args": ["1"]}
+{"t": 1795572749300, "cmd": "shot", "args": ["t2"]}
+{"t": 1795572754750, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1795572756762, "cmd": "shot", "args": ["t3"]}
+{"t": 1795572762036, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795572768218, "cmd": "shot", "args": ["t4"]}
+{"t": 1795572774897, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795572778149, "cmd": "shot", "args": ["t5"]}
+{"t": 1795572786612, "cmd": "key", "args": ["e"]}
+{"t": 1795572787180, "cmd": "wait", "args": ["1"]}
+{"t": 1795572788313, "cmd": "shot", "args": ["lit1"]}
+{"t": 1795572788608, "cmd": "status", "args": []}
+{"t": 1795572795047, "cmd": "note", "args": ["--shot", "overlap1", "Edge arrow '20 m >' is drawn on top of the interaction prompt text ('...porches are lit' becomes 'li20 m>') right after lighting Nana's lantern; marker should stay clear of prompt line"]}
+{"t": 1795572795356, "cmd": "key", "args": ["Tab"]}
+{"t": 1795572795967, "cmd": "wait", "args": ["1"]}
+{"t": 1795572797097, "cmd": "shot", "args": ["nb1"]}
+{"t": 1795572802122, "cmd": "key", "args": ["Right"]}
+{"t": 1795572802758, "cmd": "wait", "args": ["1"]}
+{"t": 1795572803939, "cmd": "shot", "args": ["nb2"]}
+{"t": 1795572810951, "cmd": "note", "args": ["--shot", "nb2b", "Notebook page 2 shows developer-facing line 'Sources in RESEARCH.md: S1, S2...' to the player; pages otherwise fit and have a 'Page N of 2' indicator"]}
+{"t": 1795572811314, "cmd": "key", "args": ["Tab"]}
+{"t": 1795572812041, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572812291, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572812464, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572812667, "cmd": "wait", "args": ["1"]}
+{"t": 1795572815956, "cmd": "shot", "args": ["t6"]}
+{"t": 1795572827875, "cmd": "key", "args": ["F1"]}
+{"t": 1795572828543, "cmd": "look", "args": ["120", "0"]}
+{"t": 1795572828758, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795572833031, "cmd": "shot", "args": ["t7"]}
+{"t": 1795572838344, "cmd": "look", "args": ["60", "0"]}
+{"t": 1795572838549, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795572843852, "cmd": "shot", "args": ["t8"]}
+{"t": 1795572849550, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795572849856, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795572850274, "cmd": "wait", "args": ["1"]}
+{"t": 1795572851380, "cmd": "shot", "args": ["t9"]}
+{"t": 1795572857272, "cmd": "look", "args": ["80", "0"]}
+{"t": 1795572857476, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795572863775, "cmd": "shot", "args": ["t10"]}
+{"t": 1795572870092, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795572870697, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795572870991, "cmd": "wait", "args": ["1"]}
+{"t": 1795572872101, "cmd": "shot", "args": ["t11"]}
+{"t": 1795572878383, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795572878747, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795572878947, "cmd": "wait", "args": ["1"]}
+{"t": 1795572880146, "cmd": "shot", "args": ["t12"]}
+{"t": 1795572886286, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1795572886464, "cmd": "hold", "args": ["w", "5"]}
+{"t": 1795572891665, "cmd": "shot", "args": ["t13"]}
+{"t": 1795572896832, "cmd": "key", "args": ["e"]}
+{"t": 1795572897456, "cmd": "wait", "args": ["1"]}
+{"t": 1795572898667, "cmd": "shot", "args": ["knock1"]}
+{"t": 1795572907431, "cmd": "key", "args": ["t"]}
+{"t": 1795572908240, "cmd": "wait", "args": ["2"]}
+{"t": 1795572910391, "cmd": "shot", "args": ["joke1"]}
+{"t": 1795572916283, "cmd": "key", "args": ["e"]}
+{"t": 1795572916892, "cmd": "wait", "args": ["2"]}
+{"t": 1795572919032, "cmd": "shot", "args": ["ike1"]}
+{"t": 1795572927049, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795572928766, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572928978, "cmd": "wait", "args": ["1"]}
+{"t": 1795572930144, "cmd": "shot", "args": ["ike2"]}
+{"t": 1795572937814, "cmd": "note", "args": ["--shot", "ike2b", "Grandpa Ike's lantern: the 'E light' prompt appeared right at the Okafors' door, so it was lit without ever seeing it and with no marker on it. Stepping back and looking along the porch I could not tell which object is Ike's lantern or that anything looks newly lit (wall lantern above the door still looks dark)."]}
+{"t": 1795572943222, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795572943523, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795572947892, "cmd": "shot", "args": ["t14"]}
+{"t": 1795572953383, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795572953635, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795572953838, "cmd": "wait", "args": ["1"]}
+{"t": 1795572954930, "cmd": "shot", "args": ["t15"]}
+{"t": 1795572960358, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795572966685, "cmd": "shot", "args": ["t16"]}
+{"t": 1795572971983, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795572972247, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795572972484, "cmd": "wait", "args": ["1"]}
+{"t": 1795572973572, "cmd": "shot", "args": ["t17"]}
+{"t": 1795572979070, "cmd": "hold", "args": ["w", "5"]}
+{"t": 1795572984300, "cmd": "shot", "args": ["t18"]}
+{"t": 1795572990845, "cmd": "look", "args": ["-80", "0"]}
+{"t": 1795572991048, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795572995276, "cmd": "shot", "args": ["t19"]}
+{"t": 1795573000801, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1795573001097, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795573005403, "cmd": "shot", "args": ["t20"]}
+{"t": 1795573011265, "cmd": "key", "args": ["e"]}
+{"t": 1795573011821, "cmd": "wait", "args": ["2"]}
+{"t": 1795573013956, "cmd": "shot", "args": ["knock2"]}
+{"t": 1795573019546, "cmd": "key", "args": ["t"]}
+{"t": 1795573020205, "cmd": "wait", "args": ["2"]}
+{"t": 1795573022282, "cmd": "shot", "args": ["joke2"]}
+{"t": 1795573028012, "cmd": "key", "args": ["Tab"]}
+{"t": 1795573028705, "cmd": "wait", "args": ["1"]}
+{"t": 1795573029857, "cmd": "shot", "args": ["nb3"]}
+{"t": 1795573035898, "cmd": "key", "args": ["Tab"]}
+{"t": 1795573036498, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573036791, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573037059, "cmd": "wait", "args": ["1"]}
+{"t": 1795573038283, "cmd": "shot", "args": ["t21"]}
+{"t": 1795573043227, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573049531, "cmd": "shot", "args": ["t22"]}
+{"t": 1795573056394, "cmd": "look", "args": ["60", "0"]}
+{"t": 1795573056622, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795573061718, "cmd": "shot", "args": ["t23"]}
+{"t": 1795573067404, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573067686, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795573067888, "cmd": "hold", "args": ["w", "1.5"]}
+{"t": 1795573069582, "cmd": "shot", "args": ["t24"]}
+{"t": 1795573074000, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795573074164, "cmd": "hold", "args": ["w", "1"]}
+{"t": 1795573075307, "cmd": "shot", "args": ["t25"]}
+{"t": 1795573079946, "cmd": "key", "args": ["e"]}
+{"t": 1795573080539, "cmd": "wait", "args": ["2"]}
+{"t": 1795573082602, "cmd": "key", "args": ["t"]}
+{"t": 1795573083175, "cmd": "wait", "args": ["2"]}
+{"t": 1795573085250, "cmd": "shot", "args": ["knock3"]}
+{"t": 1795573092255, "cmd": "hold", "args": ["s", "1.5"]}
+{"t": 1795573098033, "cmd": "key", "args": ["q"]}
+{"t": 1795573098613, "cmd": "wait", "args": ["2"]}
+{"t": 1795573100763, "cmd": "shot", "args": ["cat1"]}
+{"t": 1795573108619, "cmd": "note", "args": ["--shot", "catnext", "The Samhain/cat thread only appeared in NEXT after I pressed Q on my own: for 50 game minutes NEXT said only 'Knock where a porch light is on', never hinting that the cat/paw-print goal exists. A player following NEXT alone would not discover the main thread until porch lights go off."]}
+{"t": 1795573109010, "cmd": "look", "args": ["0", "150"]}
+{"t": 1795573109276, "cmd": "wait", "args": ["1"]}
+{"t": 1795573110513, "cmd": "shot", "args": ["bag1"]}
+{"t": 1795573116217, "cmd": "look", "args": ["0", "-150"]}
+{"t": 1795573116512, "cmd": "look", "args": ["300", "0"]}
+{"t": 1795573116971, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573117231, "cmd": "wait", "args": ["1"]}
+{"t": 1795573118374, "cmd": "shot", "args": ["c2"]}
+{"t": 1795573126410, "cmd": "look", "args": ["60", "0"]}
+{"t": 1795573126650, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573133031, "cmd": "shot", "args": ["c3"]}
+{"t": 1795573138959, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573139184, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573139470, "cmd": "wait", "args": ["1"]}
+{"t": 1795573140668, "cmd": "shot", "args": ["c4"]}
+{"t": 1795573146384, "cmd": "look", "args": ["50", "0"]}
+{"t": 1795573146576, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573152932, "cmd": "shot", "args": ["c5"]}
+{"t": 1795573158344, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573158776, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795573159030, "cmd": "wait", "args": ["1"]}
+{"t": 1795573160330, "cmd": "shot", "args": ["c6"]}
+{"t": 1795573166958, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795573172366, "cmd": "shot", "args": ["c7"]}
+{"t": 1795573179136, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573179460, "cmd": "look", "args": ["100", "0"]}
+{"t": 1795573179725, "cmd": "wait", "args": ["1"]}
+{"t": 1795573180927, "cmd": "shot", "args": ["c8"]}
+{"t": 1795573186963, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573187269, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573187506, "cmd": "wait", "args": ["1"]}
+{"t": 1795573188661, "cmd": "shot", "args": ["c9"]}
+{"t": 1795573194346, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573200716, "cmd": "shot", "args": ["c10"]}
+{"t": 1795573206554, "cmd": "look", "args": ["40", "0"]}
+{"t": 1795573206803, "cmd": "hold", "args": ["Shift_L+w", "7"]}
+{"t": 1795573214079, "cmd": "shot", "args": ["c11"]}
+{"t": 1795573220514, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573220781, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795573221063, "cmd": "wait", "args": ["1"]}
+{"t": 1795573222187, "cmd": "shot", "args": ["c12"]}
+{"t": 1795573228378, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573228697, "cmd": "look", "args": ["100", "0"]}
+{"t": 1795573228997, "cmd": "wait", "args": ["1"]}
+{"t": 1795573230113, "cmd": "shot", "args": ["c13"]}
+{"t": 1795573237478, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573241762, "cmd": "shot", "args": ["c14"]}
+{"t": 1795573248971, "cmd": "note", "args": ["--shot", "labelov", "House-name label 'Mr. Hale's' is drawn over the NEXT card text ('follow her paw Mr. Hale's'): labels are not kept clear of the HUD"]}
+{"t": 1795573249279, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573249531, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573249768, "cmd": "wait", "args": ["1"]}
+{"t": 1795573250959, "cmd": "shot", "args": ["c15"]}
+{"t": 1795573257150, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573257347, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573257562, "cmd": "wait", "args": ["1"]}
+{"t": 1795573258687, "cmd": "shot", "args": ["c16"]}
+{"t": 1795573264925, "cmd": "look", "args": ["30", "0"]}
+{"t": 1795573265079, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573269307, "cmd": "shot", "args": ["c17"]}
+{"t": 1795573274736, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573274984, "cmd": "look", "args": ["100", "0"]}
+{"t": 1795573275197, "cmd": "wait", "args": ["1"]}
+{"t": 1795573276376, "cmd": "shot", "args": ["c18"]}
+{"t": 1795573282293, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573286692, "cmd": "shot", "args": ["c19"]}
+{"t": 1795573292751, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573292993, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573297331, "cmd": "shot", "args": ["c20"]}
+{"t": 1795573303509, "cmd": "look", "args": ["-30", "0"]}
+{"t": 1795573303686, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573309977, "cmd": "shot", "args": ["c21"]}
+{"t": 1795573318173, "cmd": "hold", "args": ["Shift_L+w", "7"]}
+{"t": 1795573325505, "cmd": "shot", "args": ["c22"]}
+{"t": 1795573332584, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573332914, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573333328, "cmd": "wait", "args": ["1"]}
+{"t": 1795573334443, "cmd": "shot", "args": ["c23"]}
+{"t": 1795573340315, "cmd": "look", "args": ["120", "0"]}
+{"t": 1795573340535, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795573345946, "cmd": "shot", "args": ["c24"]}
+{"t": 1795573352977, "cmd": "look", "args": ["80", "-40"]}
+{"t": 1795573353266, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795573358643, "cmd": "shot", "args": ["c25"]}
+{"t": 1795573367087, "cmd": "note", "args": ["--shot", "losttrail", "Paw-print step: the NEXT marker is a carrot that stays ~8 m ahead on the trail, which does lead along Smoke's prints, but the trail is hard to keep in the dark: twice NEXT flipped to 'find her trail, then follow it east' after a few seconds of hurrying along it, and near the creek slope the marker sat at 8 m while I could not get closer (dark slope, no prints visible). No sense of how long the trail is or progress along it."]}
+{"t": 1795573367428, "cmd": "look", "args": ["-250", "40"]}
+{"t": 1795573367743, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573368074, "cmd": "wait", "args": ["1"]}
+{"t": 1795573369242, "cmd": "shot", "args": ["c26"]}
+{"t": 1795573374948, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573375263, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573375585, "cmd": "wait", "args": ["1"]}
+{"t": 1795573376753, "cmd": "shot", "args": ["c27"]}
+{"t": 1795573383029, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795573383366, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795573386543, "cmd": "shot", "args": ["c28"]}
+{"t": 1795573393032, "cmd": "look", "args": ["-250", "0"]}
+{"t": 1795573393382, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795573393639, "cmd": "wait", "args": ["1"]}
+{"t": 1795573394806, "cmd": "shot", "args": ["c29"]}
+{"t": 1795573402170, "cmd": "look", "args": ["100", "-60"]}
+{"t": 1795573402458, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795573407938, "cmd": "shot", "args": ["c30"]}
+{"t": 1795573414981, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573415379, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573421798, "cmd": "shot", "args": ["c31"]}
+{"t": 1795573431571, "cmd": "note", "args": ["--shot", "regress", "NEXT went backwards: at 7:03 it read 'Over the creek, Smoke's paw prints lead to the old oak' (marker 13 m, near the creek bridge); I followed the glowing prints and the marker for ~6 s and at 7:07 NEXT was back to 'Smoke's scent goes off toward the creek: follow her paw prints east'. The prints I followed after the oak step apparently led back across/along the creek, so the marker + visible prints sent me back to an earlier step."]}
+{"t": 1795573444814, "cmd": "look", "args": ["250", "0"]}
+{"t": 1795573445389, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573445770, "cmd": "wait", "args": ["1"]}
+{"t": 1795573447095, "cmd": "shot", "args": ["c32"]}
+{"t": 1795573453630, "cmd": "look", "args": ["200", "0"]}
+{"t": 1795573454038, "cmd": "wait", "args": ["1"]}
+{"t": 1795573455361, "cmd": "shot", "args": ["c33"]}
+{"t": 1795573463113, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573463526, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573463860, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573464182, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573464515, "cmd": "wait", "args": ["1"]}
+{"t": 1795573465713, "cmd": "shot", "args": ["c34"]}
+{"t": 1795573466041, "cmd": "status", "args": []}
+{"t": 1795573473894, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573478347, "cmd": "shot", "args": ["c35"]}
+{"t": 1795573485655, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573490022, "cmd": "shot", "args": ["c36"]}
+{"t": 1795573499616, "cmd": "note", "args": ["--shot", "creekfall", "Second time at the creek bridge: right after NEXT said 'Over the creek... lead to the old oak' with the marker 6 m straight ahead, hurrying straight at the marker for 4 s dropped me into a dark gully and NEXT reset to 'find her trail' with the marker now 24 m away. The marker near the bridge seems to point straight across rather than along a walkable route, and the creek gully is pitch black."]}
+{"t": 1795573500120, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573500528, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573500841, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573501133, "cmd": "wait", "args": ["1"]}
+{"t": 1795573502277, "cmd": "shot", "args": ["c37"]}
+{"t": 1795573509663, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573509990, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573510284, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573510586, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573511096, "cmd": "wait", "args": ["1"]}
+{"t": 1795573512320, "cmd": "shot", "args": ["c38"]}
+{"t": 1795573518677, "cmd": "look", "args": ["120", "0"]}
+{"t": 1795573518939, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795573524421, "cmd": "shot", "args": ["c39"]}
+{"t": 1795573531317, "cmd": "look", "args": ["100", "0"]}
+{"t": 1795573531604, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795573534946, "cmd": "shot", "args": ["c40"]}
+{"t": 1795573541683, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573542046, "cmd": "look", "args": ["100", "0"]}
+{"t": 1795573542308, "cmd": "wait", "args": ["1"]}
+{"t": 1795573543469, "cmd": "shot", "args": ["c41"]}
+{"t": 1795573550061, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573550339, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573550618, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573550984, "cmd": "wait", "args": ["1"]}
+{"t": 1795573552128, "cmd": "shot", "args": ["c42"]}
+{"t": 1795573559813, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573560071, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573560447, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573560838, "cmd": "wait", "args": ["1"]}
+{"t": 1795573562033, "cmd": "shot", "args": ["c43"]}
+{"t": 1795573569536, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795573572796, "cmd": "shot", "args": ["c44"]}
+{"t": 1795573578733, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573579034, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795573582300, "cmd": "shot", "args": ["c45"]}
+{"t": 1795573588184, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573588420, "cmd": "hold", "args": ["w", "3"]}
+{"t": 1795573591723, "cmd": "shot", "args": ["c46"]}
+{"t": 1795573597793, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1795573598152, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795573602415, "cmd": "shot", "args": ["c47"]}
+{"t": 1795573608144, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795573608443, "cmd": "hold", "args": ["w", "4"]}
+{"t": 1795573612750, "cmd": "shot", "args": ["c48"]}
+{"t": 1795573619946, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573620181, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573620390, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573620653, "cmd": "wait", "args": ["1"]}
+{"t": 1795573621799, "cmd": "shot", "args": ["c49"]}
+{"t": 1795573627271, "cmd": "look", "args": ["-60", "0"]}
+{"t": 1795573627499, "cmd": "hold", "args": ["Shift_L+w", "5"]}
+{"t": 1795573632957, "cmd": "shot", "args": ["c50"]}
+{"t": 1795573638974, "cmd": "look", "args": ["-40", "0"]}
+{"t": 1795573639180, "cmd": "hold", "args": ["Shift_L+w", "6"]}
+{"t": 1795573645709, "cmd": "shot", "args": ["c51"]}
+{"t": 1795573654011, "cmd": "note", "args": ["--shot", "smoke", "Found Smoke under the old oak at 7:47 pm after following the paw-print trail (about 30 game minutes on the trail step, with two lost-trail resets). Nice moment; NEXT now 'Lead Smoke up Lantern Hill, into the ring of stones', 101 m."]}
+{"t": 1795573654420, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573654633, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573654861, "cmd": "look", "args": ["150", "0"]}
+{"t": 1795573655221, "cmd": "wait", "args": ["1"]}
+{"t": 1795573656366, "cmd": "shot", "args": ["h1"]}
+{"t": 1795573661782, "cmd": "look", "args": ["120", "0"]}
+{"t": 1795573661935, "cmd": "hold", "args": ["Shift_L+w", "8"]}
+{"t": 1795573670319, "cmd": "shot", "args": ["h2"]}
+{"t": 1795573676337, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573676580, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573676897, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573677145, "cmd": "wait", "args": ["1"]}
+{"t": 1795573678330, "cmd": "shot", "args": ["h3"]}
+{"t": 1795573685488, "cmd": "look", "args": ["-50", "-60"]}
+{"t": 1795573685731, "cmd": "hold", "args": ["Shift_L+w", "8"]}
+{"t": 1795573694082, "cmd": "shot", "args": ["h4"]}
+{"t": 1795573699653, "cmd": "look", "args": ["-200", "0"]}
+{"t": 1795573699923, "cmd": "hold", "args": ["Shift_L+w", "4"]}
+{"t": 1795573704343, "cmd": "shot", "args": ["h5"]}
+{"t": 1795573711579, "cmd": "key", "args": ["q"]}
+{"t": 1795573712311, "cmd": "wait", "args": ["2"]}
+{"t": 1795573714456, "cmd": "shot", "args": ["w1"]}
+{"t": 1795573722794, "cmd": "key", "args": ["F5"]}
+{"t": 1795573723538, "cmd": "wait", "args": ["1"]}
+{"t": 1795573724777, "cmd": "shot", "args": ["f5"]}
+{"t": 1795573725291, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573725626, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573725914, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573726217, "cmd": "hold", "args": ["Shift_L+w", "8"]}
+{"t": 1795573734604, "cmd": "shot", "args": ["b1"]}
+{"t": 1795573742357, "cmd": "key", "args": ["F9"]}
+{"t": 1795573743043, "cmd": "wait", "args": ["1"]}
+{"t": 1795573744194, "cmd": "shot", "args": ["f9"]}
+{"t": 1795573744487, "cmd": "key", "args": ["Escape"]}
+{"t": 1795573745079, "cmd": "wait", "args": ["1"]}
+{"t": 1795573746255, "cmd": "shot", "args": ["esc1"]}
+{"t": 1795573754269, "cmd": "click", "args": ["320", "180"]}
+{"t": 1795573755096, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573755299, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573755610, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573755798, "cmd": "look", "args": ["-150", "0"]}
+{"t": 1795573756073, "cmd": "wait", "args": ["1"]}
+{"t": 1795573757231, "cmd": "shot", "args": ["b2"]}
+{"t": 1795573763049, "cmd": "look", "args": ["-150", "40"]}
+{"t": 1795573763310, "cmd": "hold", "args": ["Shift_L+w", "10"]}
+{"t": 1795573773581, "cmd": "shot", "args": ["b3"]}
+{"t": 1795573782565, "cmd": "note", "args": ["--shot", "slow", "Perf under the shared software renderer: holding Shift+W for 10 s moved Wren only ~12 m (marker 239 -> 227 m); mouse-look nudges of 150-250 px sometimes turned only ~10 degrees. With the candy bag 239 m away after leading Smoke to the stones, the walk back would take minutes of real time."]}
+{"t": 1795573782752, "cmd": "log", "args": []}
+{"t": 1795573782979, "cmd": "stop", "args": []}
+{"t": 1795573825382, "cmd": "report", "args": []}
+{"t": 1795573829461, "cmd": "report", "args": []}

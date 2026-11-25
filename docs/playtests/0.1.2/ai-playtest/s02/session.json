@@ -1,0 +1,27 @@
+{
+  "session": "s02",
+  "dir": "<run-dir>/s02",
+  "profile": "familiar",
+  "display": ":103",
+  "window": "6291475",
+  "size": "640x360",
+  "seed": "7",
+  "args": [],
+  "command": [
+    "<game-dir>/build/familiar",
+    "--width",
+    "640",
+    "--height",
+    "360",
+    "--slot",
+    "<run-dir>/s02/data",
+    "--seed",
+    "7"
+  ],
+  "probe": false,
+  "ticksPerSecond": null,
+  "startedAtMs": 1795572723167,
+  "version": null,
+  "commit": "234260b",
+  "tree": "9518189bd957f6d37b04c75e99f44170387d3ca7"
+}
