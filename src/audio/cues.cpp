@@ -27,6 +27,7 @@ int count(const std::array<bool, kLanternCount>& a) {
 int hour(const World& w) { return static_cast<int>(gameMinutes(w)) / 60; }
 
 constexpr int kDusk = 18 * 60;  // owls from about six (sunset is twenty to six)
+constexpr float kBagHeard = 17.0f;  // the dropped bag's wrappers are heard within about 18 m
 
 }  // namespace
 
@@ -63,6 +64,15 @@ Ambience ambience(const World& w, Vec3 listener, float stepsPerSecond) {
         const float dx = at.x - w.player.x, dz = at.z - w.player.z;
         const float d = std::sqrt(dx * dx + dz * dz);
         a.purr = clampf(1.0f - (d - 1.0f) / 3.0f, 0.0f, 1.0f);
+    }
+
+    // The candy bag Wren left on the ground: its wrappers crinkle in the breeze,
+    // faint from across a yard and plain beside it, so a girl looking for it in
+    // the dark can follow her ears (#28). The cat has no use for it.
+    if (w.bagDown && w.form == Form::Girl) {
+        const float dx = w.bag.x - listener.x, dz = w.bag.z - listener.z;
+        const float d = std::sqrt(dx * dx + dz * dz);
+        a.bag = clampf(1.0f - (d - 1.0f) / kBagHeard, 0.0f, 1.0f);
     }
 
     a.steps = stepsPerSecond;

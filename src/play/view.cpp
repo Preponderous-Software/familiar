@@ -128,10 +128,42 @@ void drawFlames(strata::Engine& engine, const World& w, float night) {
     };
     // The dropped candy bag glints, so it can be found again in a dark yard (#15),
     // and the NEXT line's place glows faintly (#14), seen from afar.
+    // After dark and from further off it glints brighter (#28): the spark keeps
+    // a few pixels on screen however far away, and a wisp of candy-gold motes
+    // rises slowly from the bag, like warm breath on a cold night, to show
+    // where it lies over a fence or across a dark field.
     if (w.bagDown) {
+        const Vec3 b{w.bag.x, w.bag.y + 0.35f, w.bag.z};
+        const float ex = b.x - eye.x, ez = b.z - eye.z;
+        const float far = clampf((std::sqrt(ex * ex + ez * ez) - 3.0f) / 20.0f, 0.0f, 1.0f);
         const float glint = 0.6f + 0.3f * std::sin(t * 4.0f);
-        soft({w.bag.x, w.bag.y + 0.35f, w.bag.z}, 0.45f, 1.0f, 0.9f, 0.55f, glint);
-        soft({w.bag.x, w.bag.y + 0.35f, w.bag.z}, 1.4f, 1.0f, 0.75f, 0.35f, 0.25f * glint);
+        const float bright = 1.0f + 0.6f * night;
+        soft(b, 0.45f + 0.35f * far, 1.0f, 0.9f, 0.55f, std::fmin(1.0f, glint * bright));
+        soft(b, 1.4f + 2.0f * night, 1.0f, 0.75f, 0.35f, (0.25f + 0.35f * night) * glint);
+        // A sharp twinkle now and then, the way foil catches a lamp.
+        const float twinkle = std::pow(std::fmax(0.0f, std::sin(t * 1.7f)), 24.0f);
+        if (twinkle > 0.02f) {
+            StrataPoint q{};
+            q.position[0] = b.x;
+            q.position[1] = b.y + 0.05f;
+            q.position[2] = b.z;
+            q.size_pixels = 3.0f + 4.0f * twinkle;
+            q.world_diameter = 0.25f;
+            q.color[0] = 1.0f;
+            q.color[1] = 0.95f;
+            q.color[2] = 0.8f;
+            q.color[3] = twinkle;
+            q.flags = STRATA_POINT_SOFT;
+            pts.push_back(q);
+        }
+        constexpr int kMotes = 4;
+        for (int k = 0; k < kMotes; ++k) {
+            const float u = std::fmod(t * 0.35f + static_cast<float>(k) / kMotes, 1.0f);  // 0 at the bag, 1 at the top
+            const float sway = 0.12f * std::sin(t * 1.3f + static_cast<float>(k) * 2.1f);
+            const float fade = std::sin(u * kPi);
+            soft({b.x + sway, b.y + 0.1f + 1.6f * u, b.z + 0.5f * sway}, 0.18f + 0.3f * far, 1.0f, 0.8f, 0.4f,
+                 (0.45f + 0.5f * night) * fade * fade);
+        }
     }
     if (const NextStep n = tonightStep(w); n.goal) {
         const float dx = n.at.x - eye.x, dz = n.at.z - eye.z;
@@ -315,6 +347,8 @@ void setLights(strata::Engine& engine, const World& w, float sunElevation) {
     }
     for (Vec2 p : T::kStreetlamps) add({p.x, T::kStreetlampHeight - 0.5f, p.z}, 14.0f, kStreetColor, 1.3f * lit);
     if (w.form == Form::Cat) add(lamplighterLamp(w), 8.0f, kStreetColor, 0.9f * lit);
+    // The dropped bag's glint lights the grass round it a little after dark (#28).
+    if (w.bagDown && night > 0) add({w.bag.x, w.bag.y + 0.5f, w.bag.z}, 4.0f, kLanternColor, 1.2f * night);
     for (int i = 0; i < kLanternCount; ++i)
         if (w.lit[static_cast<size_t>(i)]) {
             const Vec3 a = lantern(i).at;
