@@ -18,12 +18,106 @@ structure is copied from them on purpose (see [Reused](#reused)).
 The rules build and test without a GPU in seconds (`-DFAMILIAR_WITH_STRATA=OFF`). CI builds them
 on Linux and Windows and runs the tests on both.
 
+```mermaid
+flowchart TD
+    subgraph apps["app/"]
+        main["main.cpp<br/>desktop: play, --tour, --autopilot"]
+        webmain["web_main.cpp<br/>browser, IndexedDB saves"]
+    end
+    subgraph play["src/play (familiar_play)"]
+        session["session<br/>input, HUD, autosave"]
+        view["view<br/>camera, sky, lights, text"]
+    end
+    subgraph bridge["src/bridge"]
+        scene["scene<br/>meshes kept in step"]
+        geometry["geometry<br/>town as triangles"]
+    end
+    sim["src/sim (familiar_sim)<br/>town, world, doors, cat, craft,<br/>notebook, autopilot, math.h"]
+    save["src/save (familiar_save)<br/>save.cpp, sha256.cpp"]
+    audio["src/audio<br/>cues, synth (familiar_audio)<br/>device + miniaudio (familiar_sound)"]
+    strata[["Strata engine<br/>(fetched at a pinned commit)"]]
+    tests["tests/ (no GPU)"]
+
+    main --> session
+    webmain --> session
+    session --> view
+    session --> scene
+    session --> save
+    session --> audio
+    scene --> geometry
+    scene --> strata
+    view --> strata
+    geometry --> sim
+    save --> sim
+    audio --> sim
+    tests --> sim
+    tests --> save
+    tests --> audio
+```
+
+*The module map. Arrows point at what a part depends on. Only `src/play` and `src/bridge` touch
+Strata; the rules, saves and sound cues build and test without a GPU.*
+
+### The rules and the renderer
+
+The rules never see the engine. Each frame the session turns keys, the mouse or the touch stick
+into one `Input`, the rules advance the `World` by whole ticks, and the drawing side reads the
+World back:
+
+```mermaid
+sequenceDiagram
+    participant P as Player (keys, mouse, touch)
+    participant S as play::Session
+    participant R as Rules (src/sim)
+    participant B as Scene (src/bridge)
+    participant E as Strata
+    P->>S: key, look, stick, tap
+    loop each tick (30 a second)
+        S->>R: tick(world, input)
+        R-->>S: World (deterministic)
+    end
+    S->>B: sync(world): gates, figures, lanterns, spirits
+    S->>E: camera, sun, lights, HUD text
+    B->>E: meshes
+    E-->>P: a frame
+```
+
+*The rules are the whole game; the rest draws it and plays its sound. That is why the tests and
+`--headless --autopilot` can play the whole night on nothing but `src/sim`.*
+
+![The desktop game at night: Elm Street with porch lights, the HUD on the left](docs/images/tour-desktop-street.jpg)
+
+*What the renderer makes of the World: the desktop build at 960×540, from the headless tour.*
+
 ## Determinism
 
 The rules are compiled without fused multiply-adds (`-ffp-contract=off`, `/fp:precise`) and use
 their own sine, cosine and arctangent built from `+ - * /` (`src/sim/math.h`), so the same inputs
 give bit-identical worlds on every compiler. `fingerprint()` hashes the whole `World`; tests pin
 the fingerprints of scripted runs and of the autopilot's playthrough.
+
+## The night's clock
+
+The World's clock is `tick`, 30 a second; a game minute is 90 ticks (one every three seconds of
+play), from 5:20 pm (`kStartMinute`). Everything that changes with the hour (the sun, porch
+lights, the children, the spirits, Nana's walk) is a function of `tick` and the World, never of a
+wall clock, so a save holds the whole night in one number.
+
+```mermaid
+timeline
+    title 31 October 2026 in Hollowell (sim/world.h, sim/doors.h, sim/craft.h)
+    5:20 pm : tick 0 : costume on Nana's walk
+    5:44 pm : sunset : porch lights on, children out
+    6:14 pm : end of civil twilight : properly dark
+    9:00 pm : porch lights off : trick-or-treating ends
+    10:30 pm : Nana walks up Lantern Hill
+    about 10:46 pm : moonrise
+    midnight : the church clock strikes twelve : Smoke goes home, if all is ready
+```
+
+![The night in four stops from the headless tour: Nana's porch at dusk, Elm Street after sunset, the churchyard as the cat, and Smoke going home at midnight](docs/images/night-timeline.jpg)
+
+*The same night at four ticks, rendered by `familiar --headless --tour`.*
 
 ## Saves
 
@@ -32,6 +126,32 @@ A save is `FAMILIAR`, a format version, the payload's length, the World field by
 trusted until the checksum matches, every read is bounds-checked, and a world that could never
 happen (an unknown costume, a door answered in the future) is refused even with a good checksum.
 `decodeSave` either fills the whole World or leaves it untouched.
+
+```mermaid
+flowchart TD
+    w["World"] --> enc["encodeSave<br/>FAMILIAR · version · length · fields · SHA-256"]
+    enc --> rb{"decodes back?"}
+    rb -- no --> stop1["refuse to write"]
+    rb -- yes --> tmp["write familiar.save.tmp,<br/>read it back byte for byte"]
+    tmp --> cur{"current familiar.save<br/>still good?"}
+    cur -- yes --> prev["keep it as familiar.save.prev"]
+    cur -- no --> dmg["set it aside as<br/>familiar.save.damaged"]
+    prev --> mv["rename .tmp to familiar.save"]
+    dmg --> mv
+    load["load"] --> c1{"familiar.save<br/>checksum and World valid?"}
+    c1 -- yes --> ok["Loaded your save."]
+    c1 -- no --> c2{"familiar.save.prev valid?"}
+    c2 -- yes --> okp["Your latest save was refused (why).<br/>Loaded the one before it."]
+    c2 -- no --> none["refused, with the reason;<br/>a new night"]
+```
+
+*Writing (top) never replaces a good save with a bad one; loading (bottom) falls back to the save
+before. In the browser the slot is `/familiar-save/default` on IndexedDB (IDBFS), flushed after
+each save and when the page is hidden.*
+
+![The browser game after a reload with its latest save damaged: the message says the save was refused and the one before it loaded](docs/images/save-refused.jpg)
+
+*The fallback in the browser: one byte of the latest save flipped, then a reload.*
 
 The format only grows. A new version adds fields at the end, read when the save's version has them
 and left at a new night's defaults when it does not; `tests/fixtures` keeps saves from every

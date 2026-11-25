@@ -8,6 +8,33 @@ which builds the game for Windows x64, Linux x64 and the browser and attaches th
 release. macOS is not built. The arcade is separate: the browser build deploys there on every push
 to `main` (`browser.yml`).
 
+```mermaid
+flowchart LR
+    tag["gh release create 0.1.1<br/>(or push the bare tag 0.1.1)"] --> meta
+    pr["pull request touching<br/>release.yml, CMakeLists.txt<br/>or docs/playtests"] -. dry run .-> meta
+    subgraph rel["release.yml"]
+        meta["meta<br/>tag = project VERSION?<br/>playtest evidence named for it?"]
+        meta --> linux["linux<br/>build, walk the tour on llvmpipe,<br/>tar.gz + .sha256"]
+        meta --> windows["windows<br/>build, check no missing DLLs,<br/>zip + .sha256"]
+        meta --> web["web<br/>emsdk build,<br/>web.zip + .sha256"]
+        web --> itch["itch<br/>butler push, channel html5<br/>(skips without BUTLER_API_KEY)"]
+        linux --> attach["attach<br/>gh release upload --clobber"]
+        windows --> attach
+        web --> attach
+    end
+    attach --> assets[("GitHub release assets")]
+    itch --> itchio(["danthetechman.itch.io/familiar"])
+    main["push to main"] --> browser["browser.yml<br/>build, wasm tests, smoke tests,<br/>deploy (when enabled)"] --> arcade(["familiar.play.danielstephenson.dev"])
+```
+
+*The release flow: one tag fans out to three builds; the web package also goes to itch.io. The
+arcade is fed separately, from `main`. A pull request (dotted) runs the same builds as a dry run
+and attaches nothing.*
+
+![The assets of the Familiar 0.1.1 release on GitHub: Windows zip, Linux tarball, web zip and a SHA-256 file for each](images/release-assets.jpg)
+
+*What step 3 leaves on the release page (0.1.1).*
+
 ## Steps
 
 0. **Playtest the candidate.** Play `main` and commit the notes, and what was changed for them, under
