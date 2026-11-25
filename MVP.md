@@ -65,3 +65,23 @@ Each milestone is one pull request, merged when every check is green.
 | M5 Saves and autopilot | Checksummed saves, the autopilot's playthrough on a pinned fingerprint, synthesised sound |
 | M6 Browser | The WebGL 2 build with touch controls and IndexedDB saves, smoke-tested in CI (not deployed) |
 | M7 Windows | `tools/play-familiar.bat` and a release workflow (no release cut) |
+
+### Delivered
+
+Each milestone, as the game shows it now (taken by `tools/capture-docs.sh`):
+
+| | |
+|---|---|
+| ![Elm Street at nightfall with porch lights and streetlamps](docs/images/tour-desktop-street.jpg) | ![A neighbour in a lit doorway asking for a trick](docs/images/knock-asked.jpg) |
+| **M1 Night town:** Elm Street after the real sunset, porch lights and streetlamps on, the HUD. | **M2 Trick-or-treat:** a knock, and Mrs. Okafor asks for a trick. |
+| ![A pale glowing figure among the churchyard stones, seen by the cat](docs/images/cat-spirits.jpg) | ![Wren's notebook open on its Samhain page with sources](docs/images/notebook.jpg) |
+| **M3 Cat:** in the churchyard the cat sees the spirits; Wren does not. | **M4 Witchcraft:** a lantern lit, and the notebook's Samhain page with its sources. |
+| ![The game after a reload, saying the latest save was refused and the one before it loaded](docs/images/save-refused.jpg) | ![A phone in portrait at a neighbour's door with touch buttons](docs/images/phone-knock.jpg) |
+| **M5 Saves and autopilot:** a save with one byte flipped is refused, and the one before loads. | **M6 Browser:** the WebGL 2 build on a phone, with touch controls. |
+| ![The assets of the 0.1.1 release on GitHub](docs/images/release-assets.jpg) | ![Animation: the headless tour of the whole night](docs/images/night.gif) |
+| **M7 Windows:** the release workflow's downloads for Windows, Linux and the browser. | **M5 again:** the night from 5:20 pm to midnight, played headless. |
+
+Phone layouts before and after the touch fixes are in [docs/touch/](docs/touch/), and the AI
+playtests, with the screenshots their findings cite, in
+[docs/playtests/0.1.0](docs/playtests/0.1.0/README.md) and
+[docs/playtests/0.1.1](docs/playtests/0.1.1/README.md).
