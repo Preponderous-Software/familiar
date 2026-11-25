@@ -113,8 +113,10 @@ EMSCRIPTEN_KEEPALIVE const char* familiar_notebook() {
         o += ",\"text\":";
         // Keep the paragraphs: jsonString turns control characters into spaces.
         std::string text;
-        for (char ch : std::string(p->text)) text += ch == '\n' ? '|' : ch;
+        for (char ch : pageText(*p)) text += ch == '\n' ? '|' : ch;
         jsonString(o, text);
+        o += ",\"sources\":";
+        jsonString(o, pageSources(*p));
         o += '}';
     }
     o += ']';

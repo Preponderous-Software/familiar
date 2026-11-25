@@ -29,7 +29,7 @@ constexpr float kStride = 0.75f;  // metres a step: footsteps from how fast the 
 std::string settingsPath(const std::string& slot) { return slot + "/settings.txt"; }
 constexpr const char* kGreeting =
     "Halloween in Hollowell. Nana waves from her porch: \"Pick a costume, love, and knock where the porch light's on.\"\n"
-    "1-4 chooses a costume. Q turns you into a cat, and back. Tab opens Wren's notebook.";
+    "Q turns you into a cat, and back. Tab opens Wren's notebook.";
 
 }  // namespace
 
@@ -209,7 +209,9 @@ void Session::onKeyDown(int scancode, bool repeat) {
         return;
     }
     if (notebook_ >= 0 && (scancode == kLeft || scancode == kRight)) {
-        const int n = std::max<int>(1, static_cast<int>(notebook(w_).size()));
+        int32_t width = 0, height = 0;
+        engine_.drawableSize(width, height);
+        const int n = std::max<int>(1, static_cast<int>(notebookLayout(w_, width, height).sheets.size()));
         notebook_ = (notebook_ + (scancode == kRight ? 1 : n - 1)) % n;
         return;
     }
