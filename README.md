@@ -6,6 +6,11 @@ trick-or-treating, and helping your grandmother, who is a Wiccan, keep Samhain: 
 for the town's beloved dead, brewing her cider, and bringing her old cat's spirit home by midnight.
 And tonight you can turn into a cat.
 
+![Night on Elm Street from the Okafors' porch: lit windows and jack-o'-lanterns across the road, children in costume on the sidewalk, the HUD's NEXT line on the left](docs/images/hero.jpg)
+
+*Elm Street at 7:40 pm in the browser build: porch lights on, trick-or-treaters out, and the
+HUD's NEXT line saying what to do.*
+
 **Status: in development.** See [CONCEPT.md](CONCEPT.md) for the game, [MVP.md](MVP.md) for what
 the first playable version holds and its milestones, [RESEARCH.md](RESEARCH.md) for the sources
 behind its portrayal of Samhain and Wicca, and [ARCHITECTURE.md](ARCHITECTURE.md) for how it is
@@ -20,6 +25,48 @@ In a browser, on a desktop or a phone:
 
 Saves stay in the browser and site where you play: a night saved on itch.io doesn't carry over to
 the arcade, or the other way round.
+
+## Screenshots
+
+All of these are the real game, taken by `tools/capture-docs.sh` (see
+[Docs images](#docs-images)). Browser shots are 1280×720 in headless Chromium; desktop shots are
+the native game's headless tour at 960×540.
+
+| | |
+|---|---|
+| ![Dusk on Nana's front walk with the costume choices on screen](docs/images/costume.jpg) | ![A neighbour in a lit doorway asking for a trick](docs/images/knock-asked.jpg) |
+| *5:20 pm: choose a costume (1–4) on Nana's walk.* | *Knock (E) and Mrs. Okafor asks for a trick: tell a joke (T).* |
+| ![A low cat's-eye view across the street to the lit Garcias' house, the HUD saying the bag is on the ground](docs/images/cat-night.jpg) | ![A cat's-eye view along the top of a picket fence](docs/images/tour-cat-fence.jpg) |
+| *Q: Wren becomes a black cat; the bag stays on the ground where she changed.* | *The cat hops up onto fences, sheds and roofs.* |
+| ![A pale glowing figure among the churchyard stones](docs/images/cat-spirits.jpg) | ![A lantern jar glowing in Nana's window](docs/images/lantern.jpg) |
+| *Only the cat sees the spirits: the town's own dead, visiting.* | *The first family lantern, in Nana's window, for her mother Ada.* |
+| ![Wren at the iron pot behind Nana's house, the prompt to stir](docs/images/potion.jpg) | ![Night at the stone circle on Lantern Hill, Nana's words in the message line](docs/images/tour-offering.jpg) |
+| *Nana's cider at the iron pot: stir (E) four times.* | *The offering at the stones on Lantern Hill.* |
+| ![Wren's notebook open on its Samhain and Guising pages](docs/images/notebook.jpg) | ![The HUD lines and the NEXT guidance](docs/images/hud.jpg) |
+| *Wren's notebook (Tab): what is history, what is practice, what is the game's own.* | *The HUD: the night at a glance, and NEXT says what to do.* |
+| ![Elm Street at nightfall in the desktop build](docs/images/tour-desktop-street.jpg) | ![A grey cat walking away between the stones at midnight](docs/images/tour-midnight.jpg) |
+| *The desktop build (Windows and Linux), here on Mesa llvmpipe.* | *Midnight: Smoke goes home.* |
+
+<table>
+<tr>
+<td width="33%"><img src="docs/images/phone-knock.jpg" alt="A phone in portrait at a neighbour's door, with Tell a joke and Just the treat buttons"></td>
+<td width="33%"><img src="docs/images/phone-lantern.jpg" alt="A phone in portrait at Nana's window, the big button reading Light"></td>
+<td width="34%"><img src="docs/images/phone-landscape.jpg" alt="A phone in landscape on Elm Street at night with the touch controls"></td>
+</tr>
+<tr>
+<td colspan="3"><em>On a phone: a stick on the left half, a drag on the right to look, and buttons named for
+what they do (Knock, Tell a joke, Light, Cat). More phone layouts are in <a href="docs/touch/">docs/touch/</a>.</em></td>
+</tr>
+</table>
+
+| | |
+|---|---|
+| ![Animation: the view drops low as Wren becomes a cat, then rises again](docs/images/cat-transform.gif) | ![Animation: walking along Elm Street at night past lit porches](docs/images/walk.gif) |
+| *Q and back: the eye drops to a hand's height.* | *Walking Elm Street after dark.* |
+
+![Animation: the whole night from the headless tour, from dusk on Nana's walk to midnight at the stones](docs/images/night.gif)
+
+*The whole night in 21 stops (`familiar --headless --tour`), one a second.*
 
 ## Building
 
@@ -67,6 +114,10 @@ byte damaged is refused with a message and the previous save loads instead; a da
 aside as `familiar.save.damaged`, never deleted. Saves from every earlier format keep loading:
 `tests/fixtures` holds one of each, and the tests load them. See `src/save/save.h`.
 
+![The browser game after a reload with its latest save damaged: the message says the save was refused and the one before it loaded](docs/images/save-refused.jpg)
+
+*One byte of the latest save flipped, then a reload: refused, and the save before it loads.*
+
 `familiar --autopilot` lets the autopilot play the whole night, from choosing a costume to Smoke
 going home at midnight; `familiar --headless --autopilot` plays it without a window and checks it
 ends on the pinned fingerprint (CI runs it with `--slot`, saving and reloading at every step). See
@@ -102,6 +153,23 @@ loader's bytes. After each link, `web/strata_page.cmake` puts the loader and
 the bridge inline in the page (so the site is still the same three files) and stamps the download's size on the
 template, because the arcade compresses on the fly and sends no
 `Content-Length`.
+
+## Docs images
+
+Every image in the docs is in `docs/images/` and is made by one script, so they can be re-taken
+whenever the game changes:
+
+```sh
+tools/capture-docs.sh                 # build both games, serve the web build, shoot everything
+tools/capture-docs.sh --only hero     # just one shot
+```
+
+It runs [darkroom](https://github.com/Preponderous-Software/darkroom) 0.7.1 on the shot list in
+`tools/docs-media/media.json`. Desktop shots come from `familiar --headless --tour` on Mesa
+llvmpipe; browser shots drive the page in headless Chromium through the same `window.familiar`
+hooks as the smoke test, plus `tools/docs-media/page-helpers.js`, which sets the clock of a save
+(re-signing it, as the game does) so a shot can start at 7:40 pm. Stills are kept under 200 KB
+and GIFs under 3 MB. The script's header lists what it needs.
 
 ## Licence
 
