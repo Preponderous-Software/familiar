@@ -72,6 +72,12 @@ MeshData buildBag();
 // scene draws it translucent and unlit, the way spirits are seen tonight.
 MeshData buildSmoke();
 
+// A family lantern's candlelight, once lit: the glass jar glowing warm from
+// inside and a flame over the rim, at the origin (the jar's foot). The scene
+// draws it unlit over the dark jar, so a lit lantern looks lit from any side
+// and in daylight (#29).
+MeshData buildLanternLight();
+
 // Where the jack-o'-lanterns sit on a house's porch (two each, none at Hale's).
 std::vector<Vec3> pumpkins(town::HouseId h);
 

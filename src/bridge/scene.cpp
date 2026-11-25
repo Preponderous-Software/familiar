@@ -56,6 +56,7 @@ Scene::Scene(strata::Engine& engine) : engine_(engine) {
         spirits_[i] = upload(buildSpirit(ss[i].look, ss[i].height), true, 0.42f);
     bag_ = upload(buildBag());
     smoke_ = upload(buildSmoke(), true, 0.55f);
+    for (uint32_t& l : lanterns_) l = upload(buildLanternLight(), true);
 }
 
 // Turns a figure built facing -z to `yaw` and stands it at `at`; hidden ones go
@@ -80,6 +81,7 @@ void Scene::update(const World& w) {
     float smokeYaw = 0;
     const bool seen = smokeShown(w, smokeAt, smokeYaw);
     place(smoke_, smokeAt, smokeYaw, seen);
+    for (int i = 0; i < kLanternCount; ++i) place(lanterns_[static_cast<size_t>(i)], lantern(i).at, 0, w.lit[static_cast<size_t>(i)]);
     for (int g = 0; g < T::GateCount; ++g) {
         const bool shut = !w.gateOpen[static_cast<size_t>(g)];
         if (shut && !gate_[static_cast<size_t>(g)]) gate_[static_cast<size_t>(g)] = upload(buildGate(static_cast<T::Gate>(g)));
@@ -120,6 +122,7 @@ Scene::~Scene() {
         for (uint32_t& id : spirits_) remove(id);
         remove(bag_);
         remove(smoke_);
+        for (uint32_t& id : lanterns_) remove(id);
         remove(town_);
         remove(glow_);
         remove(water_);

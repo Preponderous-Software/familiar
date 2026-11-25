@@ -575,6 +575,15 @@ MeshData buildSpirit(int who, float height) {
     return m;
 }
 
+MeshData buildLanternLight() {
+    MeshData m;
+    // A shade wider than the jar (0.11 m), so the glow covers its dark glass.
+    m.cylinder({0, 0.01f, 0}, 0.116f, 0.106f, 0.2f, 8, Rgb{1.0f, 0.62f, 0.22f});
+    m.blob({0, 0.215f, 0}, 0.07f, 0.5f, Rgb{1.0f, 0.82f, 0.45f});  // the candle's light at the rim
+    m.blob({0, 0.31f, 0}, 0.035f, 1.8f, Rgb{1.0f, 0.9f, 0.6f});   // the flame
+    return m;
+}
+
 MeshData buildBag() {
     MeshData m;
     const Rgb orange{0.70f, 0.22f, 0.02f}, black{0.03f, 0.03f, 0.03f};
