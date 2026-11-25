@@ -103,6 +103,7 @@ struct NextStep {
     std::string text;
     bool goal = false;
     Vec3 at{};
+    Vec2 stand{};  // where to stand for it, for the marker's way there (sim/ways.h, #25)
 };
 NextStep tonightStep(const World& w);
 // A second NEXT line, or "": the other thread of the evening, when NEXT names

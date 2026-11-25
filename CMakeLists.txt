@@ -53,6 +53,7 @@ add_library(familiar_sim STATIC
   src/sim/notebook.cpp
   src/sim/npc.cpp
   src/sim/town.cpp
+  src/sim/ways.cpp
   src/sim/world.cpp)
 target_include_directories(familiar_sim PUBLIC src)
 familiar_warnings(familiar_sim)
@@ -77,7 +78,7 @@ familiar_warnings(familiar_audio)
 
 if(FAMILIAR_BUILD_TESTS)
   enable_testing()
-  foreach(t movement town doors cat craft autopilot saves audio)
+  foreach(t movement town doors cat craft autopilot saves audio ways)
     add_executable(test_${t} tests/test_${t}.cpp)
     target_link_libraries(test_${t} PRIVATE familiar_sim familiar_save familiar_audio)
     target_compile_definitions(test_${t} PRIVATE FAMILIAR_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
@@ -141,6 +142,13 @@ if(FAMILIAR_WITH_STRATA)
   target_link_libraries(familiar PRIVATE familiar_play)
   target_compile_definitions(familiar PRIVATE FAMILIAR_VERSION="${PROJECT_VERSION}")
   familiar_warnings(familiar)
+  # Screenshots of the NEXT marker for docs/screenshots/wayfinding (a developer's tool).
+  option(FAMILIAR_SHOTS "Build tools/wayfinding_shots" OFF)
+  if(FAMILIAR_SHOTS)
+    add_executable(wayfinding_shots tools/wayfinding_shots.cpp)
+    target_link_libraries(wayfinding_shots PRIVATE familiar_play)
+    familiar_warnings(wayfinding_shots)
+  endif()
 endif()
 
 # emcmake cmake -S . -B build-web -DFAMILIAR_WITH_STRATA=OFF -DFAMILIAR_WEB=ON:
