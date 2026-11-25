@@ -266,6 +266,11 @@ night, borrowed from old stories about witches, not something Wiccans believe or
 names, no "Satan" the cat. Smoke is Nana's ordinary, beloved pet. An optional end-credits line can
 mention black-cat adoption.
 
+| | |
+|---|---|
+| ![A pale glowing figure among the churchyard stones, seen by the cat](docs/images/cat-spirits.jpg) | ![A small grey glowing cat sitting in the dark grass under the oak](docs/images/tour-smoke-oak.jpg) |
+| *As the game shows it: a spirit in the churchyard is a soft, pale figure, seen only by the cat, who nods or smiles.* | *Smoke is an ordinary grey cat, faintly glowing, who follows the cat home.* |
+
 ---
 
 ## 8. Setting facts: 42.4 N, 72.5 W, Saturday 31 October 2026
@@ -351,6 +356,20 @@ wins.
   she casts a circle, and whether she would do this alone with a child or with her coven.
 - Sensitivity "Do" 2: what counts as a "spell" in the game.
 - Every notebook page about Wicca, Samhain and the Wheel of the Year.
+
+### How it looks in the game
+
+These are the game's words and pictures as the docs script takes them now, for checking against
+the rules above (and for the practitioner reviewer).
+
+| | |
+|---|---|
+| ![The How to play dialog, with its line that the cat and the spirits are the game's fairy tale, not something Wiccans believe or do](docs/images/how-to-play.jpg) | ![Wren's notebook open on its Samhain and Guising pages, with source keys](docs/images/notebook.jpg) |
+| *Do 5: How to play labels the cat and the spirits as the game's fairy tale before the night starts.* | *Do 6 and Don't 3: the notebook's Samhain page separates history, today's practice and the game's invention, with sources; Guising is credited to Scotland and Ireland.* |
+| ![Nana's window lantern lit, her thanks in the message line](docs/images/lantern.jpg) | ![Night at the stone circle on Lantern Hill, Nana's words for the offering in the message line](docs/images/tour-offering.jpg) |
+| *Do 7: a family lantern lit for Nana's mother, Ada; Nana's thanks, no comic payoff.* | *Do 2 and Don't 4: the offering in Nana's own (original) words, "Harm none": apple, cider and a candle.* |
+| ![A neighbour in a lit doorway, Wren in a skeleton costume telling a joke](docs/images/knock-candy.jpg) | ![At midnight a small grey cat walks away between the stones](docs/images/tour-midnight.jpg) |
+| *Do 6: guising as it was done in Scotland and Ireland, a joke at the door for a treat [S20].* | *Do 7: grief kept gentle; Smoke walks home and does not look back.* |
 
 The game's words for all of these are in two files: `src/sim/notebook.cpp` (the notebook's pages)
 and `src/sim/craft.cpp` (the lanterns, the cider, the offering, Smoke, and Nana's lines).

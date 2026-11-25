@@ -5,3 +5,4 @@ Testing/
 *.swp
 web/smoke/node_modules/
 smoke-out/
+tools/docs-media/.darkroom/

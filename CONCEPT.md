@@ -17,6 +17,10 @@ skeletons, and the woods at the edge of town go dark. You walk anywhere: up Elm 
 to door, across the green, over the creek bridge, through the orchard and up Lantern Hill, where
 Nana will be waiting at midnight.
 
+![Dusk on Nana's front walk: the street, the Garcias' house and the autumn trees, the HUD on the left](docs/images/tour-nanas-porch.jpg)
+
+*5:20 pm on Nana's walk, where the night starts (the desktop build).*
+
 Two things to do, and both matter:
 
 - **Trick-or-treat.** Knock on doors with a porch light on. Each neighbour has a personality: some
@@ -29,12 +33,26 @@ Two things to do, and both matter:
   Smoke, Nana's old cat, who died this spring and has lost her way, and lead her up Lantern Hill
   to the circle where Nana makes her offering at midnight.
 
+| | |
+|---|---|
+| ![A neighbour in a lit doorway asking for a trick](docs/images/knock-asked.jpg) | ![Wren's joke and Mrs. Okafor's thanks in the message line, candy in the HUD](docs/images/knock-candy.jpg) |
+| *Trick-or-treat: knock, and Mrs. Okafor asks for a trick.* | *A joke, three candies, and a request: light Grandpa Ike's lantern.* |
+| ![A lantern jar glowing in Nana's window at dusk](docs/images/tour-window-lantern.jpg) | ![Night at the stone circle on Lantern Hill, Nana's words in the message line](docs/images/tour-offering.jpg) |
+| *Samhain: Nana's window lantern, for her mother Ada.* | *The offering at the stones, with Nana.* |
+
 And the verb that ties them together: **press Q and you are a black cat.** Small, quick, eyes a
 hand's height off the ground. You hop onto fences and sheds and from there onto roofs, slip
 through gaps in hedges, and see what people cannot: the spirits out walking on the one night the
 veil is thin, Smoke among them. But a cat cannot knock on a door, and cannot carry a candy bag or a
 lantern jar. Everything Wren carries stays on the ground where she changed until she comes back
 for it. Most of the night's puzzles need both of you: the cat gets in, the girl gets things done.
+
+| | |
+|---|---|
+| ![Animation: the view drops low as Wren becomes a cat, then rises again](docs/images/cat-transform.gif) | ![A low cat's-eye view across the street to the lit Garcias' house, the HUD saying the bag is on the ground](docs/images/cat-night.jpg) |
+| *Q: a hand's height off the ground, and back.* | *The bag stays where Wren changed.* |
+| ![A cat's-eye view along the top of a picket fence](docs/images/tour-cat-fence.jpg) | ![A pale glowing figure among the churchyard stones](docs/images/cat-spirits.jpg) |
+| *Up on a fence: the cat's way over.* | *What people cannot see: a spirit out walking.* |
 
 | | |
 |---|---|
@@ -65,6 +83,11 @@ never makes the trials a joke. The notebook's pages that explain Samhain, the Wh
 the Rede say plainly which parts are history, which are modern practice and which are the game's
 own invention, with their sources.
 
+![The How to play dialog, with its line: the cat and the spirits are this game's fairy tale, not something Wiccans believe or do](docs/images/how-to-play.jpg)
+
+*How to play, on a first visit, says it before the night starts: the cat and the spirits are the
+game's fairy tale, not something Wiccans believe or do.*
+
 ## The night
 
 | Time | What happens |
@@ -80,6 +103,10 @@ own invention, with their sources.
 Time runs at one game minute for every three seconds of play, so the whole night is a little over
 half an hour. Nothing fails if you are late: the veil stays thin until dawn, and the clock strikes
 every hour. Midnight is simply when it is best.
+
+![Four stops of the same night: dusk on Nana's walk, Elm Street after sunset, the churchyard as the cat, and midnight at the stones](docs/images/night-timeline.jpg)
+
+*The night at 5:20 pm, 6:52 pm, 9:24 pm and just after midnight (the headless tour).*
 
 ## The town
 
@@ -97,6 +124,10 @@ the owner's other Strata games (see [ARCHITECTURE.md](ARCHITECTURE.md)).
 - **The orchard** across the creek, and beyond it **the woods' edge**.
 - **Lantern Hill** to the north-east, with a ring of standing stones on top, the highest place
   around. From there the whole town shows as a string of lights.
+
+![Animation: walking along Elm Street at night past lit porches](docs/images/walk.gif)
+
+*Elm Street after dark.*
 
 ## The neighbours
 
@@ -124,6 +155,10 @@ the owner's other Strata games (see [ARCHITECTURE.md](ARCHITECTURE.md)).
 
 Lighting Mr. Hale's lantern turns his porch light back on, however late it is.
 
+![A lantern jar glowing in Nana's window at night, Nana's thanks in the message line](docs/images/lantern.jpg)
+
+*The first lantern lit: "Thank you, love. That one's always first."*
+
 ## Nana's cider
 
 Two apples from the orchard (one for the pot, one for the offering), a sprig of rosemary from
@@ -132,12 +167,20 @@ iron pot behind Nana's house and stir (E) until it is ready. The cider and an ap
 offering; apples and cider belong to this night in both its Halloween and its Samhain traditions
 [S17] [S18].
 
+![Wren at the iron pot on the fire pit behind Nana's house, the prompt to stir](docs/images/potion.jpg)
+
+*At the pot: the cider is on, and E stirs it.*
+
 ## Smoke
 
 As a cat you see faint, glowing paw prints that people cannot: Smoke's trail, from Nana's garden
 to wherever she has wandered. Find her and she follows you, but only while you are a cat (she
 will not come to people tonight). Lead her up Lantern Hill to the circle. On the way you pass
 other spirits out walking, all of them gentle: the town's own dead, visiting.
+
+![A small grey glowing cat sitting in the dark grass under the oak](docs/images/tour-smoke-oak.jpg)
+
+*Smoke, found under the old oak across the creek.*
 
 ## Secrets
 
@@ -154,8 +197,16 @@ Year, the Rede, why lanterns go in windows, guising, why a turnip came before th
 black cat in folklore, and the secrets. The pages about real belief and history cite their sources
 and say where the game invents.
 
+![Wren's notebook open on its Samhain and Guising pages, with source keys like [S1]](docs/images/notebook.jpg)
+
+*The notebook's Samhain page: history, today's practice, and where the game invents, with sources.*
+
 ## What success looks like
 
 Midnight on Lantern Hill, the church clock striking, the town below a string of porch lights and
 lanterns, a small grey cat walking into the dark between the stones and not looking back, Nana
 saying her name. Then the night carries on, and you can walk home.
+
+![At midnight a small grey cat walks away into the dark between the stones](docs/images/tour-midnight.jpg)
+
+*Midnight on Lantern Hill, as the game has it now.*

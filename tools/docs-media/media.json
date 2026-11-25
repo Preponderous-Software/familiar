@@ -1,0 +1,1040 @@
+{
+  "description": "Familiar's documentation images (README, CONCEPT, MVP, RESEARCH, ARCHITECTURE, docs/RELEASING). Run tools/capture-docs.sh, which builds the game, serves the web build and runs darkroom on this file.",
+  "out": "../../docs/images",
+  "vars": {
+    "base": "http://127.0.0.1:8846/",
+    "native": "../../build-docs-native/familiar",
+    "witchcraft": "RkFNSUxJQVIDAAAArQAAAAAAAAABAAAAAAAAAM8LAAAAAAAAAACIwgAAwMEAAAAAAAAAAAAAAAAAAAAAAgAAAAAADwAAAAoAAAAAAQABAQEBAQEBCQAAAE4HAAAAAAAAAQAAAP////8CAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAAABAAAAAAABAAAAAAAAAAAAAABwQjMzx8H//////////xkAAAAAAAAABgAAAAEAAACxCwAAAAAAAO0wnLL5WstuZ+++snAt2NKqlr2bPQrYlKzoANUVwd8/"
+  },
+  "devices": {
+    "phone2": {
+      "width": 390,
+      "height": 844,
+      "dpr": 2,
+      "touch": true,
+      "mobile": true
+    },
+    "phone2-landscape": {
+      "width": 844,
+      "height": 390,
+      "dpr": 2,
+      "touch": true,
+      "mobile": true
+    }
+  },
+  "budgets": {
+    "still_kb": 200,
+    "gif_mb": 3
+  },
+  "defaults": {
+    "backend": "web",
+    "device": "desktop",
+    "url": "{base}",
+    "waitUntil": "commit",
+    "ready": "window.__docs && __docs.ready()",
+    "readyTimeout": 300000,
+    "screenshotTimeout": 300000,
+    "timeout": 1500,
+    "initScript": {
+      "file": "page-helpers.js"
+    },
+    "userAgent": "familiar-docs headless",
+    "css": "#clickToPlay { display: none !important; }",
+    "quality": 84
+  },
+  "shots": [
+    {
+      "name": "tour",
+      "kind": "still",
+      "backend": "command",
+      "argv": [
+        "{native}",
+        "--headless",
+        "--tour",
+        "--frames",
+        "{out_dir}",
+        "--width",
+        "960",
+        "--height",
+        "540"
+      ],
+      "env": {
+        "LIBGL_ALWAYS_SOFTWARE": "1",
+        "GALLIUM_DRIVER": "llvmpipe"
+      },
+      "device": {
+        "width": 960,
+        "height": 540
+      },
+      "outputs": {
+        "nanas-porch": {
+          "file": "01-nanas-porch.png",
+          "caption": "5:20 pm on Nana's walk: choose a costume.",
+          "alt": "Dusk on Nana's front walk, the street and the Garcias' house beyond a picket fence, the HUD on the left"
+        },
+        "window-lantern": {
+          "file": "02-nanas-window-lantern.png",
+          "caption": "The first lantern, in Nana's window, for her mother Ada.",
+          "alt": "A lit lantern jar glowing in Nana's window at dusk"
+        },
+        "desktop-street": {
+          "file": "06-dusk-street.png",
+          "caption": "Elm Street after sunset, porch lights on: the desktop build.",
+          "alt": "Elm Street at nightfall with porch lights and streetlamps, the HUD on the left"
+        },
+        "cat-fence": {
+          "file": "07-cat-over-fence.png",
+          "caption": "As the cat, up on a picket fence.",
+          "alt": "A cat's-eye view along the top of a white picket fence at night"
+        },
+        "cat-spirits": {
+          "file": "12-cat-churchyard-spirits.png",
+          "caption": "In the churchyard the cat sees a spirit out walking.",
+          "alt": "A faint, pale glowing figure among the churchyard stones at night"
+        },
+        "smoke-oak": {
+          "file": "19-smoke-under-the-oak.png",
+          "caption": "Smoke, Nana's old cat, found under the oak.",
+          "alt": "A small grey glowing cat sitting in the dark grass"
+        },
+        "offering": {
+          "file": "20-the-offering.png",
+          "caption": "The offering at the stones on Lantern Hill.",
+          "alt": "Night at the stone circle; Nana's words about the offering in the message line"
+        },
+        "midnight": {
+          "file": "21-midnight-smoke-goes-home.png",
+          "caption": "Midnight: Smoke walks out between the stones.",
+          "alt": "At midnight a small grey cat walks away into the dark between the stones"
+        }
+      }
+    },
+    {
+      "name": "night",
+      "kind": "clip",
+      "backend": "command",
+      "argv": [
+        "{native}",
+        "--headless",
+        "--tour",
+        "--frames",
+        "{out_dir}",
+        "--width",
+        "960",
+        "--height",
+        "540"
+      ],
+      "env": {
+        "LIBGL_ALWAYS_SOFTWARE": "1",
+        "GALLIUM_DRIVER": "llvmpipe"
+      },
+      "device": {
+        "width": 960,
+        "height": 540
+      },
+      "fps": 1,
+      "gif": {
+        "width": 640,
+        "hold_last_ms": 2000
+      },
+      "caption": "The headless tour's 21 stops, from 5:20 pm to midnight, one a second.",
+      "alt": "Animation: the night from dusk on Nana's walk, through the street, the cat and the churchyard, to midnight at the stones"
+    },
+    {
+      "name": "first-visit",
+      "kind": "still",
+      "caption": "A first visit: How to play, then a costume on Nana's walk.",
+      "alt": "The How to play dialog over the game",
+      "steps": [
+        {
+          "wait": 1500
+        },
+        {
+          "capture": "how-to-play"
+        },
+        {
+          "click": "#helpClose"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "capture": "costume"
+        }
+      ]
+    },
+    {
+      "name": "hero",
+      "kind": "still",
+      "session": "night",
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ],
+      "caption": "Elm Street at 7:40 pm, from the Okafors' porch.",
+      "alt": "Night on Elm Street: lit porches and jack-o'-lanterns across the road, the HUD on the left",
+      "steps": [
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI - 0.35, 0.05)"
+        },
+        {
+          "wait": 7000
+        }
+      ]
+    },
+    {
+      "name": "knock",
+      "kind": "still",
+      "session": "night",
+      "caption": "Trick-or-treating: knock (E), tell a joke (T), get candy.",
+      "alt": "Mrs. Okafor in her lit doorway asking for a trick",
+      "steps": [
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(0, 0.05)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "key": "KeyE"
+        },
+        {
+          "waitFor": "__docs.st().asking || __docs.st().knocked > 0",
+          "timeout": 20000
+        },
+        {
+          "wait": 2500
+        },
+        {
+          "capture": "knock-asked"
+        },
+        {
+          "key": "KeyT"
+        },
+        {
+          "waitFor": "__docs.st().candy > 0",
+          "timeout": 20000
+        },
+        {
+          "wait": 2500
+        },
+        {
+          "capture": "knock-candy"
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "lantern",
+      "kind": "still",
+      "session": "night",
+      "caption": "Nana's window lantern, lit for her mother Ada.",
+      "alt": "A lantern jar glowing in the window of Nana's house at night",
+      "steps": [
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "familiar.toPlace(0)"
+        },
+        {
+          "waitFor": "__docs.st().use === 'Light'",
+          "timeout": 20000
+        },
+        {
+          "wait": 800
+        },
+        {
+          "key": "KeyE"
+        },
+        {
+          "waitFor": "__docs.st().lanterns >= 1",
+          "timeout": 20000
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "notebook",
+      "kind": "still",
+      "session": "night",
+      "caption": "Wren's notebook (Tab): pages on Samhain and the night's customs, with sources.",
+      "alt": "Wren's notebook open on a page about Samhain, with source keys",
+      "steps": [
+        {
+          "js": "if (getComputedStyle(document.getElementById('notebook')).display === 'none') document.getElementById('bookBtn').click()"
+        },
+        {
+          "wait": 1500
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "cat-night",
+      "kind": "still",
+      "session": "night",
+      "caption": "Q: Wren becomes a black cat. The candy bag stays where she changed.",
+      "alt": "A low cat's-eye view across the street to the lit Garcias' house, the HUD saying the bag is on the ground",
+      "steps": [
+        {
+          "js": "const nb = document.getElementById('notebook'); if (getComputedStyle(nb).display !== 'none') document.getElementById('bookClose').click()"
+        },
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "familiar.toDoorstep(1)"
+        },
+        {
+          "wait": 800
+        },
+        {
+          "key": "KeyQ"
+        },
+        {
+          "waitFor": "__docs.st().cat",
+          "timeout": 20000
+        },
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI, -0.35)"
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "cat-spirits",
+      "kind": "still",
+      "session": "night",
+      "caption": "Only the cat sees the spirits: the town's own dead, visiting.",
+      "alt": "A pale glowing figure of a farmer among the churchyard stones, seen by the cat",
+      "steps": [
+        {
+          "js": "if (!__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "waitFor": "__docs.st().cat",
+          "timeout": 20000
+        },
+        {
+          "js": "familiar.toSpot(2)"
+        },
+        {
+          "waitFor": "__docs.st().spiritsSeen > 0",
+          "timeout": 30000
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "hud",
+      "kind": "still",
+      "session": "night",
+      "caption": "The HUD: the time, candy, costume, form, lanterns, basket and Smoke, then NEXT.",
+      "alt": "The top-left HUD lines and the NEXT guidance",
+      "steps": [
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "familiar.toPlace(1)"
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "crop": [
+        0,
+        50,
+        800,
+        280
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "cat-transform",
+      "kind": "clip",
+      "session": "night",
+      "fps": 3,
+      "gif": {
+        "width": 640,
+        "hold_last_ms": 1200
+      },
+      "caption": "Q turns Wren into a cat (the eye drops to a hand's height) and back.",
+      "alt": "Animation: the view on Elm Street at night drops low as Wren becomes a cat, then rises again",
+      "steps": [
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "if (__docs.st().bagDown) familiar.toDoorstep(1)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "js": "if (__docs.st().bagDown) familiar.press(8)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI, 0)"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "until": "__docs.st().z > -3",
+          "max": 15,
+          "steps": [
+            {
+              "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 400)); familiar.stick(0, 0)"
+            }
+          ]
+        },
+        {
+          "js": "__docs.pose(Math.PI / 2, 0.02)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "repeat": 3,
+          "steps": [
+            {
+              "capture": true
+            }
+          ]
+        },
+        {
+          "key": "KeyQ"
+        },
+        {
+          "waitFor": "__docs.st().cat",
+          "timeout": 20000
+        },
+        {
+          "wait": 500
+        },
+        {
+          "repeat": 4,
+          "steps": [
+            {
+              "capture": true
+            }
+          ]
+        },
+        {
+          "key": "KeyQ"
+        },
+        {
+          "waitFor": "!__docs.st().cat",
+          "timeout": 20000
+        },
+        {
+          "wait": 500
+        },
+        {
+          "repeat": 3,
+          "steps": [
+            {
+              "capture": true
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "walk",
+      "kind": "clip",
+      "session": "night",
+      "fps": 4,
+      "gif": {
+        "width": 640
+      },
+      "caption": "Walking Elm Street after dark, a few steps between frames.",
+      "alt": "Animation: walking east along Elm Street at night past lit porches and trick-or-treaters",
+      "steps": [
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI, 0)"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "until": "__docs.st().z > -3",
+          "max": 15,
+          "steps": [
+            {
+              "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 400)); familiar.stick(0, 0)"
+            }
+          ]
+        },
+        {
+          "js": "__docs.pose(Math.PI / 2, 0.02)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "repeat": 12,
+          "steps": [
+            {
+              "js": "familiar.stick(1, 0); await new Promise((r) => setTimeout(r, 2500)); familiar.stick(0, 0)"
+            },
+            {
+              "wait": 500
+            },
+            {
+              "capture": true
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "save-refused",
+      "kind": "still",
+      "session": "night",
+      "caption": "A damaged save is refused, and the one before it loads.",
+      "alt": "The game after a reload, its message line saying the latest save was refused and the one before it loaded",
+      "steps": [
+        {
+          "js": "if (__docs.st().cat) familiar.press(20)"
+        },
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI, 0)"
+        },
+        {
+          "wait": 800
+        },
+        {
+          "js": "__docs.damage()"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "waitFor": "/refused/.test(__docs.st().message)",
+          "timeout": 30000
+        },
+        {
+          "wait": 1200
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "potion",
+      "kind": "still",
+      "session": "night",
+      "caption": "Nana's cider at the iron pot: apples, rosemary, cinnamon, then stir (E).",
+      "alt": "Wren at the iron pot on the fire pit behind Nana's house, the prompt to stir",
+      "steps": [
+        {
+          "js": "__docs.loadSave(vars.witchcraft)"
+        },
+        {
+          "reload": true
+        },
+        {
+          "waitFor": "__docs.st().use === 'Stir'",
+          "timeout": 30000
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "key": "KeyE"
+        },
+        {
+          "wait": 5000
+        }
+      ],
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "key": "Digit3"
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "js": "familiar.help(0)"
+        },
+        {
+          "wait": 4000
+        }
+      ]
+    },
+    {
+      "name": "phone-knock",
+      "kind": "still",
+      "caption": "On a phone: the stick, a drag to look, and buttons named for what they do.",
+      "alt": "A phone in portrait at a neighbour's door, with the Tell a joke and Just the treat buttons and the Cat button",
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "tap": "#costumes [data-costume=\"3\"]"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "steps": [
+        {
+          "js": "familiar.toDoorstep(1)"
+        },
+        {
+          "waitFor": "document.getElementById('use').textContent.trim() === 'Knock'",
+          "timeout": 20000
+        },
+        {
+          "tap": "#use"
+        },
+        {
+          "waitFor": "__docs.st().asking",
+          "timeout": 20000
+        },
+        {
+          "wait": 2500
+        }
+      ],
+      "device": "phone2",
+      "session": "phone"
+    },
+    {
+      "name": "phone-lantern",
+      "kind": "still",
+      "caption": "On a phone the big button reads Light at a lantern.",
+      "alt": "A phone in portrait at Nana's window, the big button reading Light",
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "tap": "#costumes [data-costume=\"3\"]"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "steps": [
+        {
+          "tap": "#trickBtn"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "js": "familiar.toPlace(0)"
+        },
+        {
+          "waitFor": "document.getElementById('use').textContent.trim() === 'Light'",
+          "timeout": 20000
+        },
+        {
+          "wait": 1500
+        }
+      ],
+      "device": "phone2",
+      "session": "phone"
+    },
+    {
+      "name": "phone-landscape",
+      "kind": "still",
+      "caption": "A phone held sideways.",
+      "alt": "A phone in landscape on Elm Street at night, the touch controls along the edges",
+      "device": "phone2-landscape",
+      "setup": [
+        {
+          "click": "#helpClose"
+        },
+        {
+          "tap": "#costumes [data-costume=\"3\"]"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "js": "__docs.saveAt('7:40 pm')"
+        },
+        {
+          "reload": true
+        },
+        {
+          "wait": 3000
+        }
+      ],
+      "session": "phone-landscape",
+      "steps": [
+        {
+          "js": "familiar.toDoorstep(1); __docs.pose(Math.PI - 0.35, 0.05)"
+        },
+        {
+          "wait": 3000
+        }
+      ]
+    },
+    {
+      "name": "release-assets",
+      "kind": "still",
+      "url": "https://github.com/Preponderous-Software/familiar/releases/tag/0.1.1",
+      "device": {
+        "width": 1100,
+        "height": 420
+      },
+      "ready": "document.readyState === 'complete'",
+      "initScript": [],
+      "css": "",
+      "caption": "The 0.1.1 release's downloads.",
+      "alt": "The Familiar 0.1.1 release page on GitHub listing its download assets",
+      "steps": [
+        {
+          "js": "window.scrollTo(0, document.body.scrollHeight)"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "waitFor": "[...document.querySelectorAll('a')].some(a => /web\\.zip$/.test(a.textContent.trim()))",
+          "timeout": 60000
+        },
+        {
+          "js": "const h = [...document.querySelectorAll('summary, h2, span')].find(e => e.textContent.trim().startsWith('Assets')); window.scrollTo(0, h.getBoundingClientRect().top + scrollY - 16)"
+        },
+        {
+          "wait": 800
+        }
+      ],
+      "context": {
+        "bypassCSP": true
+      }
+    },
+    {
+      "name": "night-timeline",
+      "kind": "grid",
+      "cols": 2,
+      "tiles": [
+        {
+          "image": "../../docs/images/tour-nanas-porch.jpg",
+          "caption": "5:20 pm, Nana's walk"
+        },
+        {
+          "image": "../../docs/images/tour-desktop-street.jpg",
+          "caption": "6:52 pm, Elm Street"
+        },
+        {
+          "image": "../../docs/images/tour-cat-spirits.jpg",
+          "caption": "9:24 pm, the churchyard"
+        },
+        {
+          "image": "../../docs/images/tour-midnight.jpg",
+          "caption": "12:01 am, Lantern Hill"
+        }
+      ]
+    }
+  ]
+}
