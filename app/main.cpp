@@ -390,7 +390,7 @@ int runGame(strata::Engine& engine, const Args& args) {
         session.frame(engine.frameSeconds());
         engine.present();
     }
-    session.save("");  // on quitting
+    session.save(false);  // on quitting
     return 0;
 }
 

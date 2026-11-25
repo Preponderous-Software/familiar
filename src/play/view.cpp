@@ -52,6 +52,23 @@ void text(std::vector<StrataText>& out, std::vector<std::string>& keep, float x,
     out.push_back(t);
 }
 
+// Text a little smaller on a short screen (640x360), as the HUD has always been.
+float fitText(int32_t height) { return height < 600 ? 0.75f : 1.0f; }
+
+// A dark, see-through card behind words, so they read against a lit door (#16).
+StrataRect backing(float x, float y, float width, float height, float alpha = 0.5f) {
+    StrataRect r{};
+    r.x = x;
+    r.y = y;
+    r.width = width;
+    r.height = height;
+    r.color[0] = 0.05f;
+    r.color[1] = 0.03f;
+    r.color[2] = 0.06f;
+    r.color[3] = alpha;
+    return r;
+}
+
 float nightness(float sunElevation) { return clampf(-sunElevation / 6.0f, 0.0f, 1.0f); }
 
 // The jack-o'-lanterns' candle flames, and the streetlamps' glow, as soft points.
@@ -471,16 +488,20 @@ void setLights(strata::Engine& engine, const World& w, float sunElevation) {
 }
 
 std::vector<HudLine> hudLines(const World& w) {
+    // Only what matters now (#16): the time and the candy always; the costume
+    // while it can still be chosen; the cat's lines while she is the cat; each
+    // part of Nana's night once it has begun; then NEXT.
     std::vector<HudLine> lines;
     lines.push_back({"31 October  " + clockText(w), true});
     lines.push_back({"Candy     " + std::to_string(w.candy) + (w.bagDown ? "  (bag on the ground)" : "")});
-    if (w.form == Form::Girl) lines.push_back({std::string("Costume   ") + costumeShort(w.costume)});
-    lines.push_back({std::string("You are   ") + (w.form == Form::Cat ? "a black cat  (Q: Wren)" : "Wren  (Q: a cat)")});
-    if (w.spiritsSeen) lines.push_back({"Spirits   " + std::to_string(spiritsSeen(w)) + " of " + std::to_string(SpiritCount) + " met"});
-    lines.push_back({"Lanterns  " + lanternLine(w)});
-    lines.push_back({"Basket    " + basketLine(w)});
-    lines.push_back({"Smoke     " + smokeLine(w)});
-    lines.push_back({""});
+    if (canChooseCostume(w)) lines.push_back({std::string("Costume   ") + costumeShort(w.costume)});
+    if (w.form == Form::Cat) {
+        lines.push_back({"You are   a black cat  (Q: Wren)"});
+        if (w.spiritsSeen) lines.push_back({"Spirits   " + std::to_string(spiritsSeen(w)) + " of " + std::to_string(SpiritCount) + " met"});
+    }
+    if (lanternsLit(w) > 0) lines.push_back({"Lanterns  " + lanternLine(w)});
+    if (const std::string b = basketLine(w); b != "empty") lines.push_back({"Basket    " + b});
+    if (w.smoke != SmokeState::Lost) lines.push_back({"Smoke     " + smokeLine(w)});
     lines.push_back({"NEXT", true});
     lines.push_back({tonightNext(w)});
     if (std::string also = tonightAlso(w); !also.empty()) lines.push_back({also});
@@ -490,10 +511,10 @@ std::vector<HudLine> hudLines(const World& w) {
 std::string prompt(const World& w) {
     if (std::string b = catPrompt(w); !b.empty()) return b;  // the bag, a latch (M3)
     if (std::string c = craftPrompt(w); !c.empty()) return c;
+    const std::string u = usePrompt(w);
     // A door's own line, unless it only says something (Nana's door, which does
     // nothing, or the costume line once one is chosen) and something usable is
     // straight ahead, out of reach.
-    const std::string u = usePrompt(w);
     const bool weak = canChooseCostume(w) ? w.costume != Costume::None : atDoor(w) == T::Nana;
     if (!u.empty() && !weak) return u;
     const std::string h = reachHint(w);
@@ -531,12 +552,12 @@ std::vector<std::string> wrapped(const std::string& text, size_t columns) {
 }
 
 void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool noText, const std::string& message,
-            Cover cover, int notebookPage) {
+            Cover cover, int notebookPage, const std::string& cue) {
     const float elevation = setSky(engine, w);
     setLights(engine, w, elevation);
     int32_t width = 0, height = 0;
     engine.drawableSize(width, height);
-    const float fit = height < 600 ? 0.75f : 1.0f;
+    const float fit = fitText(height);
     gTextSize = std::round(16.0f * fit);
     gLine = std::round(20.0f * fit);
     const float aspect = height > 0 ? static_cast<float>(width) / static_cast<float>(height) : 1.0f;
@@ -570,11 +591,16 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
         }
         for (const std::string& part : wrapped(l.text, hudColumns)) shown.push_back({part, l.heading});
     }
+    std::vector<StrataRect> backs;
+    float hudWide = 0;
     for (const HudLine& l : shown) {
         hudRight.push_back(noText ? 0 : kMargin + gTextSize * static_cast<float>(l.text.size()));
+        hudWide = std::max(hudWide, gTextSize * static_cast<float>(l.text.size()));
         if (!l.text.empty()) text(texts, keep, kMargin, y, l.text, l.heading ? lamp : ink);
         y += gLine;
     }
+    if (!noText && !shown.empty())
+        backs.push_back(backing(kMargin - 6, kMargin - 5, hudWide + 12, y - kMargin - (gLine - gTextSize) + 10));
     const size_t hudTexts = texts.size();
     // Whether a text box would sit on the HUD: its lines, as drawn, or the
     // page's own HUD over the canvas (cover) on a phone.
@@ -635,79 +661,131 @@ void render(strata::Engine& engine, const World& w, bool help, float eyeY, bool 
     text(texts, keep, static_cast<float>(width) / 2 - gTextSize / 2, static_cast<float>(height) / 2 - gTextSize / 2, "+",
          usable(here) ? lamp : ink);
     const auto columns = static_cast<size_t>(std::max(16.0f, (static_cast<float>(width) - 2 * kMargin) / gTextSize));
-    auto centred = [&](const std::string& s, float row, const float* colour) {
-        for (const std::string& line : wrapped(s, columns)) {
+    // The prompt, then what was said, under the crosshair, each on its own card.
+    auto centred = [&](const std::vector<std::string>& lines, float row, const float* colour) {
+        float wide = 0;
+        for (const std::string& line : lines) wide = std::max(wide, gTextSize * static_cast<float>(line.size()));
+        if (!lines.empty() && !noText)
+            backs.push_back(backing(static_cast<float>(width) / 2 - wide / 2 - 8, row - 5, wide + 16,
+                                    gLine * static_cast<float>(lines.size()) - (gLine - gTextSize) + 10, 0.55f));
+        for (const std::string& line : lines) {
             text(texts, keep, static_cast<float>(width) / 2 - gTextSize * 0.5f * static_cast<float>(line.size()), row, line, colour);
             row += gLine;
         }
         return row;
     };
     float py = static_cast<float>(height) / 2 + 2 * gLine;
-    if (!here.empty()) py = centred(here, py, ink);
-    if (!message.empty()) centred(message, std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine), lamp);
+    if (!here.empty()) py = centred(wrapped(here, columns), py, ink);
+    const std::vector<std::string> said = message.empty() ? std::vector<std::string>{} : wrapped(message, columns);
+    const float sayAt = std::max(static_cast<float>(height) / 2 + 4 * gLine, py + gLine);
+    if (!said.empty()) centred(said, sayAt, lamp);
+    // The controls along the bottom (F1), out of the way of what is being said:
+    // while the words would reach them, they wait (#16).
     if (help) {
         std::vector<std::string> items = {"W A S D walk", "Shift hurry", "Mouse look", "E knock / use", "T tell a joke", "1-4 costume", "Q cat / Wren",
-                                          "Tab notebook", "M sound", "Esc free the mouse", "F1 hide help"};
+                                          "Tab notebook", "M sound", "F5 save", "F9 load", "Esc free the mouse", "F1 hide help"};
         std::vector<std::string> lines(1);
         for (const std::string& item : items) {
             if (!lines.back().empty() && lines.back().size() + 3 + item.size() > columns) lines.emplace_back();
             lines.back() += (lines.back().empty() ? "" : "   ") + item;
         }
-        float bottom = static_cast<float>(height) - kMargin - gTextSize;
-        for (size_t i = lines.size(); i-- > 0;) {
-            text(texts, keep, kMargin, bottom, lines[i], ink);
-            bottom -= gLine;
+        const float last = static_cast<float>(height) - kMargin - gTextSize;
+        const float top = last - gLine * static_cast<float>(lines.size() - 1);
+        const float wordsEnd = said.empty() ? py : sayAt + gLine * static_cast<float>(said.size());
+        if (wordsEnd + gLine / 2 <= top) {
+            float wide = 0;
+            for (const std::string& line : lines) wide = std::max(wide, gTextSize * static_cast<float>(line.size()));
+            if (!noText) backs.push_back(backing(kMargin - 6, top - 5, wide + 12, last - top + gTextSize + 10, 0.45f));
+            for (size_t i = 0; i < lines.size(); ++i) text(texts, keep, kMargin, top + gLine * static_cast<float>(i), lines[i], ink);
         }
     }
-    // Wren's notebook, open over the night (Tab): one page at a time.
-    const std::vector<const Page*> pages = notebook(w);
+    // A save just written: a small note at the top right, so even the
+    // two-minute autosave shows (#30).
+    if (!cue.empty() && !noText) {
+        const float dim[4] = {0.8f, 0.74f, 0.66f, 0.9f};
+        const float wide = gTextSize * static_cast<float>(cue.size());
+        const float x = static_cast<float>(width) - kMargin - wide;
+        backs.push_back(backing(x - 6, kMargin - 5, wide + 12, gTextSize + 10, 0.45f));
+        text(texts, keep, x, kMargin, cue, dim);
+    }
+    // Wren's notebook, open over the night (Tab): one sheet at a time.
     if (!noText && notebookPage >= 0) {
         texts.clear();
         keep.clear();
-        const float pw = std::min(static_cast<float>(width) - 2 * kMargin, gTextSize * 64 + 2 * kMargin);
-        const auto cols = static_cast<size_t>((pw - 2 * kMargin) / gTextSize);
-        const float px = (static_cast<float>(width) - pw) / 2;
+        backs.clear();
+        const NotebookLayout nb = notebookLayout(w, width, height);
+        const size_t count = nb.sheets.size();
+        const float px = (static_cast<float>(width) - nb.width) / 2;
         float ty = kMargin * 2;
-        std::vector<std::string> body;
-        std::string title = "Wren's notebook";
-        if (pages.empty()) {
-            body = wrapped("Nothing yet. Pages fill in as the night goes: light Nana's window lantern first.", cols);
-        } else {
-            const Page& pg = *pages[static_cast<size_t>(notebookPage) % pages.size()];
-            title = pg.title;
-            body = wrapped(pg.text, cols);
-        }
-        const std::string foot = "Page " + std::to_string(pages.empty() ? 0 : notebookPage % static_cast<int>(pages.size()) + 1) +
-                                 " of " + std::to_string(pages.size()) + "   Secrets " + std::to_string(secretsFound(w)) + " of " +
-                                 std::to_string(SecretCount) + "   Left/Right turn   Tab close";
-        const float ph = gLine * static_cast<float>(body.size() + 4) + 2 * kMargin;
-        StrataRect r{};
-        r.x = px;
-        r.y = ty - kMargin;
-        r.width = pw;
-        r.height = std::min(ph, static_cast<float>(height) - ty);
-        r.color[0] = 0.07f;
-        r.color[1] = 0.05f;
-        r.color[2] = 0.08f;
-        r.color[3] = 0.9f;
-        engine.submitRects(&r, 1);
-        text(texts, keep, px + kMargin, ty, title, lamp);
+        Sheet blank;
+        blank.title = "Wren's notebook";
+        blank.body = wrapped("Nothing written yet. Pages fill in as the night goes: light Nana's window lantern first.", nb.columns);
+        const size_t at = count ? static_cast<size_t>(notebookPage) % count : 0;
+        const Sheet& sh = count ? nb.sheets[at] : blank;
+        const std::vector<std::string> foot = wrapped(notebookFooter(w, count ? at + 1 : 0, count), nb.columns);
+        const float ph = gLine * static_cast<float>(sh.body.size() + 3 + foot.size()) + kMargin;
+        backs.push_back(backing(px, ty - kMargin, nb.width, std::min(ph, static_cast<float>(height) - ty), 0.9f));
+        text(texts, keep, px + kMargin, ty, sh.title, lamp);
         ty += gLine * 2;
-        for (const std::string& line : body) {
-            text(texts, keep, px + kMargin, ty, line, ink);
+        const float dim[4] = {0.7f, 0.64f, 0.62f, 1.0f};
+        for (size_t i = 0; i < sh.body.size(); ++i) {
+            text(texts, keep, px + kMargin, ty, sh.body[i], i >= sh.sourcesFrom ? dim : ink);
             ty += gLine;
         }
         ty += gLine;
-        for (const std::string& line : wrapped(foot, cols)) {
-            const float dim[4] = {0.7f, 0.64f, 0.62f, 1.0f};
+        for (const std::string& line : foot) {
             text(texts, keep, px + kMargin, ty, line, dim);
             ty += gLine;
         }
     }
+    if (!backs.empty()) engine.submitRects(backs.data(), backs.size());
     for (size_t i = 0; i < texts.size(); ++i) texts[i].utf8 = keep[i].c_str();
     if (!noText) engine.submitText(texts.data(), texts.size());
     else if (labelsEnd > hudTexts) engine.submitText(texts.data() + hudTexts, labelsEnd - hudTexts);
     engine.endFrame();
+}
+
+std::string notebookFooter(const World& w, size_t sheet, size_t sheets) {
+    if (sheets == 0) return "Tab close";
+    return "Page " + std::to_string(sheet) + " of " + std::to_string(sheets) + "   Secrets " + std::to_string(secretsFound(w)) + " of " +
+           std::to_string(SecretCount) + "   Left/Right turn   Tab close";
+}
+
+NotebookLayout notebookLayout(const World& w, int32_t width, int32_t height) {
+    const float size = std::round(16.0f * fitText(height)), line = std::round(20.0f * fitText(height));
+    NotebookLayout out;
+    out.width = std::min(static_cast<float>(width) - 2 * kMargin, size * 64 + 2 * kMargin);
+    out.columns = static_cast<size_t>(std::max(16.0f, (out.width - 2 * kMargin) / size));
+    // Rows for the body: the screen less the margins, the title (two lines),
+    // the gap and the footer (at its longest).
+    const size_t footLines = wrapped(notebookFooter(w, 99, 99), out.columns).size();
+    const float room = static_cast<float>(height) - 4 * kMargin - line * static_cast<float>(3 + footLines);
+    const auto rows = static_cast<size_t>(std::max(4.0f, std::floor(room / line)));
+    for (const Page* pg : notebook(w)) {
+        std::vector<std::string> body = wrapped(pageText(*pg), out.columns);
+        size_t sourcesFrom = body.size();
+        if (const std::string src = pageSources(*pg); !src.empty()) {
+            body.emplace_back();
+            sourcesFrom = body.size();
+            for (std::string& l : wrapped(src, out.columns)) body.push_back(std::move(l));
+        }
+        // A page longer than the screen goes over several sheets (#18).
+        const size_t parts = (body.size() + rows - 1) / rows;
+        for (size_t k = 0, from = 0; from < body.size(); ++k, from += rows) {
+            Sheet sh;
+            sh.title = pg->title;
+            if (parts > 1) sh.title += " (" + std::to_string(k + 1) + " of " + std::to_string(parts) + ")";
+            const size_t to = std::min(body.size(), from + rows);
+            for (size_t i = from; i < to; ++i) {
+                if (sh.body.empty() && body[i].empty()) continue;  // no blank line at the top of a sheet
+                if (i == sourcesFrom) sh.sourcesFrom = sh.body.size();
+                sh.body.push_back(body[i]);
+            }
+            if (sourcesFrom < from) sh.sourcesFrom = 0;
+            out.sheets.push_back(std::move(sh));
+        }
+    }
+    return out;
 }
 
 }  // namespace familiar::play

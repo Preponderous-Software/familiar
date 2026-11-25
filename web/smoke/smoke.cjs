@@ -264,7 +264,9 @@ function colourCount(png) {
     await page.waitForTimeout(300);
     if (!(await page.locator('#notebook').isVisible())) await fail('the Notebook button did not open the notebook');
     const book = await page.locator('#bookPages').innerText();
-    if (!/Samhain/.test(book) || !/\[S1\]/.test(book)) await fail('the notebook lacks the Samhain page and its sources: ' + book.slice(0, 200));
+    if (!/Samhain/.test(book) || !/Sources in RESEARCH\.md: S1\b/.test(book)) await fail('the notebook lacks the Samhain page and its sources: ' + book.slice(0, 200));
+    // The keys stay off the words and on the sources line (#18).
+    if (/\[S\d+\]/.test(book)) await fail('the notebook shows source keys in its words: ' + book.slice(0, 200));
     await page.screenshot({ path: path.join(outDir, 'familiar-notebook.png'), timeout: 180000 });
     await page.locator('#bookClose').tap();
     if (await page.locator('#notebook').isVisible()) await fail('Close did not close the notebook');

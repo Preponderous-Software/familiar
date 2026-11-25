@@ -28,7 +28,7 @@ const Neighbour kNeighbours[T::HouseCount] = {
      "\"A ghost! My favourite. An extra one for haunting me.\"",
      "\"Trick or treat? You know the rule in my class: a joke first.\" (T: tell a joke, E: just the treat)",
      "\"Oh, that's terrible. I love it. Three for you.\""},
-    {"Mr. Novak", 2, false, Costume::None, "\"Mind the spider! He's friendly. Two each.\"", "", "", ""},
+    {"Mr. Novak", 2, false, Costume::None, "\"Mind the spider! He's friendly. Take two.\"", "", "", ""},
     {"Mr. Abbas", 1, false, Costume::None, "\"Happy Halloween! One from the jar. The shop's open till eleven.\"", "", "", ""},
     {"Mrs. Whitfield", 2, false, Costume::Witch, "\"You made it past the skeletons! Two for you.\"",
      "\"A witch! The best costume on the street. Have another.\"", "", ""},
@@ -101,22 +101,34 @@ int housesLeft(const World& w) {
     return n;
 }
 
+namespace {
+// Two lines, so a narrow screen never splits "3" from "skeleton" (#16).
+constexpr const char* kCostumePrompt = "Choose a costume:\n1 ghost   2 pumpkin   3 skeleton   4 witch";
+}  // namespace
+
 std::string usePrompt(const World& w) {
     if (std::string c = catPrompt(w); !c.empty()) return c;
+    // The costume line goes once one is chosen: the HUD says which, and 1-4
+    // still changes it on Nana's walk (#16).
+    const bool choosing = canChooseCostume(w) && w.costume == Costume::None;
     const int h = atDoor(w);
     if (h < 0) {
-        if (canChooseCostume(w)) return "Choose a costume:  1 ghost   2 pumpkin   3 skeleton   4 witch";
+        if (choosing) return kCostumePrompt;
         return "";
     }
     const auto id = static_cast<T::HouseId>(h);
     if (id == T::Nana) {
-        if (canChooseCostume(w)) return "Choose a costume:  1 ghost   2 pumpkin   3 skeleton   4 witch";
+        if (choosing) return kCostumePrompt;
         if (!w.lit[NanaWindow]) return "Nana's door. Her window lantern is just to the left of it";
         return "Nana's door. The neighbours' porches are lit";
     }
     if (w.asking == h) return "T  tell a joke     E  just the treat";
     if (!porchLightOn(w, id)) return id == T::Hale ? "Mr. Hale's porch light is off" : "The porch light is off now";
-    if (w.knocked[h]) return "You have been here tonight";
+    if (w.knocked[h]) {
+        // Not while the neighbour is still talking: it read as a refusal (#19).
+        if (w.answered == h && !answerText(w).empty()) return "";
+        return "You've had your treat here";
+    }
     if (w.form == Form::Girl && w.bagDown) return "Your candy bag is where you became a cat. Fetch it first";
     return w.form == Form::Cat ? "E  meow at the door" : "E  knock: trick or treat!";
 }

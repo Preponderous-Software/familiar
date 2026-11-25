@@ -7,6 +7,7 @@
 // sensitivity notes). Text is plain ASCII: Strata's font draws nothing else.
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "sim/world.h"
@@ -23,6 +24,13 @@ struct Page {
 };
 const Page& page(int i);    // PageId
 const Page& secret(int i);  // SecretId
+
+// What the player reads: a page's text with its [S..] keys taken out, and
+// those keys gathered into one line ("Sources in RESEARCH.md: S1, S3"), or
+// "" for a page that cites nothing. The keys stay in `text`, where the tests
+// check each one against RESEARCH.md.
+std::string pageText(const Page& p);
+std::string pageSources(const Page& p);
 
 // Whether the cat or Wren is where secret i is found (and in the right form, at the right hour).
 bool secretHere(const World& w, int i);

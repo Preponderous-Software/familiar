@@ -633,7 +633,22 @@ int main(int, char**) {
             }
             CHECK(cites > 0);
             CHECK(ascii(p.title) && ascii(p.text));
+            // The player reads the page without its keys (#18), and every key is
+            // kept on its sources line instead.
+            const std::string shown = pageText(p), sources = pageSources(p);
+            CHECK(shown.find('[') == std::string::npos && shown.find(']') == std::string::npos);
+            CHECK(shown.find(" .") == std::string::npos && shown.find("  ") == std::string::npos);
+            CHECK(sources.rfind("Sources in RESEARCH.md: S", 0) == 0);
+            for (auto it = std::sregex_iterator(text.begin(), text.end(), cite); it != std::sregex_iterator(); ++it) {
+                const std::string key = (*it)[1];
+                const std::regex whole("[ ,:]" + key + "(,|$)");
+                CHECK(std::regex_search(sources, whole));
+            }
         }
+        CHECK(pageText(page(SamhainPage)).find("summer pastures. It is in the oldest Irish stories, from about the 9th century, and") !=
+              std::string::npos);
+        CHECK(pageSources(page(SamhainPage)) == "Sources in RESEARCH.md: S1, S2, S3, S4, S5, S15");
+        CHECK(pageSources(secret(BridgeInitials)).empty() && pageText(secret(BridgeInitials)) == secret(BridgeInitials).text);
         for (int i = 0; i < SecretCount; ++i) CHECK(ascii(secret(i).title) && ascii(secret(i).text));
         // The fantasy is labelled as fantasy.
         CHECK(std::string(page(CatsPage).text).find("not something Wiccans believe or do") != std::string::npos);

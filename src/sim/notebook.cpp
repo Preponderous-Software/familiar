@@ -1,5 +1,6 @@
 #include "sim/notebook.h"
 
+#include <algorithm>
 #include <cmath>
 
 #include "sim/cat.h"
@@ -100,6 +101,47 @@ bool near(const World& w, Vec2 p, float r) {
 }
 
 }  // namespace
+
+std::string pageText(const Page& p) {
+    // Drop each " [Sn]" (and the space before it), so "pastures [S1]." reads "pastures.".
+    const std::string in = p.text;
+    std::string out;
+    for (size_t i = 0; i < in.size();) {
+        size_t j = i;
+        while (j < in.size() && in[j] == ' ') ++j;
+        if (j + 2 < in.size() && in[j] == '[' && in[j + 1] == 'S') {
+            size_t k = j + 2;
+            while (k < in.size() && in[k] >= '0' && in[k] <= '9') ++k;
+            if (k > j + 2 && k < in.size() && in[k] == ']') {
+                i = k + 1;
+                continue;
+            }
+        }
+        out += in[i++];
+    }
+    return out;
+}
+
+std::string pageSources(const Page& p) {
+    const std::string in = p.text;
+    std::vector<std::string> keys;
+    for (size_t i = in.find("[S"); i != std::string::npos; i = in.find("[S", i + 1)) {
+        size_t k = i + 2;
+        while (k < in.size() && in[k] >= '0' && in[k] <= '9') ++k;
+        if (k == i + 2 || k >= in.size() || in[k] != ']') continue;
+        const std::string key = in.substr(i + 1, k - i - 1);
+        bool seen = false;
+        for (const std::string& s : keys) seen = seen || s == key;
+        if (!seen) keys.push_back(key);
+    }
+    if (keys.empty()) return "";
+    std::sort(keys.begin(), keys.end(), [](const std::string& a, const std::string& b) {
+        return std::stoi(a.substr(1)) < std::stoi(b.substr(1));
+    });
+    std::string out = "Sources in RESEARCH.md:";
+    for (size_t i = 0; i < keys.size(); ++i) out += (i ? ", " : " ") + keys[i];
+    return out;
+}
 
 const Page& page(int i) { return kPages[((i % PageCount) + PageCount) % PageCount]; }
 const Page& secret(int i) { return kSecrets[((i % SecretCount) + SecretCount) % SecretCount]; }
